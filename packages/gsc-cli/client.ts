@@ -11,7 +11,7 @@ import {
   resolveInvocationPath,
   resolveProfilePath,
   type ProductGrowthProfileMetadata,
-} from "@deniffer/product-growth-runtime/profile";
+} from "./lib/product-growth-runtime/profile";
 import { config } from "dotenv";
 import { google, type searchconsole_v1 } from "googleapis";
 import { cliError } from "./lib/errors";

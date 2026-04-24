@@ -14,7 +14,7 @@ import {
   resolveInvocationPath,
   resolveProfilePath,
   type ProductGrowthProfileMetadata,
-} from "@deniffer/product-growth-runtime/profile";
+} from "./lib/product-growth-runtime/profile";
 import { config } from "dotenv";
 import { CliError, cliError } from "./lib/errors";
 
