@@ -23,6 +23,7 @@
     "bin",
     "handlers",
     "lib",
+    "skills",
     "!**/*.test.ts",
     "AGENTS.md",
     "README.md"

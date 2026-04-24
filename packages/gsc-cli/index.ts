@@ -11,6 +11,7 @@ import {
   loadDefaultCliEnv,
   shouldLoadDefaultCliEnv,
 } from "./client";
+import { handleDoctorReadinessDataset } from "./handlers/doctor";
 import { handleInspectionEntityUrl } from "./handlers/inspection";
 import { handlePropertySitesDataset } from "./handlers/property";
 import { handleSearchAnalyticsDataset } from "./handlers/search";
@@ -18,6 +19,11 @@ import {
   handleSitemapDatasetSitemaps,
   handleSitemapEntitySitemap,
 } from "./handlers/sitemap";
+import {
+  handleSkillInstall,
+  handleSkillPath,
+  handleSkillPrint,
+} from "./handlers/skill";
 import {
   buildSchemaSubset,
   matchSchemaSelector,
@@ -94,6 +100,16 @@ const app = cli(schema, {
 
 await app.run({
   handlers: {
+    skill: {
+      path: handleSkillPath,
+      print: handleSkillPrint,
+      install: handleSkillInstall,
+    },
+    doctor: {
+      dataset: {
+        readiness: handleDoctorReadinessDataset,
+      },
+    },
     inspection: {
       entity: {
         url: handleInspectionEntityUrl,

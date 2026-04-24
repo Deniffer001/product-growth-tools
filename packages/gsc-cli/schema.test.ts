@@ -70,11 +70,29 @@ describe("gsc cli schema", () => {
 
     expect(result.status).toBe(0);
     expect(extractOutline(result.stdout)).toEqual([
+      "skill{path,print,install}",
+      "doctor{dataset{readiness}}",
       "inspection{entity{url}}",
       "property{dataset{sites}}",
       "sitemap{entity{sitemap},dataset{sitemaps}}",
       "search{dataset{analytics}}",
     ]);
+  });
+
+  test("exposes readiness doctor selector", () => {
+    const result = runCli(["--schema=.doctor.dataset.readiness"]);
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain("readiness(");
+  });
+
+  test("exposes skill install selector", () => {
+    const result = runCli(["--schema=.skill.install"]);
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain("install(");
+    expect(result.stdout).toContain("skill?: string");
+    expect(result.stdout).toContain("force?: boolean");
   });
 
   test("exposes analytics dataset with agent-friendly flags", () => {

@@ -63,6 +63,72 @@ export const globalsSchema = s(
 );
 
 export const schema = {
+  skill: group(
+    { description: "Agent skill registration helpers" },
+    {
+      path: c
+        .meta({
+          description: "Print the canonical bundled skill path",
+          examples: ["gsc skill path", "gsc skill path --skill gsc-cli"],
+        })
+        .input(
+          s(
+            object({
+              skill: optional(string()),
+            })
+          )
+        ),
+      print: c
+        .meta({
+          description: "Print the canonical bundled skill markdown",
+          examples: ["gsc skill print", "gsc skill print --skill gsc-cli"],
+        })
+        .input(
+          s(
+            object({
+              skill: optional(string()),
+            })
+          )
+        ),
+      install: c
+        .meta({
+          description:
+            "Install a bundled skill into .agents/skills for the current project",
+          examples: [
+            "gsc skill install",
+            "gsc skill install --skill gsc-cli",
+            "gsc skill install --global",
+            "gsc skill install --force",
+          ],
+        })
+        .input(
+          s(
+            object({
+              skill: optional(string()),
+              global: optional(boolean()),
+              force: optional(boolean()),
+            })
+          )
+        ),
+    }
+  ),
+  doctor: group(
+    { description: "Local runtime and provider readiness checks" },
+    {
+      dataset: group(
+        { description: "Read diagnostic datasets" },
+        {
+          readiness: c
+            .meta({
+              description:
+                "Check local credentials, defaults, and Search Console provider reachability",
+              examples: ["gsc doctor dataset readiness"],
+            })
+            .input(s(object({}))),
+        }
+      ),
+    }
+  ),
   inspection: group(
     { description: "URL inspection reads" },
     {
