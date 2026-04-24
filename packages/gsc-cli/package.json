@@ -1,6 +1,6 @@
 {
   "name": "@deniffer/gsc-cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Google Search Console raw-data CLI for product growth and SEO workflows.",
   "type": "module",
   "sideEffects": false,
