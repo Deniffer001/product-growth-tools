@@ -92,6 +92,22 @@ bun run google-ads searchTerm dataset performance --start-date 2026-04-01 --end-
 
 Set `GOOGLE_ADS_LOGIN_CUSTOMER_ID` only when the account actually needs MCC routing. A missing login customer should be treated as a warning unless the provider call proves it is required.
 
+## SERP Snapshot
+
+Set `DATAFORSEO_LOGIN` and `DATAFORSEO_PASSWORD` in the active profile.
+
+Readiness:
+
+```bash
+bun run serp-snapshot doctor dataset readiness
+```
+
+Basic provider truth:
+
+```bash
+bun run serp-snapshot query dataset results --query "typeless alternative for mac" --country US --language en --device desktop --os macos --depth 20
+```
+
 ## Sitemap Watch
 
 This CLI does not need provider credentials. Use a local registry file.
