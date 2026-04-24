@@ -11,8 +11,8 @@
     "directory": "packages/sitemap-watch-cli"
   },
   "bin": {
-    "sitemap-watch": "./bin/sitemap-watch-cli.js",
-    "sitemap-watch-cli": "./bin/sitemap-watch-cli.js"
+    "sitemap-watch": "bin/sitemap-watch-cli.js",
+    "sitemap-watch-cli": "bin/sitemap-watch-cli.js"
   },
   "files": [
     "index.ts",

@@ -11,8 +11,8 @@
     "directory": "packages/google-ads-cli"
   },
   "bin": {
-    "google-ads": "./bin/google-ads-cli.js",
-    "google-ads-cli": "./bin/google-ads-cli.js"
+    "google-ads": "bin/google-ads-cli.js",
+    "google-ads-cli": "bin/google-ads-cli.js"
   },
   "files": [
     "index.ts",
