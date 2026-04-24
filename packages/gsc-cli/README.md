@@ -8,3 +8,14 @@ bunx @deniffer/gsc-cli search dataset analytics --site-url sc-domain:example.com
 ```
 
 Credentials are loaded from CLI flags or local environment files. Do not commit credentials.
+
+Credential resolution:
+
+```bash
+GSC_SERVICE_ACCOUNT_JSON='{"type":"service_account",...}'
+GSC_CREDENTIALS_FILE=./credentials/gsc.json
+GOOGLE_APPLICATION_CREDENTIALS=./credentials/gsc.json
+GSC_SITE_URL=sc-domain:example.com
+```
+
+The CLI loads `.env.local` and `.env` from the directory where it is invoked.

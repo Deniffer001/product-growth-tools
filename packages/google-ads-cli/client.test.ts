@@ -4,8 +4,11 @@
  * @pos client resolution tests for Google Ads CLI
  */
 
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { afterEach, describe, expect, test } from "vitest";
-import { createCliContext } from "./client";
+import { createCliContext, loadDefaultCliEnv } from "./client";
 
 describe("google-ads client resolution", () => {
   afterEach(() => {
@@ -63,5 +66,20 @@ describe("google-ads client resolution", () => {
         credentialsFile: "packages/google-ads-cli/credentials/test.json",
       }).credentialsFile
     ).toBe("/repo/packages/google-ads-cli/credentials/test.json");
+  });
+
+  test("loads env files from invocation root", () => {
+    const loadedPaths: string[] = [];
+    const root = mkdtempSync(join(tmpdir(), "google-ads-cli-env-"));
+    process.env.INIT_CWD = root;
+    writeFileSync(join(root, ".env.local"), "GOOGLE_ADS_CUSTOMER_ID=123\n");
+    writeFileSync(join(root, ".env"), "GOOGLE_ADS_CUSTOMER_ID=456\n");
+
+    loadDefaultCliEnv((input) => {
+      loadedPaths.push(input.path);
+    });
+
+    expect(loadedPaths).toEqual([join(root, ".env.local"), join(root, ".env")]);
+    rmSync(root, { force: true, recursive: true });
   });
 });

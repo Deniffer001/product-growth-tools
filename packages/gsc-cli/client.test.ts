@@ -4,14 +4,18 @@
  * @pos client resolution tests for GSC CLI
  */
 
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { afterEach, describe, expect, test } from "vitest";
-import { createCliContext } from "./client";
+import { createCliContext, loadDefaultCliEnv } from "./client";
 
 describe("gsc client resolution", () => {
   afterEach(() => {
     process.env.GSC_SITE_URL = undefined;
     process.env.GOOGLE_APPLICATION_CREDENTIALS = undefined;
     process.env.GSC_SERVICE_ACCOUNT_JSON = undefined;
+    process.env.INIT_CWD = undefined;
   });
 
   test("prefers explicit site url over env defaults", () => {
@@ -30,11 +34,35 @@ describe("gsc client resolution", () => {
     expect(createCliContext({}).credentialsFile).toBe("/tmp/gsc.json");
   });
 
+  test("resolves relative credentials path from invocation root", () => {
+    process.env.INIT_CWD = "/repo";
+    process.env.GSC_CREDENTIALS_FILE = "credentials/gsc.json";
+
+    expect(createCliContext({}).credentialsFile).toBe(
+      "/repo/credentials/gsc.json"
+    );
+  });
+
   test("reads inline service account json from env", () => {
     process.env.GSC_SERVICE_ACCOUNT_JSON = '{"type":"service_account"}';
 
     expect(createCliContext({}).credentialsJson).toBe(
       '{"type":"service_account"}'
     );
+  });
+
+  test("loads env files from invocation root", () => {
+    const loadedPaths: string[] = [];
+    const root = mkdtempSync(join(tmpdir(), "gsc-cli-env-"));
+    process.env.INIT_CWD = root;
+    writeFileSync(join(root, ".env.local"), "GSC_SITE_URL=sc-domain:test\n");
+    writeFileSync(join(root, ".env"), "GSC_SITE_URL=sc-domain:fallback\n");
+
+    loadDefaultCliEnv((input) => {
+      loadedPaths.push(input.path);
+    });
+
+    expect(loadedPaths).toEqual([join(root, ".env.local"), join(root, ".env")]);
+    rmSync(root, { force: true, recursive: true });
   });
 });

@@ -53,8 +53,7 @@ type ProviderOutput<T> =
   | { ok: false; error: { code: string; message: string; hint?: string } };
 
 const cliDirectory = dirname(fileURLToPath(import.meta.url));
-const packageEnvPath = resolve(cliDirectory, ".env.local");
-const backendEnvPath = resolve(cliDirectory, "../backend/.env.local");
+const DEFAULT_ENV_FILES = [".env.local", ".env"];
 const providerScriptPath = resolve(
   cliDirectory,
   "provider/google_ads_provider.py"
@@ -65,7 +64,7 @@ const localPythonCandidates = [
 ];
 
 export function loadDefaultCliEnv(loadEnv: EnvLoader = config) {
-  for (const path of [packageEnvPath, backendEnvPath]) {
+  for (const path of resolveDefaultEnvPaths()) {
     if (!existsSync(path)) {
       continue;
     }
@@ -165,7 +164,7 @@ function requireEnv(name: string) {
   throw cliError({
     code: "invalid_input",
     message: `Missing required environment variable: ${name}`,
-    hint: "Set Google Ads credentials in packages/google-ads-cli/.env.local or packages/backend/.env.local.",
+    hint: "Set Google Ads credentials in the invocation directory .env.local/.env or pass CLI flags.",
   });
 }
 
@@ -261,7 +260,7 @@ async function runProvider<T>(
     throw cliError({
       code: "backend_failure",
       message: result.stderr || "Python provider execution failed.",
-      hint: "Install the package-local provider runtime with `bun run --filter @my-aigc-apps/google-ads-cli provider:install`.",
+      hint: "Install Google Ads Python dependencies and set GOOGLE_ADS_PROVIDER_PYTHON_BIN if python3 cannot import them.",
     });
   }
 
@@ -313,4 +312,12 @@ export function createGoogleAdsClient(context: CliContext): GoogleAdsClient {
       return data.rows;
     },
   };
+}
+
+function getInvocationRoot() {
+  return process.env.INIT_CWD ?? process.cwd();
+}
+
+function resolveDefaultEnvPaths() {
+  return DEFAULT_ENV_FILES.map((name) => resolve(getInvocationRoot(), name));
 }

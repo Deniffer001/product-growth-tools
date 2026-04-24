@@ -5,8 +5,7 @@
  */
 
 import { existsSync, readFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { isAbsolute, resolve } from "node:path";
 import { config } from "dotenv";
 import { google, type searchconsole_v1 } from "googleapis";
 import { cliError } from "./lib/errors";
@@ -53,12 +52,10 @@ type EnvLoader = (input: {
   quiet?: boolean;
 }) => unknown;
 
-const cliDirectory = dirname(fileURLToPath(import.meta.url));
-const packageEnvPath = resolve(cliDirectory, ".env.local");
-const backendEnvPath = resolve(cliDirectory, "../backend/.env.local");
+const DEFAULT_ENV_FILES = [".env.local", ".env"];
 
 export function loadDefaultCliEnv(loadEnv: EnvLoader = config) {
-  for (const path of [packageEnvPath, backendEnvPath]) {
+  for (const path of resolveDefaultEnvPaths()) {
     if (!existsSync(path)) {
       continue;
     }
@@ -100,11 +97,16 @@ function resolveSiteUrl(override?: string) {
 }
 
 function resolveCredentialsFile(override?: string) {
-  return (
+  const resolved =
     override ??
     process.env.GSC_CREDENTIALS_FILE ??
-    process.env.GOOGLE_APPLICATION_CREDENTIALS
-  );
+    process.env.GOOGLE_APPLICATION_CREDENTIALS;
+
+  if (!resolved) {
+    return resolved;
+  }
+
+  return normalizePathFromInvocationRoot(resolved);
 }
 
 function resolveCredentialsJson() {
@@ -205,4 +207,20 @@ export function createGscClient(context: CliContext): GscClient {
 
 export function readJsonFile(path: string) {
   return JSON.parse(readFileSync(path, "utf8")) as Record<string, unknown>;
+}
+
+function getInvocationRoot() {
+  return process.env.INIT_CWD ?? process.cwd();
+}
+
+function normalizePathFromInvocationRoot(path: string) {
+  if (isAbsolute(path)) {
+    return path;
+  }
+
+  return resolve(getInvocationRoot(), path);
+}
+
+function resolveDefaultEnvPaths() {
+  return DEFAULT_ENV_FILES.map((name) => resolve(getInvocationRoot(), name));
 }

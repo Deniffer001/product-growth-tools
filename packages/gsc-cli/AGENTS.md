@@ -28,6 +28,6 @@ lib/
 - provider-only: 只暴露 GSC 官方只读数据，不在此处增加存储、同步、报表或 SEO 解释层
 - 输出契约: 默认 JSON，`--pretty` 只做人类可读渲染，不改变数据语义
 - 本地凭证: 服务账号 JSON 放在 `credentials/*.json`，保持 gitignored
-- 本地环境: `packages/gsc-cli/.env.local` 可设置 `GOOGLE_APPLICATION_CREDENTIALS` 或 `GSC_CREDENTIALS_FILE`
+- 本地环境: 调用目录的 `.env.local` / `.env` 可设置 `GOOGLE_APPLICATION_CREDENTIALS`、`GSC_CREDENTIALS_FILE` 或 `GSC_SERVICE_ACCOUNT_JSON`
 
 [PROTOCOL]: 变更时更新此头部，然后检查 AGENTS.md

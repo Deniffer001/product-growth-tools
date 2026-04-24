@@ -1,6 +1,6 @@
 {
   "name": "@deniffer/google-ads-cli",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Google Ads raw-data CLI for product growth and paid search workflows.",
   "type": "module",
   "sideEffects": false,
