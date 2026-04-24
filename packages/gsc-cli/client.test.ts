@@ -4,7 +4,7 @@
  * @pos client resolution tests for GSC CLI
  */
 
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, test } from "vitest";
@@ -12,10 +12,14 @@ import { createCliContext, loadDefaultCliEnv } from "./client";
 
 describe("gsc client resolution", () => {
   afterEach(() => {
-    process.env.GSC_SITE_URL = undefined;
-    process.env.GOOGLE_APPLICATION_CREDENTIALS = undefined;
-    process.env.GSC_SERVICE_ACCOUNT_JSON = undefined;
-    process.env.INIT_CWD = undefined;
+    delete process.env.PRODUCT_GROWTH_PROFILE;
+    delete process.env.PRODUCT_GROWTH_PROFILE_DIR;
+    delete process.env.PRODUCT_GROWTH_PROFILE_ROOT;
+    delete process.env.GSC_SITE_URL;
+    delete process.env.GSC_CREDENTIALS_FILE;
+    delete process.env.GOOGLE_APPLICATION_CREDENTIALS;
+    delete process.env.GSC_SERVICE_ACCOUNT_JSON;
+    delete process.env.INIT_CWD;
   });
 
   test("prefers explicit site url over env defaults", () => {
@@ -51,6 +55,15 @@ describe("gsc client resolution", () => {
     );
   });
 
+  test("resolves profile credentials path from profile directory", () => {
+    process.env.PRODUCT_GROWTH_PROFILE_DIR = "/profiles/openclaw-web";
+    process.env.GSC_CREDENTIALS_FILE = "./credentials/gsc.json";
+
+    expect(createCliContext({}).credentialsFile).toBe(
+      "/profiles/openclaw-web/credentials/gsc.json"
+    );
+  });
+
   test("loads env files from invocation root", () => {
     const loadedPaths: string[] = [];
     const root = mkdtempSync(join(tmpdir(), "gsc-cli-env-"));
@@ -64,5 +77,30 @@ describe("gsc client resolution", () => {
 
     expect(loadedPaths).toEqual([join(root, ".env.local"), join(root, ".env")]);
     rmSync(root, { force: true, recursive: true });
+  });
+
+  test("loads business profile env before invocation env files", () => {
+    const loadedPaths: string[] = [];
+    const root = mkdtempSync(join(tmpdir(), "gsc-cli-env-"));
+    const profiles = mkdtempSync(join(tmpdir(), "product-growth-profiles-"));
+    const profileDir = join(profiles, "openclaw-web");
+    process.env.INIT_CWD = root;
+    process.env.PRODUCT_GROWTH_PROFILE = "openclaw-web";
+    process.env.PRODUCT_GROWTH_PROFILE_ROOT = profiles;
+    mkdirSync(profileDir);
+    writeFileSync(join(profileDir, ".env"), "GSC_SITE_URL=sc-domain:profile\n");
+    writeFileSync(join(root, ".env.local"), "GSC_SITE_URL=sc-domain:local\n");
+
+    loadDefaultCliEnv((input) => {
+      loadedPaths.push(input.path);
+    });
+
+    expect(loadedPaths).toEqual([
+      join(profileDir, ".env"),
+      join(root, ".env.local"),
+    ]);
+    expect(process.env.PRODUCT_GROWTH_PROFILE_DIR).toBe(profileDir);
+    rmSync(root, { force: true, recursive: true });
+    rmSync(profiles, { force: true, recursive: true });
   });
 });

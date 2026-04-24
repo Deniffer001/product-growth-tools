@@ -37,6 +37,7 @@
     "test:once": "vitest run"
   },
   "dependencies": {
+    "@deniffer/product-growth-runtime": "workspace:*",
     "@standard-schema/spec": "^1.0.0",
     "@valibot/to-json-schema": "^1.6.0",
     "argc": "github:ethan-huo/argc",

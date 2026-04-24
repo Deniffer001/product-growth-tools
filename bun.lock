@@ -14,12 +14,13 @@
     },
     "packages/google-ads-cli": {
       "name": "@deniffer/google-ads-cli",
-      "version": "0.1.0",
+      "version": "0.1.2",
       "bin": {
-        "google-ads": "./index.ts",
-        "google-ads-cli": "./index.ts",
+        "google-ads": "bin/google-ads-cli.js",
+        "google-ads-cli": "bin/google-ads-cli.js",
       },
       "dependencies": {
+        "@deniffer/product-growth-runtime": "workspace:*",
         "@standard-schema/spec": "^1.0.0",
         "@valibot/to-json-schema": "^1.6.0",
         "argc": "github:ethan-huo/argc",
@@ -36,12 +37,13 @@
     },
     "packages/gsc-cli": {
       "name": "@deniffer/gsc-cli",
-      "version": "0.1.0",
+      "version": "0.1.2",
       "bin": {
-        "gsc": "./index.ts",
-        "gsc-cli": "./index.ts",
+        "gsc": "bin/gsc-cli.js",
+        "gsc-cli": "bin/gsc-cli.js",
       },
       "dependencies": {
+        "@deniffer/product-growth-runtime": "workspace:*",
         "@standard-schema/spec": "^1.0.0",
         "@valibot/to-json-schema": "^1.6.0",
         "argc": "github:ethan-huo/argc",
@@ -57,9 +59,23 @@
         "vitest": "^4.0.18",
       },
     },
+    "packages/product-growth-runtime": {
+      "name": "@deniffer/product-growth-runtime",
+      "version": "0.1.0",
+      "dependencies": {
+        "dotenv": "catalog:",
+      },
+      "devDependencies": {
+        "@types/bun": "catalog:",
+        "@types/node": "catalog:",
+        "bun-types": "catalog:",
+        "typescript": "catalog:",
+        "vitest": "catalog:",
+      },
+    },
     "packages/sitemap-watch-cli": {
       "name": "@deniffer/sitemap-watch-cli",
-      "version": "0.1.0",
+      "version": "0.1.2",
       "bin": {
         "sitemap-watch": "./index.ts",
         "sitemap-watch-cli": "./index.ts",
@@ -95,6 +111,8 @@
     "@deniffer/google-ads-cli": ["@deniffer/google-ads-cli@workspace:packages/google-ads-cli"],
 
     "@deniffer/gsc-cli": ["@deniffer/gsc-cli@workspace:packages/gsc-cli"],
+
+    "@deniffer/product-growth-runtime": ["@deniffer/product-growth-runtime@workspace:packages/product-growth-runtime"],
 
     "@deniffer/sitemap-watch-cli": ["@deniffer/sitemap-watch-cli@workspace:packages/sitemap-watch-cli"],
 
@@ -365,5 +383,7 @@
     "web-streams-polyfill": ["web-streams-polyfill@3.3.3", "", {}, "sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw=="],
 
     "why-is-node-running": ["why-is-node-running@2.3.0", "", { "dependencies": { "siginfo": "^2.0.0", "stackback": "0.0.2" }, "bin": { "why-is-node-running": "cli.js" } }, "sha512-hUrmaWBdVDcxvYqnyh09zunKzROWjbZTiNy8dBEjkS7ehEDQibXJ7XvlmtbwuTclUiIyN+CyXQD4Vmko8fNm8w=="],
+
+    "@deniffer/sitemap-watch-cli/argc": ["argc@github:ethan-huo/argc#a4910da", { "peerDependencies": { "@standard-schema/spec": "^1.0.0" } }, "ethan-huo-argc-a4910da", "sha512-v7oiXLgGDYGD2Q/sEy7BBCY4S9RrUCV7sjA1xRaEml5taWa8abO2mlwHGyr2z38gtzEC/gIj4UFFGRklWO8MgA=="],
   }
 }

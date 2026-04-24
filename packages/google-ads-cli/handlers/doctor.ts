@@ -133,6 +133,13 @@ export async function handleDoctorReadinessDataset(args: {
     services.output.success(
       {
         ready,
+        profile: {
+          name: services.context.profile.profile ?? null,
+          root: services.context.profile.profileRoot ?? null,
+          dir: services.context.profile.profileDir ?? null,
+          envPath: services.context.profile.profileEnvPath ?? null,
+          envFound: services.context.profile.profileEnvFound,
+        },
         checks,
       },
       renderDoctor

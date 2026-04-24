@@ -5,7 +5,13 @@
  */
 
 import { existsSync, readFileSync } from "node:fs";
-import { isAbsolute, resolve } from "node:path";
+import {
+  getActiveProfileMetadata,
+  loadProductGrowthEnv,
+  resolveInvocationPath,
+  resolveProfilePath,
+  type ProductGrowthProfileMetadata,
+} from "@deniffer/product-growth-runtime/profile";
 import { config } from "dotenv";
 import { google, type searchconsole_v1 } from "googleapis";
 import { cliError } from "./lib/errors";
@@ -44,6 +50,7 @@ export type CliContext = {
   credentialsJson?: string;
   siteUrl?: string;
   pretty?: boolean;
+  profile: ProductGrowthProfileMetadata;
 };
 
 type EnvLoader = (input: {
@@ -52,15 +59,8 @@ type EnvLoader = (input: {
   quiet?: boolean;
 }) => unknown;
 
-const DEFAULT_ENV_FILES = [".env.local", ".env"];
-
 export function loadDefaultCliEnv(loadEnv: EnvLoader = config) {
-  for (const path of resolveDefaultEnvPaths()) {
-    if (!existsSync(path)) {
-      continue;
-    }
-    loadEnv({ path, override: false, quiet: true });
-  }
+  loadProductGrowthEnv(loadEnv);
 }
 
 export function shouldLoadDefaultCliEnv(input: {
@@ -85,6 +85,7 @@ export function createCliContext(input: {
     credentialsJson: resolveCredentialsJson(),
     siteUrl: resolveSiteUrl(input.siteUrl),
     pretty: input.pretty ?? false,
+    profile: getActiveProfileMetadata(),
   };
 }
 
@@ -97,8 +98,11 @@ function resolveSiteUrl(override?: string) {
 }
 
 function resolveCredentialsFile(override?: string) {
+  if (override) {
+    return resolveInvocationPath(override);
+  }
+
   const resolved =
-    override ??
     process.env.GSC_CREDENTIALS_FILE ??
     process.env.GOOGLE_APPLICATION_CREDENTIALS;
 
@@ -106,7 +110,7 @@ function resolveCredentialsFile(override?: string) {
     return resolved;
   }
 
-  return normalizePathFromInvocationRoot(resolved);
+  return resolveProfilePath(resolved);
 }
 
 function resolveCredentialsJson() {
@@ -207,20 +211,4 @@ export function createGscClient(context: CliContext): GscClient {
 
 export function readJsonFile(path: string) {
   return JSON.parse(readFileSync(path, "utf8")) as Record<string, unknown>;
-}
-
-function getInvocationRoot() {
-  return process.env.INIT_CWD ?? process.cwd();
-}
-
-function normalizePathFromInvocationRoot(path: string) {
-  if (isAbsolute(path)) {
-    return path;
-  }
-
-  return resolve(getInvocationRoot(), path);
-}
-
-function resolveDefaultEnvPaths() {
-  return DEFAULT_ENV_FILES.map((name) => resolve(getInvocationRoot(), name));
 }

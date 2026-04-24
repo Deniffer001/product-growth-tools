@@ -6,8 +6,15 @@
 
 import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
-import { dirname, isAbsolute, resolve } from "node:path";
+import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  getActiveProfileMetadata,
+  loadProductGrowthEnv,
+  resolveInvocationPath,
+  resolveProfilePath,
+  type ProductGrowthProfileMetadata,
+} from "@deniffer/product-growth-runtime/profile";
 import { config } from "dotenv";
 import { CliError, cliError } from "./lib/errors";
 
@@ -30,6 +37,7 @@ export type CliContext = {
   loginCustomerId?: string;
   linkedCustomerId?: string;
   pretty?: boolean;
+  profile: ProductGrowthProfileMetadata;
 };
 
 type EnvLoader = (input: {
@@ -53,7 +61,6 @@ type ProviderOutput<T> =
   | { ok: false; error: { code: string; message: string; hint?: string } };
 
 const cliDirectory = dirname(fileURLToPath(import.meta.url));
-const DEFAULT_ENV_FILES = [".env.local", ".env"];
 const providerScriptPath = resolve(
   cliDirectory,
   "provider/google_ads_provider.py"
@@ -64,12 +71,7 @@ const localPythonCandidates = [
 ];
 
 export function loadDefaultCliEnv(loadEnv: EnvLoader = config) {
-  for (const path of resolveDefaultEnvPaths()) {
-    if (!existsSync(path)) {
-      continue;
-    }
-    loadEnv({ path, override: false, quiet: true });
-  }
+  loadProductGrowthEnv(loadEnv);
 }
 
 export function getProviderRuntimeState() {
@@ -111,6 +113,7 @@ export function createCliContext(input: {
       "GOOGLE_ADS_LINKED_CUSTOMER_ID",
     ]),
     pretty: input.pretty ?? false,
+    profile: getActiveProfileMetadata(),
   };
 }
 
@@ -131,7 +134,11 @@ function resolveEnvValue(
 }
 
 function resolveCredentialsFile(override?: string) {
-  const resolved = resolveEnvValue(override, [
+  if (override) {
+    return resolveInvocationPath(override);
+  }
+
+  const resolved = resolveEnvValue(undefined, [
     "GOOGLE_ADS_JSON_KEY_FILE_PATH",
     "GOOGLE_APPLICATION_CREDENTIALS",
   ]);
@@ -140,19 +147,11 @@ function resolveCredentialsFile(override?: string) {
     return resolved;
   }
 
-  return normalizePathFromInvocationRoot(resolved);
+  return resolveProfilePath(resolved);
 }
 
 function resolveCredentialsJson() {
   return process.env.GOOGLE_ADS_SERVICE_ACCOUNT_JSON;
-}
-
-function normalizePathFromInvocationRoot(path: string) {
-  if (isAbsolute(path)) {
-    return path;
-  }
-
-  return resolve(process.env.INIT_CWD ?? process.cwd(), path);
 }
 
 function requireEnv(name: string) {
@@ -312,12 +311,4 @@ export function createGoogleAdsClient(context: CliContext): GoogleAdsClient {
       return data.rows;
     },
   };
-}
-
-function getInvocationRoot() {
-  return process.env.INIT_CWD ?? process.cwd();
-}
-
-function resolveDefaultEnvPaths() {
-  return DEFAULT_ENV_FILES.map((name) => resolve(getInvocationRoot(), name));
 }

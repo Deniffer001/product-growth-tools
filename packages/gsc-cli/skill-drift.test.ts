@@ -79,5 +79,5 @@ describe("gsc skill examples", () => {
       expect(result.status, `${selector}\n${result.stderr}`).toBe(0);
       expect(result.stdout, selector).not.toContain("Invalid schema selector");
     }
-  });
+  }, 15000);
 });

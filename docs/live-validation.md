@@ -4,39 +4,51 @@ This repo should support real provider checks without committing provider secret
 
 ## Principle
 
-Real credentials are local runtime inputs, not test fixtures. Keep them in:
+Real credentials are local runtime inputs, not test fixtures. Keep them in a business profile:
 
 ```text
-.env.live
-credentials/
+~/.config/product-growth-tools/profiles/<business>/.env
+~/.config/product-growth-tools/profiles/<business>/credentials/
 ```
 
-Both are gitignored by the root `.gitignore`.
+Repo-local `.env.live` is allowed only as a temporary compatibility profile and is gitignored.
 
 ## Setup
 
-Copy the template:
+Create a business profile:
 
 ```bash
-cp .env.live.example .env.live
-mkdir -p credentials
+mkdir -p ~/.config/product-growth-tools/profiles/openclaw-web/credentials
+cp profile.env.example ~/.config/product-growth-tools/profiles/openclaw-web/.env
 ```
 
-Copy the OpenClaw web provider credentials into `credentials/`, then edit `.env.live`.
+Copy the OpenClaw web provider credentials into the profile credentials directory, then edit the profile `.env`.
 
-Recommended local filenames:
+Recommended profile filenames:
 
 ```text
-credentials/openclaw-web-gsc.json
-credentials/openclaw-web-google-ads.json
+~/.config/product-growth-tools/profiles/openclaw-web/credentials/gsc.json
+~/.config/product-growth-tools/profiles/openclaw-web/credentials/google-ads.json
 ```
 
-Do not use ad hoc shell exports when you want repeatable validation. Put stable local defaults in `.env.live`, then run commands with `set -a`.
+Set the profile name when running provider reads:
 
 ```bash
-set -a
-source .env.live
-set +a
+export PRODUCT_GROWTH_PROFILE=openclaw-web
+```
+
+For a repo checkout that should default to one business, put only the selector in ignored `.env.local`:
+
+```bash
+PRODUCT_GROWTH_PROFILE=openclaw-web
+```
+
+The CLI first reads `PRODUCT_GROWTH_PROFILE` / `PRODUCT_GROWTH_PROFILE_ROOT` from repo-local `.env.local` / `.env`, then loads `~/.config/product-growth-tools/profiles/$PRODUCT_GROWTH_PROFILE/.env`, then loads repo-local `.env.local` / `.env` as fallback values. Existing process env values always win.
+
+For tests or custom layouts, override the profile root:
+
+```bash
+export PRODUCT_GROWTH_PROFILE_ROOT=/path/to/product-growth-profiles
 ```
 
 ## Google Search Console
@@ -51,10 +63,10 @@ Basic provider truth:
 
 ```bash
 bun run gsc property dataset sites
-bun run gsc search dataset analytics --start-date 2026-04-01 --end-date 2026-04-07 --dimensions "query,page" --row-limit 10
+bun run gsc search dataset analytics --start-date 2026-04-01 --end-date 2026-04-07 --dimensions "query,page" --rowLimit 10
 ```
 
-If `GSC_SITE_URL` is not set in `.env.live`, pass `--site-url` explicitly.
+If `GSC_SITE_URL` is not set in the active profile, pass `--site-url` explicitly.
 
 ## Google Ads
 

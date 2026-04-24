@@ -5,7 +5,6 @@
  */
 
 import { inspect } from "node:util";
-import type { CliContext } from "./client";
 import { normalizeCliError } from "./lib/errors";
 
 export type Output<T> =
@@ -40,7 +39,7 @@ function resolveHumanLines<T>(data: T, human?: HumanLines<T>) {
   return typeof human === "function" ? human(data) : human;
 }
 
-export function createOutputService(context: CliContext): OutputService {
+export function createOutputService(context: { pretty?: boolean }): OutputService {
   const pretty = context.pretty ?? false;
 
   return {

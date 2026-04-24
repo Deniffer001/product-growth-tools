@@ -27,8 +27,8 @@ bunx @deniffer/sitemap-watch-cli --schema
 ## Live Validation
 
 Real provider credentials must stay local and gitignored. Use
-[docs/live-validation.md](docs/live-validation.md) and `.env.live.example` to
-copy an existing app's provider credentials into a local live profile.
+[docs/live-validation.md](docs/live-validation.md) and `profile.env.example` to
+copy an existing app's provider credentials into a business profile.
 
 ## Boundary
 

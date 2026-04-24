@@ -4,7 +4,7 @@
  * @pos client resolution tests for Google Ads CLI
  */
 
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, test } from "vitest";
@@ -12,13 +12,16 @@ import { createCliContext, loadDefaultCliEnv } from "./client";
 
 describe("google-ads client resolution", () => {
   afterEach(() => {
-    process.env.GOOGLE_ADS_JSON_KEY_FILE_PATH = undefined;
-    process.env.GOOGLE_APPLICATION_CREDENTIALS = undefined;
-    process.env.GOOGLE_ADS_SERVICE_ACCOUNT_JSON = undefined;
-    process.env.GOOGLE_ADS_CUSTOMER_ID = undefined;
-    process.env.GOOGLE_ADS_LOGIN_CUSTOMER_ID = undefined;
-    process.env.GOOGLE_ADS_LINKED_CUSTOMER_ID = undefined;
-    process.env.INIT_CWD = undefined;
+    delete process.env.PRODUCT_GROWTH_PROFILE;
+    delete process.env.PRODUCT_GROWTH_PROFILE_DIR;
+    delete process.env.PRODUCT_GROWTH_PROFILE_ROOT;
+    delete process.env.GOOGLE_ADS_JSON_KEY_FILE_PATH;
+    delete process.env.GOOGLE_APPLICATION_CREDENTIALS;
+    delete process.env.GOOGLE_ADS_SERVICE_ACCOUNT_JSON;
+    delete process.env.GOOGLE_ADS_CUSTOMER_ID;
+    delete process.env.GOOGLE_ADS_LOGIN_CUSTOMER_ID;
+    delete process.env.GOOGLE_ADS_LINKED_CUSTOMER_ID;
+    delete process.env.INIT_CWD;
   });
 
   test("prefers explicit credentials file over env default", () => {
@@ -58,6 +61,15 @@ describe("google-ads client resolution", () => {
     );
   });
 
+  test("resolves profile credentials path from profile directory", () => {
+    process.env.PRODUCT_GROWTH_PROFILE_DIR = "/profiles/openclaw-web";
+    process.env.GOOGLE_ADS_JSON_KEY_FILE_PATH = "./credentials/google-ads.json";
+
+    expect(createCliContext({}).credentialsFile).toBe(
+      "/profiles/openclaw-web/credentials/google-ads.json"
+    );
+  });
+
   test("resolves relative credentials path from invocation root", () => {
     process.env.INIT_CWD = "/repo";
 
@@ -81,5 +93,30 @@ describe("google-ads client resolution", () => {
 
     expect(loadedPaths).toEqual([join(root, ".env.local"), join(root, ".env")]);
     rmSync(root, { force: true, recursive: true });
+  });
+
+  test("loads business profile env before invocation env files", () => {
+    const loadedPaths: string[] = [];
+    const root = mkdtempSync(join(tmpdir(), "google-ads-cli-env-"));
+    const profiles = mkdtempSync(join(tmpdir(), "product-growth-profiles-"));
+    const profileDir = join(profiles, "openclaw-web");
+    process.env.INIT_CWD = root;
+    process.env.PRODUCT_GROWTH_PROFILE = "openclaw-web";
+    process.env.PRODUCT_GROWTH_PROFILE_ROOT = profiles;
+    mkdirSync(profileDir);
+    writeFileSync(join(profileDir, ".env"), "GOOGLE_ADS_CUSTOMER_ID=123\n");
+    writeFileSync(join(root, ".env.local"), "GOOGLE_ADS_CUSTOMER_ID=456\n");
+
+    loadDefaultCliEnv((input) => {
+      loadedPaths.push(input.path);
+    });
+
+    expect(loadedPaths).toEqual([
+      join(profileDir, ".env"),
+      join(root, ".env.local"),
+    ]);
+    expect(process.env.PRODUCT_GROWTH_PROFILE_DIR).toBe(profileDir);
+    rmSync(root, { force: true, recursive: true });
+    rmSync(profiles, { force: true, recursive: true });
   });
 });

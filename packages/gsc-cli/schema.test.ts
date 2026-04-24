@@ -137,7 +137,11 @@ describe("gsc cli schema", () => {
       ],
       {
         ...process.env,
+        PRODUCT_GROWTH_PROFILE: "__test_profile_disabled__",
+        PRODUCT_GROWTH_PROFILE_ROOT: "/tmp/product-growth-test-profiles",
+        PRODUCT_GROWTH_PROFILE_DIR: "",
         GOOGLE_APPLICATION_CREDENTIALS: "",
+        GSC_CREDENTIALS_FILE: "",
         GSC_SERVICE_ACCOUNT_JSON: "",
         GSC_SITE_URL: "",
       }
