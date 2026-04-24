@@ -20,6 +20,30 @@ import { CliError, cliError } from "./lib/errors";
 
 export type GoogleAdsRow = Record<string, unknown>;
 
+export type KeywordPlanIdeasProviderInput = {
+  customerId: string;
+  keywords: string[];
+  pageUrl?: string;
+  geoTargetIds: string[];
+  languageId: string;
+  network: string;
+  includeAdultKeywords: boolean;
+  limit: number;
+  loginCustomerId?: string;
+  linkedCustomerId?: string;
+};
+
+export type KeywordPlanHistoricalMetricsProviderInput = {
+  customerId: string;
+  keywords: string[];
+  geoTargetIds: string[];
+  languageId: string;
+  network: string;
+  includeAverageCpc: boolean;
+  loginCustomerId?: string;
+  linkedCustomerId?: string;
+};
+
 export type GoogleAdsClient = {
   listAccessibleCustomers: () => Promise<string[]>;
   runGaql: (input: {
@@ -28,6 +52,12 @@ export type GoogleAdsClient = {
     loginCustomerId?: string;
     linkedCustomerId?: string;
   }) => Promise<GoogleAdsRow[]>;
+  generateKeywordIdeas: (
+    input: KeywordPlanIdeasProviderInput
+  ) => Promise<GoogleAdsRow[]>;
+  generateKeywordHistoricalMetrics: (
+    input: KeywordPlanHistoricalMetricsProviderInput
+  ) => Promise<GoogleAdsRow[]>;
 };
 
 export type CliContext = {
@@ -54,6 +84,14 @@ type ProviderPayload = {
   loginCustomerId?: string;
   linkedCustomerId?: string;
   query?: string;
+  keywords?: string[];
+  pageUrl?: string;
+  geoTargetIds?: string[];
+  languageId?: string;
+  network?: string;
+  includeAdultKeywords?: boolean;
+  includeAverageCpc?: boolean;
+  limit?: number;
 };
 
 type ProviderOutput<T> =
@@ -174,6 +212,14 @@ function createProviderPayload(
     loginCustomerId?: string;
     linkedCustomerId?: string;
     query?: string;
+    keywords?: string[];
+    pageUrl?: string;
+    geoTargetIds?: string[];
+    languageId?: string;
+    network?: string;
+    includeAdultKeywords?: boolean;
+    includeAverageCpc?: boolean;
+    limit?: number;
   }
 ): ProviderPayload {
   const credentialsFile = context.credentialsFile;
@@ -203,6 +249,14 @@ function createProviderPayload(
     loginCustomerId: input?.loginCustomerId ?? context.loginCustomerId,
     linkedCustomerId: input?.linkedCustomerId ?? context.linkedCustomerId,
     query: input?.query,
+    keywords: input?.keywords,
+    pageUrl: input?.pageUrl,
+    geoTargetIds: input?.geoTargetIds,
+    languageId: input?.languageId,
+    network: input?.network,
+    includeAdultKeywords: input?.includeAdultKeywords,
+    includeAverageCpc: input?.includeAverageCpc,
+    limit: input?.limit,
   };
 }
 
@@ -221,7 +275,11 @@ function resolvePythonBin() {
 }
 
 async function runProvider<T>(
-  command: "list-accessible-customers" | "run-gaql",
+  command:
+    | "list-accessible-customers"
+    | "run-gaql"
+    | "generate-keyword-ideas"
+    | "generate-keyword-historical-metrics",
   payload: ProviderPayload
 ) {
   const result = await new Promise<{
@@ -306,6 +364,20 @@ export function createGoogleAdsClient(context: CliContext): GoogleAdsClient {
     async runGaql(input) {
       const data = await runProvider<{ rows: GoogleAdsRow[] }>(
         "run-gaql",
+        createProviderPayload(context, input)
+      );
+      return data.rows;
+    },
+    async generateKeywordIdeas(input) {
+      const data = await runProvider<{ rows: GoogleAdsRow[] }>(
+        "generate-keyword-ideas",
+        createProviderPayload(context, input)
+      );
+      return data.rows;
+    },
+    async generateKeywordHistoricalMetrics(input) {
+      const data = await runProvider<{ rows: GoogleAdsRow[] }>(
+        "generate-keyword-historical-metrics",
         createProviderPayload(context, input)
       );
       return data.rows;

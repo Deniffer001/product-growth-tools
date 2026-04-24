@@ -189,6 +189,59 @@ export const schema = {
       ),
     }
   ),
+  keywordPlan: group(
+    { description: "Keyword Planner datasets" },
+    {
+      dataset: group(
+        { description: "Read Keyword Planner discovery datasets" },
+        {
+          ideas: c
+            .meta({
+              description:
+                "Generate keyword ideas from keyword and/or URL seeds",
+              examples: [
+                'google-ads keywordPlan dataset ideas --customer-id 1234567890 --keywords "ai browser,browser automation" --geo-target-ids "2840" --language-id 1000',
+                'google-ads keywordPlan dataset ideas --page-url https://example.com --geo-target-ids "2840" --language-id 1000 --limit 100',
+              ],
+            })
+            .input(
+              s(
+                object({
+                  customerId: optional(string()),
+                  keywords: optional(string()),
+                  pageUrl: optional(string()),
+                  geoTargetIds: optional(string()),
+                  languageId: optional(string()),
+                  network: optional(string()),
+                  includeAdultKeywords: optional(boolean()),
+                  limit: optional(flexibleNumberSchema),
+                })
+              )
+            ),
+          historicalMetrics: c
+            .meta({
+              description:
+                "Generate historical metrics for an explicit keyword list",
+              examples: [
+                'google-ads keywordPlan dataset historicalMetrics --customer-id 1234567890 --keywords "ai browser,browser automation" --geo-target-ids "2840" --language-id 1000',
+              ],
+            })
+            .input(
+              s(
+                object({
+                  customerId: optional(string()),
+                  keywords: string(),
+                  geoTargetIds: optional(string()),
+                  languageId: optional(string()),
+                  network: optional(string()),
+                  includeAverageCpc: optional(boolean()),
+                })
+              )
+            ),
+        }
+      ),
+    }
+  ),
   query: group(
     { description: "Raw GAQL datasets" },
     {

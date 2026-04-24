@@ -79,6 +79,7 @@ describe("google-ads cli schema", () => {
         "campaign{dataset{performance}}",
         "searchTerm{dataset{performance}}",
         "keyword{dataset{performance}}",
+        "keywordPlan{dataset{ideas,historicalMetrics}}",
         "query{dataset{gaql}}",
       ]);
     }
@@ -146,9 +147,13 @@ describe("google-ads cli schema", () => {
     expect(searchTerm.stdout).toContain("endDate: string");
   });
 
-  test("exposes doctor and keyword datasets", { timeout: 15_000 }, () => {
+  test("exposes doctor, keyword, and keyword-plan datasets", { timeout: 15_000 }, () => {
     const doctor = runCli(["--schema=.doctor.dataset.readiness"]);
     const keyword = runCli(["--schema=.keyword.dataset.performance"]);
+    const keywordPlanIdeas = runCli(["--schema=.keywordPlan.dataset.ideas"]);
+    const keywordPlanHistorical = runCli([
+      "--schema=.keywordPlan.dataset.historicalMetrics",
+    ]);
 
     expect(doctor.status).toBe(0);
     expect(doctor.stdout).toContain("readiness(");
@@ -156,5 +161,70 @@ describe("google-ads cli schema", () => {
     expect(keyword.status).toBe(0);
     expect(keyword.stdout).toContain("performance(");
     expect(keyword.stdout).toContain("startDate: string");
+
+    expect(keywordPlanIdeas.status).toBe(0);
+    expect(keywordPlanIdeas.stdout).toContain("ideas(");
+    expect(keywordPlanIdeas.stdout).toContain("keywords?: string");
+    expect(keywordPlanIdeas.stdout).toContain("pageUrl?: string");
+
+    expect(keywordPlanHistorical.status).toBe(0);
+    expect(keywordPlanHistorical.stdout).toContain("historicalMetrics(");
+    expect(keywordPlanHistorical.stdout).toContain("keywords: string");
   });
+
+  test("exposes keyword planner datasets", { timeout: 15_000 }, () => {
+    const ideas = runCli(["--schema=.keywordPlan.dataset.ideas"]);
+    const historicalMetrics = runCli([
+      "--schema=.keywordPlan.dataset.historicalMetrics",
+    ]);
+
+    expect(ideas.status).toBe(0);
+    expect(ideas.stdout).toContain("ideas(");
+    expect(ideas.stdout).toContain("keywords?: string");
+    expect(ideas.stdout).toContain("pageUrl?: string");
+    expect(ideas.stdout).toContain("geoTargetIds?: string");
+    expect(ideas.stdout).toContain("limit?:");
+
+    expect(historicalMetrics.status).toBe(0);
+    expect(historicalMetrics.stdout).toContain("historicalMetrics(");
+    expect(historicalMetrics.stdout).toContain("keywords: string");
+    expect(historicalMetrics.stdout).toContain("includeAverageCpc?: boolean");
+  });
+
+  test(
+    "accepts keyword planner numeric flags from argv without schema rejection",
+    { timeout: 15_000 },
+    () => {
+      const result = runCli(
+        [
+          "keywordPlan",
+          "dataset",
+          "ideas",
+          "--customer-id",
+          "1234567890",
+          "--keywords",
+          "ai browser",
+          "--language-id",
+          "1000",
+          "--geo-target-ids",
+          "2840",
+          "--limit",
+          "3",
+        ],
+        {
+          ...process.env,
+          GOOGLE_ADS_DEVELOPER_TOKEN: "",
+          GOOGLE_ADS_JSON_KEY_FILE_PATH: "",
+          GOOGLE_APPLICATION_CREDENTIALS: "",
+          GOOGLE_ADS_SERVICE_ACCOUNT_JSON: "",
+        }
+      );
+
+      expect(result.status).toBe(1);
+      expect(result.stdout).not.toContain("Expected number but received");
+      expect(result.stderr).toContain(
+        "Missing Google Ads service account credentials."
+      );
+    }
+  );
 });

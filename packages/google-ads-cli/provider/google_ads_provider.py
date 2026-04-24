@@ -171,6 +171,121 @@ def run_gaql(client: GoogleAdsClient, payload: dict[str, Any]) -> None:
     emit_success({"rows": rows})
 
 
+def get_google_ads_service(client: GoogleAdsClient) -> Any:
+    return client.get_service("GoogleAdsService")
+
+
+def geo_target_paths(client: GoogleAdsClient, geo_target_ids: list[str]) -> list[str]:
+    google_ads_service = get_google_ads_service(client)
+    return [
+        google_ads_service.geo_target_constant_path(str(geo_target_id))
+        for geo_target_id in geo_target_ids
+    ]
+
+
+def language_path(client: GoogleAdsClient, language_id: str) -> str:
+    return get_google_ads_service(client).language_constant_path(str(language_id))
+
+
+def keyword_plan_network(client: GoogleAdsClient, payload: dict[str, Any]) -> Any:
+    network = payload.get("network") or "GOOGLE_SEARCH"
+    enum = client.enums.KeywordPlanNetworkEnum
+    if network == "GOOGLE_SEARCH_AND_PARTNERS":
+        return enum.GOOGLE_SEARCH_AND_PARTNERS
+    return enum.GOOGLE_SEARCH
+
+
+def normalize_keyword_plan_metrics(metrics: Any) -> dict[str, Any] | None:
+    if not metrics:
+        return None
+
+    return normalize_row(metrics)
+
+
+def generate_keyword_ideas(client: GoogleAdsClient, payload: dict[str, Any]) -> None:
+    customer_id = payload.get("customerId")
+    keywords = payload.get("keywords") or []
+    page_url = payload.get("pageUrl")
+
+    if not customer_id:
+        emit_error("invalid_input", "Missing Google Ads customer ID.")
+        raise SystemExit(1)
+
+    if not keywords and not page_url:
+        emit_error(
+            "invalid_input",
+            "At least one of keywords or pageUrl is required for keyword ideas.",
+        )
+        raise SystemExit(1)
+
+    service = client.get_service("KeywordPlanIdeaService")
+    request = client.get_type("GenerateKeywordIdeasRequest")
+    request.customer_id = customer_id
+    request.language = language_path(client, payload.get("languageId") or "1000")
+    request.geo_target_constants.extend(
+        geo_target_paths(client, payload.get("geoTargetIds") or [])
+    )
+    request.include_adult_keywords = bool(payload.get("includeAdultKeywords"))
+    request.keyword_plan_network = keyword_plan_network(client, payload)
+
+    if keywords and page_url:
+        request.keyword_and_url_seed.url = page_url
+        request.keyword_and_url_seed.keywords.extend(keywords)
+    elif keywords:
+        request.keyword_seed.keywords.extend(keywords)
+    else:
+        request.url_seed.url = page_url
+
+    limit = payload.get("limit") or 100
+    rows: list[dict[str, Any]] = []
+    for idea in service.generate_keyword_ideas(request=request):
+        rows.append(
+            {
+                "text": idea.text,
+                "keywordIdeaMetrics": normalize_keyword_plan_metrics(
+                    idea.keyword_idea_metrics
+                ),
+            }
+        )
+        if len(rows) >= limit:
+            break
+
+    emit_success({"rows": rows})
+
+
+def generate_keyword_historical_metrics(
+    client: GoogleAdsClient, payload: dict[str, Any]
+) -> None:
+    customer_id = payload.get("customerId")
+    keywords = payload.get("keywords") or []
+
+    if not customer_id:
+        emit_error("invalid_input", "Missing Google Ads customer ID.")
+        raise SystemExit(1)
+
+    if not keywords:
+        emit_error("invalid_input", "Missing keywords.")
+        raise SystemExit(1)
+
+    service = client.get_service("KeywordPlanIdeaService")
+    request = client.get_type("GenerateKeywordHistoricalMetricsRequest")
+    request.customer_id = customer_id
+    request.keywords.extend(keywords)
+    request.geo_target_constants.extend(
+        geo_target_paths(client, payload.get("geoTargetIds") or [])
+    )
+    request.keyword_plan_network = keyword_plan_network(client, payload)
+    request.language = language_path(client, payload.get("languageId") or "1000")
+
+    if payload.get("includeAverageCpc"):
+        request.historical_metrics_options.include_average_cpc = True
+
+    response = service.generate_keyword_historical_metrics(request=request)
+    rows = [normalize_row(result) for result in response.results]
+
+    emit_success({"rows": rows})
+
+
 def emit_google_ads_error(error: GoogleAdsException) -> None:
     code = "provider_failure"
     hint = None
@@ -223,6 +338,14 @@ def main() -> None:
 
         if command == "run-gaql":
             run_gaql(client, payload)
+            return
+
+        if command == "generate-keyword-ideas":
+            generate_keyword_ideas(client, payload)
+            return
+
+        if command == "generate-keyword-historical-metrics":
+            generate_keyword_historical_metrics(client, payload)
             return
 
         emit_error("unsupported", f"Unsupported provider command: {command}")

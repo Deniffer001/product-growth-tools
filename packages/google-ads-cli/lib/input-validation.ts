@@ -9,6 +9,7 @@ import { cliError } from "./errors";
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const CUSTOMER_ID_RE = /^\d{10}$/;
 const TRAILING_SEMICOLON_RE = /;$/;
+const GOOGLE_ADS_ID_RE = /^\d+$/;
 
 function parseIsoDate(value: string, label: string) {
   if (!ISO_DATE_RE.test(value)) {
@@ -88,6 +89,90 @@ export function validateLimit(value?: number) {
   }
 
   return value;
+}
+
+export function parseCommaSeparatedList(value?: string, label = "value") {
+  if (!value) {
+    return [] as string[];
+  }
+
+  const values = value
+    .split(",")
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+
+  if (values.length === 0) {
+    throw cliError({
+      code: "invalid_input",
+      message: `Invalid ${label}: ${value}`,
+      hint: `${label} must contain at least one non-empty value.`,
+    });
+  }
+
+  return values;
+}
+
+export function validateGoogleAdsIds(value?: string, label = "ids") {
+  const values = parseCommaSeparatedList(value, label);
+
+  for (const entry of values) {
+    if (!GOOGLE_ADS_ID_RE.test(entry)) {
+      throw cliError({
+        code: "invalid_input",
+        message: `Invalid ${label}: ${entry}`,
+        hint: `${label} must be a comma-separated list of numeric Google Ads constant IDs.`,
+      });
+    }
+  }
+
+  return values;
+}
+
+export function validateKeywordPlanNetwork(value?: string) {
+  const network = value ?? "GOOGLE_SEARCH";
+  if (!["GOOGLE_SEARCH", "GOOGLE_SEARCH_AND_PARTNERS"].includes(network)) {
+    throw cliError({
+      code: "invalid_input",
+      message: `Invalid network: ${network}`,
+      hint: "network must be GOOGLE_SEARCH or GOOGLE_SEARCH_AND_PARTNERS.",
+    });
+  }
+
+  return network;
+}
+
+export function validateLanguageId(value?: string) {
+  const languageId = value ?? "1000";
+  if (!GOOGLE_ADS_ID_RE.test(languageId)) {
+    throw cliError({
+      code: "invalid_input",
+      message: `Invalid languageId: ${languageId}`,
+      hint: "languageId must be a numeric Google Ads language constant ID.",
+    });
+  }
+
+  return languageId;
+}
+
+export function validateAbsoluteUrl(value?: string, label = "url") {
+  if (!value) {
+    return value;
+  }
+
+  try {
+    const url = new URL(value);
+    if (url.protocol === "http:" || url.protocol === "https:") {
+      return url.toString();
+    }
+  } catch {
+    // handled below
+  }
+
+  throw cliError({
+    code: "invalid_input",
+    message: `Invalid ${label}: ${value}`,
+    hint: `${label} must be an absolute http(s) URL.`,
+  });
 }
 
 export function validateGaqlQuery(value: string) {

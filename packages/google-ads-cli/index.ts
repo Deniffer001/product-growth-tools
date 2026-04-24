@@ -16,6 +16,10 @@ import { handleCampaignPerformanceDataset } from "./handlers/campaign";
 import { handleCustomerAccountsDataset } from "./handlers/customer";
 import { handleDoctorReadinessDataset } from "./handlers/doctor";
 import { handleKeywordPerformanceDataset } from "./handlers/keyword";
+import {
+  handleKeywordPlanHistoricalMetricsDataset,
+  handleKeywordPlanIdeasDataset,
+} from "./handlers/keyword-plan";
 import { handleGaqlDataset } from "./handlers/query";
 import { handleSearchTermPerformanceDataset } from "./handlers/search-term";
 import {
@@ -117,6 +121,12 @@ await app.run({
     keyword: {
       dataset: {
         performance: handleKeywordPerformanceDataset,
+      },
+    },
+    keywordPlan: {
+      dataset: {
+        historicalMetrics: handleKeywordPlanHistoricalMetricsDataset,
+        ideas: handleKeywordPlanIdeasDataset,
       },
     },
     query: {
