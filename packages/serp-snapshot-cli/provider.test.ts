@@ -34,6 +34,12 @@ describe("serp-snapshot provider", () => {
                       check_url: "https://www.google.com/search?q=typeless",
                       items: [
                         {
+                          type: "ai_overview",
+                          rank_group: 1,
+                          title: "AI overview",
+                          description: "A generated overview.",
+                        },
+                        {
                           type: "organic",
                           rank_group: 1,
                           title: "Typeless Alternatives",
@@ -81,12 +87,27 @@ describe("serp-snapshot provider", () => {
         os: "macos",
         provider: "dataforseo",
         checkUrl: "https://www.google.com/search?q=typeless",
-        resultCount: 2,
+        resultCount: 3,
+        organicResultCount: 1,
+        serpFeatureCount: 2,
       })
     );
     expect(result.features.peopleAlsoAsk).toBe(true);
     expect(result.features.featuredSnippet).toBe(true);
-    expect(result.results[0]).toEqual(
+    expect(result.features.aiOverview).toBe("present");
+    expect(result.organicResults).toHaveLength(1);
+    expect(result.serpFeatures).toEqual([
+      expect.objectContaining({
+        type: "ai_overview",
+        title: "AI overview",
+        snippet: "A generated overview.",
+      }),
+      expect.objectContaining({
+        type: "featured_snippet",
+        title: "Best voice typing app",
+      }),
+    ]);
+    expect(result.organicResults[0]).toEqual(
       expect.objectContaining({
         rank: 1,
         type: "organic",
@@ -94,6 +115,11 @@ describe("serp-snapshot provider", () => {
         resultClass: "directory",
       })
     );
+    expect(result.results.map((entry) => entry.type)).toEqual([
+      "ai_overview",
+      "organic",
+      "featured_snippet",
+    ]);
     expect(result.raw.providerTaskId).toBe("task-1");
     expect(result.capturedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
   });

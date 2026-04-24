@@ -20,6 +20,15 @@ export type SerpSnapshotResult = {
   resultClass: "competitor" | "directory" | "forum" | "publisher" | "owned" | "unknown";
 };
 
+export type SerpFeatureItem = {
+  rank: number | null;
+  type: string;
+  title: string | null;
+  url: string | null;
+  domain: string | null;
+  snippet: string | null;
+};
+
 export type SerpSnapshot = {
   query: string;
   engine: "google";
@@ -41,6 +50,10 @@ export type SerpSnapshot = {
     aiOverview: SerpFeatureState;
   };
   resultCount: number;
+  organicResultCount: number;
+  serpFeatureCount: number;
+  organicResults: SerpSnapshotResult[];
+  serpFeatures: SerpFeatureItem[];
   results: SerpSnapshotResult[];
   raw: {
     providerTaskId: string | null;
@@ -229,7 +242,16 @@ function normalizeDataForSeoSnapshot(
 ): SerpSnapshot {
   const result = task.result?.[0];
   const items = Array.isArray(result?.items) ? result.items : [];
-  const results = items.flatMap(normalizeItem);
+  const normalizedItems = items.flatMap(normalizeItem);
+  const organicResults = normalizedItems.flatMap((item) =>
+    item.kind === "organic" ? [item.result] : []
+  );
+  const serpFeatures = normalizedItems.flatMap((item) =>
+    item.kind === "feature" ? [item.feature] : []
+  );
+  const results = normalizedItems.map((item) =>
+    item.kind === "organic" ? item.result : featureToResult(item.feature)
+  );
 
   return {
     query: result?.keyword ?? request.query,
@@ -244,6 +266,10 @@ function normalizeDataForSeoSnapshot(
     checkUrl: normalizeString(result?.check_url),
     features: detectFeatures(items),
     resultCount: results.length,
+    organicResultCount: organicResults.length,
+    serpFeatureCount: serpFeatures.length,
+    organicResults,
+    serpFeatures,
     results,
     raw: {
       providerTaskId: task.id ?? null,
@@ -252,7 +278,11 @@ function normalizeDataForSeoSnapshot(
   };
 }
 
-function normalizeItem(item: unknown): SerpSnapshotResult[] {
+type NormalizedItem =
+  | { kind: "organic"; result: SerpSnapshotResult }
+  | { kind: "feature"; feature: SerpFeatureItem };
+
+function normalizeItem(item: unknown): NormalizedItem[] {
   if (!item || typeof item !== "object" || Array.isArray(item)) {
     return [];
   }
@@ -262,6 +292,30 @@ function normalizeItem(item: unknown): SerpSnapshotResult[] {
     return [];
   }
 
+  const normalized = normalizeResultLikeItem(item, type);
+  if (isOrganicResultType(type)) {
+    return [{ kind: "organic", result: normalized }];
+  }
+
+  return [
+    {
+      kind: "feature",
+      feature: {
+        rank: normalized.rank,
+        type: normalized.type,
+        title: normalized.title,
+        url: normalized.url,
+        domain: normalized.domain,
+        snippet: normalized.snippet,
+      },
+    },
+  ];
+}
+
+function normalizeResultLikeItem(
+  item: object,
+  type: string
+): SerpSnapshotResult {
   const url = normalizeString(
     Reflect.get(item, "url") ?? Reflect.get(item, "link")
   );
@@ -270,24 +324,34 @@ function normalizeItem(item: unknown): SerpSnapshotResult[] {
     url
   );
 
-  return [
-    {
-      rank: normalizeNumber(
-        Reflect.get(item, "rank_group") ?? Reflect.get(item, "rank_absolute")
-      ),
-      type,
-      title: normalizeString(Reflect.get(item, "title")),
-      url,
-      domain,
-      snippet: normalizeString(
-        Reflect.get(item, "description") ?? Reflect.get(item, "snippet")
-      ),
-      displayedUrl: normalizeString(
-        Reflect.get(item, "breadcrumb") ?? Reflect.get(item, "displayed_url")
-      ),
-      resultClass: classifyResult(domain),
-    },
-  ];
+  return {
+    rank: normalizeNumber(
+      Reflect.get(item, "rank_group") ?? Reflect.get(item, "rank_absolute")
+    ),
+    type,
+    title: normalizeString(Reflect.get(item, "title")),
+    url,
+    domain,
+    snippet: normalizeString(
+      Reflect.get(item, "description") ?? Reflect.get(item, "snippet")
+    ),
+    displayedUrl: normalizeString(
+      Reflect.get(item, "breadcrumb") ?? Reflect.get(item, "displayed_url")
+    ),
+    resultClass: classifyResult(domain),
+  };
+}
+
+function isOrganicResultType(type: string) {
+  return type === "organic" || type === "paid";
+}
+
+function featureToResult(feature: SerpFeatureItem): SerpSnapshotResult {
+  return {
+    ...feature,
+    displayedUrl: null,
+    resultClass: classifyResult(feature.domain),
+  };
 }
 
 function detectFeatures(items: unknown[]) {
