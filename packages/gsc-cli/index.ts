@@ -5,7 +5,13 @@
  * @pos app-owned SEO CLI entry point for agent consumers
  */
 
-import { cli, generateSchema, generateSchemaOutline, parseArgv } from "argc";
+import {
+  cli,
+  generateSchema,
+  generateSchemaOutline,
+  parseArgv,
+  selectSchema,
+} from "argc";
 import {
   createCliContext,
   loadDefaultCliEnv,
@@ -24,11 +30,6 @@ import {
   handleSkillPath,
   handleSkillPrint,
 } from "./handlers/skill";
-import {
-  buildSchemaSubset,
-  matchSchemaSelector,
-  parseSchemaSelector,
-} from "./lib/schema-selector";
 import { cliOptions, schema } from "./schema";
 
 const parsedArgv = parseArgv(process.argv.slice(2));
@@ -55,9 +56,8 @@ function maybeHandleExpandedSchemaSelector() {
   }
 
   try {
-    const steps = parseSchemaSelector(selectorValue);
-    const matches = matchSchemaSelector(schema, steps);
-    const subset = buildSchemaSubset(schema, matches, 2);
+    const selected = selectSchema(schema, selectorValue, { depth: 2 });
+    const subset = selected.schema;
     const schemaOutput = generateSchema(subset, {
       name: cliOptions.name,
       description: cliOptions.description,

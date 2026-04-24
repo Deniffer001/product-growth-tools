@@ -28,7 +28,6 @@ lib/
   errors.ts: shared machine-classified CLI error contract and helpers
   input-validation.ts: shared input validators and normalizers for provider calls
   reporting.ts: shared GAQL builders for stable reporting datasets
-  schema-selector.ts: local schema selector compatibility layer for focused schema discovery
 
 运行约定
 - provider-only: 只暴露 Google Ads 官方只读数据，不在此处增加存储、报表、归因解释或业务决策

@@ -24,7 +24,6 @@ lib/
   errors.test.ts: error normalization coverage
   input-validation.ts: shared validators for registry paths, URLs, and timestamps
   input-validation.test.ts: registry path resolution and scalar validation coverage
-  schema-selector.ts: local schema selector compatibility layer for focused schema discovery
 
 运行约定
 - provider-adjacent: 只暴露 competitor sitemap 当前快照，不在此处增加历史存储、diff、insight、routing 或执行动作

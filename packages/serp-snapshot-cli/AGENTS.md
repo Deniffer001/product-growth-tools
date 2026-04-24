@@ -6,7 +6,7 @@
 - `schema.ts`: schema-first command contract and global flags.
 - `provider.ts`: DataForSEO Google Organic SERP adapter plus normalization.
 - `handlers/`: command handlers for `doctor`, single query, and batch reads.
-- `lib/`: validation, errors, profile env loading, and schema selector helpers.
+- `lib/`: validation, errors, and profile env loading helpers.
 
 ## Boundary
 

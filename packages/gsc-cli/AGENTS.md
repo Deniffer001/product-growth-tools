@@ -25,7 +25,6 @@ lib/
   command-support.ts: shared command wrapper for stable error rendering
   errors.ts: shared machine-classified CLI error contract and helpers
   input-validation.ts: shared input validators and normalizers for provider calls
-  schema-selector.ts: local schema selector compatibility layer for focused schema discovery
   search-analytics.ts: request parsing and filter normalization helpers
 skills/
   gsc-cli/SKILL.md: agent-facing usage protocol for safe GSC provider reads

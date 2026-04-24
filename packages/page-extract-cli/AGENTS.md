@@ -12,7 +12,6 @@ Agent-facing page fetch and content extraction CLI for SEO and GEO workflows.
 - `output.ts`: JSON-first output boundary
 - `lib/input-validation.ts`: URL/provider validation
 - `lib/errors.ts`: stable error normalization
-- `lib/schema-selector.ts`: focused schema discovery helper
 
 ## Boundary
 

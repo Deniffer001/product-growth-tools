@@ -22,7 +22,7 @@
       "dependencies": {
         "@standard-schema/spec": "^1.0.0",
         "@valibot/to-json-schema": "^1.6.0",
-        "argc": "github:ethan-huo/argc",
+        "argc": "^0.1.1",
         "dotenv": "^17.2.2",
         "valibot": "^1.2.0",
       },
@@ -44,7 +44,7 @@
       "dependencies": {
         "@standard-schema/spec": "^1.0.0",
         "@valibot/to-json-schema": "^1.6.0",
-        "argc": "github:ethan-huo/argc",
+        "argc": "^0.1.1",
         "dotenv": "^17.2.2",
         "googleapis": "^166.0.0",
         "valibot": "^1.2.0",
@@ -67,7 +67,7 @@
       "dependencies": {
         "@standard-schema/spec": "^1.0.0",
         "@valibot/to-json-schema": "^1.6.0",
-        "argc": "github:ethan-huo/argc",
+        "argc": "^0.1.1",
         "valibot": "^1.2.0",
       },
       "devDependencies": {
@@ -88,7 +88,7 @@
       "dependencies": {
         "@standard-schema/spec": "^1.0.0",
         "@valibot/to-json-schema": "^1.6.0",
-        "argc": "github:ethan-huo/argc",
+        "argc": "^0.1.1",
         "dotenv": "^17.2.2",
         "valibot": "^1.2.0",
       },
@@ -104,13 +104,13 @@
       "name": "@deniffer/sitemap-watch-cli",
       "version": "0.1.2",
       "bin": {
-        "sitemap-watch": "./index.ts",
-        "sitemap-watch-cli": "./index.ts",
+        "sitemap-watch": "bin/sitemap-watch-cli.js",
+        "sitemap-watch-cli": "bin/sitemap-watch-cli.js",
       },
       "dependencies": {
         "@standard-schema/spec": "^1.0.0",
         "@valibot/to-json-schema": "^1.6.0",
-        "argc": "github:ethan-huo/argc",
+        "argc": "^0.1.1",
         "fast-xml-parser": "^5.3.0",
         "valibot": "^1.2.0",
       },
@@ -127,7 +127,7 @@
     "@types/bun": "^1.3.10",
     "@types/node": "^25.6.0",
     "@valibot/to-json-schema": "^1.6.0",
-    "argc": "github:ethan-huo/argc",
+    "argc": "^0.1.1",
     "bun-types": "^1.3.13",
     "dotenv": "^17.2.2",
     "typescript": "^5",
@@ -223,7 +223,7 @@
 
     "agent-base": ["agent-base@7.1.4", "", {}, "sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ=="],
 
-    "argc": ["argc@github:ethan-huo/argc#a4910da", { "peerDependencies": { "@standard-schema/spec": "^1.0.0" } }, "ethan-huo-argc-a4910da", "sha512-v7oiXLgGDYGD2Q/sEy7BBCY4S9RrUCV7sjA1xRaEml5taWa8abO2mlwHGyr2z38gtzEC/gIj4UFFGRklWO8MgA=="],
+    "argc": ["argc@0.1.1", "", {}, "sha512-Nv1PUrvwahIZUAHk3ZB5zZqEaKYKL76DDX8DqZOZMtNnuWDlSxPmQ5mSVGS/w/Puiib/nEHKAC3h1tpe2QrneA=="],
 
     "assertion-error": ["assertion-error@2.0.1", "", {}, "sha512-Izi8RQcffqCeNVgFigKli1ssklIbpHnCYc6AknXGYoB6grJqyeby7jv12JUQgmTAnIDnbck1uxksT4dzN3PWBA=="],
 
@@ -412,7 +412,5 @@
     "web-streams-polyfill": ["web-streams-polyfill@3.3.3", "", {}, "sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw=="],
 
     "why-is-node-running": ["why-is-node-running@2.3.0", "", { "dependencies": { "siginfo": "^2.0.0", "stackback": "0.0.2" }, "bin": { "why-is-node-running": "cli.js" } }, "sha512-hUrmaWBdVDcxvYqnyh09zunKzROWjbZTiNy8dBEjkS7ehEDQibXJ7XvlmtbwuTclUiIyN+CyXQD4Vmko8fNm8w=="],
-
-    "@deniffer/serp-snapshot-cli/argc": ["argc@github:ethan-huo/argc#930ca15", { "peerDependencies": { "@standard-schema/spec": "^1.0.0" } }, "ethan-huo-argc-930ca15", "sha512-nQZwuzmjoWry1yG41CAUcD7kGIfy9bX/nvlFFzHDczlbtuz40Thae2d8NEiCWnrU6zqU0Cyxv7DQ3+kqpQf/DA=="],
   }
 }
