@@ -9,5 +9,5 @@
     "skipLibCheck": true,
     "types": ["node", "bun-types"]
   },
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts", "../../types/**/*.d.ts"]
 }
