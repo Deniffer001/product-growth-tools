@@ -5,7 +5,7 @@
  */
 
 import { toStandardJsonSchema } from "@valibot/to-json-schema";
-import { c, group } from "argc";
+import { c, group } from "./lib/argc/index";
 import {
   boolean,
   literal,
@@ -283,7 +283,7 @@ export const schema = {
 
 export const cliOptions = {
   name: cliName,
-  version: "0.1.0",
+  version: "0.1.4",
   description: "Agent-friendly Google Search Console CLI",
   globals: globalsSchema,
   schemaMaxLines: 24,

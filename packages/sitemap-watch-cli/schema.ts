@@ -5,7 +5,7 @@
  */
 
 import { toStandardJsonSchema } from "@valibot/to-json-schema";
-import { c, group } from "argc";
+import { c, group } from "./lib/argc/index";
 import { boolean, object, optional, string } from "valibot";
 
 const s = toStandardJsonSchema;
@@ -100,7 +100,7 @@ export const schema = {
 
 export const cliOptions = {
   name: cliName,
-  version: "0.1.0",
+  version: "0.1.4",
   description: "Agent-friendly competitor sitemap snapshot CLI",
   globals: globalsSchema,
   schemaMaxLines: 24,

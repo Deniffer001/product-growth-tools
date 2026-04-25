@@ -46,7 +46,7 @@ jobs:
         run: bun run check-types
 
       - name: Test
-        run: bun test
+        run: bun run test
 
       - name: Pack packages
         shell: bash
