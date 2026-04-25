@@ -11,7 +11,7 @@ import {
   generateSchemaOutline,
   parseArgv,
   selectSchema,
-} from "./lib/argc/index";
+} from "argc";
 import { createCliContext } from "./context";
 import { handlePageEntityExtract } from "./handlers/page";
 import { cliOptions, schema } from "./schema";

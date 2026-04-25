@@ -1,6 +1,6 @@
 {
   "name": "@deniffer/page-extract-cli",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Page fetch and content extraction CLI for SEO and GEO workflows.",
   "type": "module",
   "sideEffects": false,
@@ -39,6 +39,7 @@
   "dependencies": {
     "@standard-schema/spec": "^1.0.0",
     "@valibot/to-json-schema": "^1.6.0",
+    "argc": "github:ethan-huo/argc",
     "valibot": "^1.2.0"
   },
   "devDependencies": {
