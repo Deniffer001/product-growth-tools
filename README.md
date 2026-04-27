@@ -36,6 +36,29 @@ bunx @deniffer/serp-snapshot-cli --schema
 bunx @deniffer/sitemap-watch-cli --schema
 ```
 
+## PostHog
+
+`@deniffer/posthog-cli` is a provider-only product analytics CLI for agent workflows. It returns JSON and leaves reports, storage, and product decisions to the consuming Growth repo or workflow layer.
+
+```bash
+bunx @deniffer/posthog-cli doctor dataset readiness
+bunx @deniffer/posthog-cli project dataset event-definitions
+bunx @deniffer/posthog-cli event dataset map --window 3d --limit 500
+bunx @deniffer/posthog-cli event dataset counts --window 3d --limit 200
+bunx @deniffer/posthog-cli funnel analyze --window 3d --events auth.signup,onboarding.started,purchase.completed
+bunx @deniffer/posthog-cli audit dataset instrumentation --window 3d --events auth.signup,purchase.completed
+```
+
+With a product-growth profile, funnel presets can live in `~/.config/product-growth-tools/profiles/<business>/posthog.funnels.json`:
+
+```bash
+PRODUCT_GROWTH_PROFILE=openclaw-web bunx @deniffer/posthog-cli profile validate
+PRODUCT_GROWTH_PROFILE=openclaw-web bunx @deniffer/posthog-cli funnel analyze --window 3d --preset signup_to_paid
+PRODUCT_GROWTH_PROFILE=openclaw-web bunx @deniffer/posthog-cli audit dataset instrumentation --window 3d --preset signup_to_paid
+```
+
+Use `--from YYYY-MM-DD --to YYYY-MM-DD` instead of `--window` for calendar-range reads.
+
 ## Live Validation
 
 Real provider credentials must stay local and gitignored. Use

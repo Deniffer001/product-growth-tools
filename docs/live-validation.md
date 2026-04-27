@@ -29,6 +29,7 @@ Recommended profile filenames:
 ```text
 ~/.config/product-growth-tools/profiles/openclaw-web/credentials/gsc.json
 ~/.config/product-growth-tools/profiles/openclaw-web/credentials/google-ads.json
+~/.config/product-growth-tools/profiles/openclaw-web/posthog.funnels.json
 ```
 
 Set the profile name when running provider reads:
@@ -107,6 +108,34 @@ Basic provider truth:
 ```bash
 bun run serp-snapshot query dataset results --query "typeless alternative for mac" --country US --language en --device desktop --os macos --depth 20
 ```
+
+## PostHog
+
+Set `POSTHOG_API_TOKEN`, `POSTHOG_HOST`, and `POSTHOG_PROJECT_ID` in the active profile. Use a PostHog personal API key with access to the target project.
+
+Readiness and profile artifact validation:
+
+```bash
+bun run posthog doctor dataset readiness
+bun run posthog profile validate
+```
+
+Discovery before funnel analysis:
+
+```bash
+bun run posthog project dataset event-definitions
+bun run posthog event dataset map --window 3d --limit 500
+bun run posthog event dataset counts --window 3d --limit 200
+```
+
+Funnel and instrumentation audit:
+
+```bash
+bun run posthog funnel analyze --window 3d --preset signup_to_paid
+bun run posthog audit dataset instrumentation --window 3d --preset signup_to_paid
+```
+
+Use `--from YYYY-MM-DD --to YYYY-MM-DD` for calendar-range reads. Treat PostHog monetization events as telemetry; reconcile paid conclusions with billing/backend truth.
 
 ## Backlink
 
