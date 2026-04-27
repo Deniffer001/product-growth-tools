@@ -31,6 +31,7 @@
     "check-types": "bun run --filter '*' check-types",
     "test": "bun run --filter '*' test:once",
     "sync:runtime": "bun run ./scripts/sync-product-growth-runtime.ts",
+    "backlink": "bun run --filter @deniffer/backlink-cli cli",
     "gsc": "bun run --filter @deniffer/gsc-cli cli",
     "google-ads": "bun run --filter @deniffer/google-ads-cli cli",
     "page-extract": "bun run --filter @deniffer/page-extract-cli cli",

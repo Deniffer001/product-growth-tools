@@ -13,6 +13,7 @@ const profileSource = resolve(
   "packages/shared/product-growth-runtime/profile.ts"
 );
 const profileTargets = [
+  "packages/backlink-cli/lib/product-growth-runtime/profile.ts",
   "packages/gsc-cli/lib/product-growth-runtime/profile.ts",
   "packages/google-ads-cli/lib/product-growth-runtime/profile.ts",
 ].map((path) => resolve(repoRoot, path));

@@ -6,7 +6,9 @@ Public CLI tools for product growth, SEO, paid search, and competitor discovery 
 
 - `@deniffer/gsc-cli` - Google Search Console raw-data CLI.
 - `@deniffer/google-ads-cli` - Google Ads raw-data CLI.
+- `@deniffer/backlink-cli` - DataForSEO backlink raw-data CLI.
 - `@deniffer/page-extract-cli` - Page fetch and content extraction CLI.
+- `@deniffer/posthog-cli` - PostHog product analytics raw-data CLI.
 - `@deniffer/serp-snapshot-cli` - Google SERP snapshot CLI.
 - `@deniffer/sitemap-watch-cli` - Competitor sitemap snapshot CLI.
 
@@ -15,7 +17,9 @@ Public CLI tools for product growth, SEO, paid search, and competitor discovery 
 ```bash
 bun add -d @deniffer/gsc-cli
 bun add -d @deniffer/google-ads-cli
+bun add -d @deniffer/backlink-cli
 bun add -d @deniffer/page-extract-cli
+bun add -d @deniffer/posthog-cli
 bun add -d @deniffer/serp-snapshot-cli
 bun add -d @deniffer/sitemap-watch-cli
 ```
@@ -25,7 +29,9 @@ bun add -d @deniffer/sitemap-watch-cli
 ```bash
 bunx @deniffer/gsc-cli --schema
 bunx @deniffer/google-ads-cli --schema
+bunx @deniffer/backlink-cli --schema
 bunx @deniffer/page-extract-cli --schema
+bunx @deniffer/posthog-cli --schema
 bunx @deniffer/serp-snapshot-cli --schema
 bunx @deniffer/sitemap-watch-cli --schema
 ```

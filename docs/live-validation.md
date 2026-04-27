@@ -108,6 +108,25 @@ Basic provider truth:
 bun run serp-snapshot query dataset results --query "typeless alternative for mac" --country US --language en --device desktop --os macos --depth 20
 ```
 
+## Backlink
+
+Set `DATAFORSEO_LOGIN` and `DATAFORSEO_PASSWORD` in the active profile.
+Backlinks API access also requires an active DataForSEO Backlinks subscription.
+
+Readiness:
+
+```bash
+bun run backlink doctor dataset readiness
+```
+
+Basic provider truth:
+
+```bash
+bun run backlink domain dataset summary --target openclawai.io
+bun run backlink domain dataset referringDomains --target openclawai.io --limit 20
+bun run backlink page dataset backlinks --target https://openclawai.io/ --limit 20
+```
+
 ## Sitemap Watch
 
 This CLI does not need provider credentials. Use a local registry file.
