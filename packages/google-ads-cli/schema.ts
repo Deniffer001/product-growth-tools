@@ -84,6 +84,32 @@ export const schema = {
       ),
     }
   ),
+  provider: group(
+    { description: "Python provider runtime actions" },
+    {
+      action: group(
+        { description: "Prepare local provider runtime dependencies" },
+        {
+          install: c
+            .meta({
+              description:
+                "Create the package-managed Python virtual environment and install Google Ads SDK dependencies",
+              examples: [
+                "google-ads provider action install",
+                "google-ads provider action install --python-bin python3.12",
+              ],
+            })
+            .input(
+              s(
+                object({
+                  pythonBin: optional(string()),
+                })
+              )
+            ),
+        }
+      ),
+    }
+  ),
   customer: group(
     { description: "Customer discovery" },
     {
@@ -272,7 +298,7 @@ export const schema = {
 
 export const cliOptions = {
   name: cliName,
-  version: "0.1.5",
+  version: "0.1.6",
   description: "Agent-friendly Google Ads CLI",
   globals: globalsSchema,
   schemaMaxLines: 24,

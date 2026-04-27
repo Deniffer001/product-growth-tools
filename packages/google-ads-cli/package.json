@@ -1,6 +1,6 @@
 {
   "name": "@deniffer/google-ads-cli",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Google Ads raw-data CLI for product growth and paid search workflows.",
   "type": "module",
   "sideEffects": false,
@@ -36,7 +36,7 @@
     "cli": "bun run ./index.ts",
     "cli:schema": "bun run google-ads --schema",
     "check-types": "tsc --noEmit",
-    "provider:install": "python3 -m venv .venv && .venv/bin/python -m pip install -r ./requirements.txt",
+    "provider:install": "bun run ./index.ts provider action install",
     "test": "vitest",
     "test:once": "vitest run"
   },

@@ -26,6 +26,7 @@ import {
   handleKeywordPlanHistoricalMetricsDataset,
   handleKeywordPlanIdeasDataset,
 } from "./handlers/keyword-plan";
+import { handleProviderInstallAction } from "./handlers/provider";
 import { handleGaqlDataset } from "./handlers/query";
 import { handleSearchTermPerformanceDataset } from "./handlers/search-term";
 import { cliOptions, schema } from "./schema";
@@ -127,6 +128,11 @@ await app.run({
       dataset: {
         historicalMetrics: handleKeywordPlanHistoricalMetricsDataset,
         ideas: handleKeywordPlanIdeasDataset,
+      },
+    },
+    provider: {
+      action: {
+        install: handleProviderInstallAction,
       },
     },
     query: {

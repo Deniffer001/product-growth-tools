@@ -75,6 +75,7 @@ describe("google-ads cli schema", () => {
       expect(extractOutline(result.stdout)).toEqual([
         "adGroup{dataset{performance}}",
         "doctor{dataset{readiness}}",
+        "provider{action{install}}",
         "customer{dataset{accounts}}",
         "campaign{dataset{performance}}",
         "searchTerm{dataset{performance}}",
@@ -145,6 +146,14 @@ describe("google-ads cli schema", () => {
     expect(searchTerm.status).toBe(0);
     expect(searchTerm.stdout).toContain("performance(");
     expect(searchTerm.stdout).toContain("endDate: string");
+  });
+
+  test("exposes provider install action", { timeout: 15_000 }, () => {
+    const result = runCli(["--schema=.provider.action.install"]);
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain("install(");
+    expect(result.stdout).toContain("pythonBin?: string");
   });
 
   test("exposes doctor, keyword, and keyword-plan datasets", { timeout: 15_000 }, () => {

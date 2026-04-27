@@ -4,7 +4,7 @@
  * @pos Google Ads auth and provider-process boundary for CLI handlers
  */
 
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -103,9 +103,12 @@ const providerScriptPath = resolve(
   cliDirectory,
   "provider/google_ads_provider.py"
 );
+const providerVenvPath = resolve(cliDirectory, ".venv");
+const providerRequirementsPath = resolve(cliDirectory, "requirements.txt");
 const localPythonCandidates = [
-  resolve(cliDirectory, ".venv/bin/python3"),
-  resolve(cliDirectory, ".venv/bin/python"),
+  resolve(providerVenvPath, "bin/python3"),
+  resolve(providerVenvPath, "bin/python"),
+  resolve(providerVenvPath, "Scripts/python.exe"),
 ];
 
 export function loadDefaultCliEnv(loadEnv: EnvLoader = config) {
@@ -118,6 +121,9 @@ export function getProviderRuntimeState() {
     pythonBin,
     pythonBinResolved: pythonBin === "python3" ? true : existsSync(pythonBin),
     providerScriptPath,
+    providerRequirementsPath,
+    providerVenvPath,
+    googleAdsSdkImportable: canImportGoogleAdsSdk(pythonBin),
   };
 }
 
@@ -272,6 +278,20 @@ function resolvePythonBin() {
   }
 
   return "python3";
+}
+
+function canImportGoogleAdsSdk(pythonBin: string) {
+  const result = spawnSync(
+    pythonBin,
+    ["-c", "import google.ads.googleads"],
+    {
+      cwd: cliDirectory,
+      encoding: "utf8",
+      stdio: "pipe",
+    }
+  );
+
+  return result.status === 0;
 }
 
 async function runProvider<T>(

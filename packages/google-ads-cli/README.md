@@ -10,6 +10,13 @@ bunx @deniffer/google-ads-cli doctor dataset readiness --pretty
 Install the Python provider dependencies before live Google Ads queries:
 
 ```bash
+bunx @deniffer/google-ads-cli provider action install
+```
+
+If you are developing inside this repository, the package script delegates to
+the same public command:
+
+```bash
 bun run provider:install
 ```
 
@@ -28,3 +35,7 @@ GOOGLE_ADS_PROVIDER_PYTHON_BIN=/path/to/python3
 ```
 
 The CLI loads `.env.local` and `.env` from the directory where it is invoked.
+By default the installer creates a package-managed `.venv` and `doctor dataset
+readiness` checks that the Google Ads Python SDK is importable. Set
+`GOOGLE_ADS_PROVIDER_PYTHON_BIN` only when you want to use an external Python
+environment instead of the managed one.

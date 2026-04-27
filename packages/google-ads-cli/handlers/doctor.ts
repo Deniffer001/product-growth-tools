@@ -19,6 +19,7 @@ type DoctorCheck = {
 
 const blockingDoctorKeys = new Set([
   "python_bin",
+  "python_google_ads_sdk",
   "provider_script",
   "developer_token",
   "credentials",
@@ -86,6 +87,14 @@ export async function handleDoctorReadinessDataset(args: {
       key: "python_bin",
       status: buildStatus(runtime.pythonBinResolved),
       summary: runtime.pythonBin,
+    });
+
+    checks.push({
+      key: "python_google_ads_sdk",
+      status: buildStatus(runtime.googleAdsSdkImportable),
+      summary: runtime.googleAdsSdkImportable
+        ? "importable"
+        : "missing; run google-ads provider action install",
     });
 
     checks.push({

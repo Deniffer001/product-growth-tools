@@ -73,7 +73,7 @@ If `GSC_SITE_URL` is not set in the active profile, pass `--site-url` explicitly
 Install the Python provider once:
 
 ```bash
-bun run --filter @deniffer/google-ads-cli provider:install
+bun run google-ads provider action install
 ```
 
 Readiness:
