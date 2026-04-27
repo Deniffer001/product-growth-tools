@@ -34,6 +34,7 @@
     "gsc": "bun run --filter @deniffer/gsc-cli cli",
     "google-ads": "bun run --filter @deniffer/google-ads-cli cli",
     "page-extract": "bun run --filter @deniffer/page-extract-cli cli",
+    "posthog": "bun run --filter @deniffer/posthog-cli cli",
     "serp-snapshot": "bun run --filter @deniffer/serp-snapshot-cli cli",
     "sitemap-watch": "bun run --filter @deniffer/sitemap-watch-cli cli"
   }
