@@ -8,7 +8,7 @@ import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, test } from "vitest";
-import { validateFunnelPresetFile } from "./funnel-presets";
+import { resolveFunnelSelection, validateFunnelPresetFile } from "./funnel-presets";
 import type { CliContext } from "../context";
 
 function contextFor(profileDir: string): CliContext {
@@ -34,10 +34,10 @@ describe("funnel preset validation", () => {
       JSON.stringify({
         version: 1,
         funnels: {
-          signup_to_paid: {
-            description: "Signup to paid",
+          example_funnel: {
+            description: "Example funnel",
             requiresReconciliation: true,
-            events: ["auth.signup", "purchase.completed"],
+            events: ["event.one", "event.two"],
           },
         },
       })
@@ -49,8 +49,8 @@ describe("funnel preset validation", () => {
     expect(result.version).toBe(1);
     expect(result.funnels).toEqual([
       {
-        name: "signup_to_paid",
-        description: "Signup to paid",
+        name: "example_funnel",
+        description: "Example funnel",
         eventCount: 2,
         requiresReconciliation: true,
       },
@@ -61,12 +61,56 @@ describe("funnel preset validation", () => {
     const dir = mkdtempSync(join(tmpdir(), "posthog-profile-"));
     writeFileSync(
       join(dir, "posthog.funnels.json"),
-      JSON.stringify({ funnels: { signup_to_paid: ["auth.signup"] } })
+      JSON.stringify({ funnels: { example_funnel: ["event.one"] } })
     );
 
     const result = validateFunnelPresetFile(contextFor(dir));
 
     expect(result.ok).toBe(false);
     expect(result.errors).toContain("Preset file must set version: 1.");
+  });
+
+  test("does not infer reconciliation for explicit event lists", () => {
+    const selection = resolveFunnelSelection({
+      events: "event.one,event.two",
+      context: contextFor(mkdtempSync(join(tmpdir(), "posthog-profile-"))),
+      parseEvents: (events) => events.split(","),
+    });
+
+    expect(selection).toEqual({
+      source: "events",
+      preset: null,
+      events: ["event.one", "event.two"],
+      requiresReconciliation: false,
+    });
+  });
+
+  test("reads reconciliation metadata from presets", () => {
+    const dir = mkdtempSync(join(tmpdir(), "posthog-profile-"));
+    writeFileSync(
+      join(dir, "posthog.funnels.json"),
+      JSON.stringify({
+        version: 1,
+        funnels: {
+          conversion: {
+            requiresReconciliation: true,
+            events: ["first", "second"],
+          },
+        },
+      })
+    );
+
+    const selection = resolveFunnelSelection({
+      preset: "conversion",
+      context: contextFor(dir),
+      parseEvents: (events) => events.split(","),
+    });
+
+    expect(selection).toEqual({
+      source: "preset",
+      preset: "conversion",
+      events: ["first", "second"],
+      requiresReconciliation: true,
+    });
   });
 });

@@ -13,9 +13,9 @@ posthog project dataset event-definitions
 posthog project dataset property-definitions --type person
 posthog event dataset counts --window 3d --limit 200
 posthog event dataset map --window 3d --limit 500
-posthog funnel analyze --window 3d --events auth.signup,onboarding.started,purchase.completed
-posthog funnel analyze --window 3d --preset signup_to_paid
-posthog audit dataset instrumentation --window 3d --preset signup_to_paid
+posthog funnel analyze --window 3d --events event.one,event.two,event.three
+posthog funnel analyze --window 3d --preset example_funnel
+posthog audit dataset instrumentation --window 3d --preset example_funnel
 posthog feature-flag dataset flags
 posthog insight dataset insights --limit 20
 posthog insight dataset insights --limit 5 --raw

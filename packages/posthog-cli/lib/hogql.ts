@@ -22,7 +22,7 @@ export function eventInList(events: string[]) {
     throw cliError({
       code: "invalid_input",
       message: "At least one event is required.",
-      hint: "Pass a comma-separated --events list, for example auth.signup,purchase.completed.",
+      hint: "Pass a comma-separated --events list, for example event.one,event.two.",
     });
   }
 

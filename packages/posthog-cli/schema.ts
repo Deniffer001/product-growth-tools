@@ -140,8 +140,8 @@ export const schema = {
                 "Count observed events and distinct users in a time window for event discovery and funnel planning",
               examples: [
                 "posthog event dataset counts --window 3d --limit 200",
-                "posthog event dataset counts --window 3d --q onboarding",
-                "posthog event dataset counts --events auth.signup,purchase.completed",
+                "posthog event dataset counts --window 3d --q checkout",
+                "posthog event dataset counts --events event.one,event.two",
               ],
             })
             .input(
@@ -189,8 +189,8 @@ export const schema = {
           description:
             "Analyze an ordered event funnel without hand-writing HogQL; pass --events directly or --preset from the active profile",
           examples: [
-            "posthog funnel analyze --window 3d --events auth.signup,onboarding.started,purchase.completed",
-            "PRODUCT_GROWTH_PROFILE=openclaw-web posthog funnel analyze --window 3d --preset signup_to_paid",
+            "posthog funnel analyze --window 3d --events event.one,event.two,event.three",
+            "PRODUCT_GROWTH_PROFILE=my-product posthog funnel analyze --window 3d --preset example_funnel",
           ],
         })
         .input(
@@ -217,8 +217,8 @@ export const schema = {
               description:
                 "Check whether event definitions and observed traffic can support a requested funnel analysis",
               examples: [
-                "posthog audit dataset instrumentation --window 3d --preset signup_to_paid",
-                "posthog audit dataset instrumentation --from 2026-04-24 --to 2026-04-27 --events auth.signup,purchase.completed",
+                "posthog audit dataset instrumentation --window 3d --preset example_funnel",
+                "posthog audit dataset instrumentation --from 2026-04-24 --to 2026-04-27 --events event.one,event.two",
               ],
             })
             .input(
@@ -244,7 +244,7 @@ export const schema = {
           description:
             "Validate non-secret PostHog profile artifacts such as posthog.funnels.json",
           examples: [
-            "PRODUCT_GROWTH_PROFILE=openclaw-web posthog profile validate",
+            "PRODUCT_GROWTH_PROFILE=my-product posthog profile validate",
           ],
         })
         .input(s(object({}))),

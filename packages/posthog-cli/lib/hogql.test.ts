@@ -9,10 +9,10 @@ import { eventInList, parseCsvList, quoteHogqlString } from "./hogql";
 
 describe("hogql helpers", () => {
   test("parses compact CSV event lists", () => {
-    expect(parseCsvList(" auth.signup, onboarding.started ,, purchase.completed ")).toEqual([
-      "auth.signup",
-      "onboarding.started",
-      "purchase.completed",
+    expect(parseCsvList(" event.one, event.two ,, event.three ")).toEqual([
+      "event.one",
+      "event.two",
+      "event.three",
     ]);
   });
 
@@ -21,8 +21,8 @@ describe("hogql helpers", () => {
   });
 
   test("builds event IN fragments", () => {
-    expect(eventInList(["auth.signup", "purchase.completed"])).toBe(
-      "'auth.signup','purchase.completed'"
+    expect(eventInList(["event.one", "event.two"])).toBe(
+      "'event.one','event.two'"
     );
   });
 });

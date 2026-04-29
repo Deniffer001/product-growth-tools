@@ -66,7 +66,46 @@ export function resolveFunnelEvents(input: {
   throw cliError({
     code: "invalid_input",
     message: "Missing funnel events.",
-    hint: "Pass --events auth.signup,purchase.completed or --preset <name>.",
+    hint: "Pass --events event.one,event.two or --preset <name>.",
+  });
+}
+
+export function resolveFunnelSelection(input: {
+  events?: string;
+  preset?: string;
+  context: CliContext;
+  parseEvents: (events: string) => string[];
+}) {
+  if (input.events && input.preset) {
+    throw cliError({
+      code: "invalid_input",
+      message: "Use either --events or --preset, not both.",
+    });
+  }
+
+  if (input.events) {
+    return {
+      source: "events" as const,
+      preset: null,
+      events: input.parseEvents(input.events),
+      requiresReconciliation: false,
+    };
+  }
+
+  if (input.preset) {
+    const preset = readFunnelPreset(input.preset, input.context);
+    return {
+      source: "preset" as const,
+      preset: input.preset,
+      events: preset.events,
+      requiresReconciliation: preset.requiresReconciliation ?? false,
+    };
+  }
+
+  throw cliError({
+    code: "invalid_input",
+    message: "Missing funnel events.",
+    hint: "Pass --events event.one,event.two or --preset <name>.",
   });
 }
 

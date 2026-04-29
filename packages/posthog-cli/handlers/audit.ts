@@ -1,12 +1,12 @@
 /**
  * @input funnel preset or event list plus PostHog metadata and traffic reads
- * @output instrumentation support report for a requested analysis
- * @pos validates whether telemetry can support a funnel before interpreting it
+ * @output instrumentation support report for a requested funnel
+ * @pos validates whether PostHog event definitions and traffic support a funnel
  */
 
 import type { CliContext } from "../context";
 import { runCliCommand } from "../lib/command-support";
-import { resolveFunnelEvents } from "../lib/funnel-presets";
+import { resolveFunnelSelection } from "../lib/funnel-presets";
 import { eventInList, parseCsvList } from "../lib/hogql";
 import { resolveTimeRange, type TimeRangeInput } from "../lib/time-range";
 import { buildFunnelQuery } from "./funnel";
@@ -32,11 +32,12 @@ export async function handleAuditDatasetInstrumentation(args: {
   context: CliContext;
 }) {
   await runCliCommand(args.context, async (services) => {
-    const events = resolveFunnelEvents({
+    const selection = resolveFunnelSelection({
       ...args.input,
       context: args.context,
       parseEvents: parseCsvList,
     });
+    const events = selection.events;
     const timeRange = resolveTimeRange(args.input);
     const client = services.getPostHogClient();
 
@@ -85,10 +86,6 @@ export async function handleAuditDatasetInstrumentation(args: {
     const funnelBreaks = checks
       .filter((check, index) => index > 0 && check.observedUsers > 0 && check.funnelUsers === 0)
       .map((check) => check.event);
-    const reconciliationRequired = events.some((event) =>
-      /^(purchase|subscribe_success|paywall|billing)\./.test(event)
-    );
-
     services.output.success(
       {
         ok:
@@ -103,10 +100,9 @@ export async function handleAuditDatasetInstrumentation(args: {
         zeroObserved,
         funnelBreaks,
         reconciliation: {
-          required: reconciliationRequired,
-          reason: reconciliationRequired
-            ? "PostHog monetization events are telemetry and should be reconciled with billing/backend truth."
-            : null,
+          required: selection.requiresReconciliation,
+          source: selection.source,
+          preset: selection.preset,
         },
       },
       renderAudit
