@@ -17,6 +17,7 @@ import {
   transform,
   union,
 } from "valibot";
+import { POSTHOG_CLI_VERSION } from "./constants";
 
 const s = toStandardJsonSchema;
 const cliName = "posthog";
@@ -84,6 +85,27 @@ export const schema = {
                   limit: optional(flexibleNumberSchema),
                   noLimitGuard: optional(boolean()),
                   raw: optional(boolean()),
+                })
+              )
+            ),
+        }
+      ),
+      action: group(
+        { description: "Execute query reads into reproducible artifact directories" },
+        {
+          run: c
+            .meta({
+              description:
+                "Run a PostHog query request file and write request, command, stdout, stderr, result, and manifest artifacts",
+              examples: [
+                "posthog query action run --request ./request.json --out ./artifacts/posthog-query",
+              ],
+            })
+            .input(
+              s(
+                object({
+                  request: string(),
+                  out: string(),
                 })
               )
             ),
@@ -324,7 +346,7 @@ export const schema = {
 
 export const cliOptions = {
   name: cliName,
-  version: "0.1.0",
+  version: POSTHOG_CLI_VERSION,
   description: "Agent-friendly PostHog provider CLI",
   globals: globalsSchema,
   schemaMaxLines: 24,

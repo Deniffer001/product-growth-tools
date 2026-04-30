@@ -43,6 +43,7 @@ bunx @deniffer/sitemap-watch-cli --schema
 ```bash
 bunx @deniffer/posthog-cli doctor dataset readiness
 bunx @deniffer/posthog-cli project dataset event-definitions
+bunx @deniffer/posthog-cli query action run --request ./request.json --out ./artifacts/posthog-query
 bunx @deniffer/posthog-cli event dataset map --window 3d --limit 500
 bunx @deniffer/posthog-cli event dataset counts --window 3d --limit 200
 bunx @deniffer/posthog-cli funnel analyze --window 3d --events auth.signup,onboarding.started,purchase.completed
@@ -68,3 +69,5 @@ copy an existing app's provider credentials into a business profile.
 ## Boundary
 
 These CLIs expose provider or provider-adjacent data as JSON. They should stay raw-data-first and avoid owning reports, storage, or product decisions.
+
+Provider CLIs may write reproducible raw artifact directories for upper-layer systems to attach, but they must not write Growth OS ledgers, findings, recommendations, reports, or product decisions.

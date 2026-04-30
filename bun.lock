@@ -102,7 +102,7 @@
     },
     "packages/posthog-cli": {
       "name": "@deniffer/posthog-cli",
-      "version": "0.1.0",
+      "version": "0.1.2",
       "bin": {
         "posthog": "bin/posthog-cli.js",
         "posthog-cli": "bin/posthog-cli.js",

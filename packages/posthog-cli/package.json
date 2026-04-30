@@ -1,6 +1,6 @@
 {
   "name": "@deniffer/posthog-cli",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "PostHog provider CLI for product-growth agents.",
   "type": "module",
   "sideEffects": false,
@@ -16,6 +16,7 @@
   },
   "files": [
     "index.ts",
+    "constants.ts",
     "context.ts",
     "provider.ts",
     "services.ts",

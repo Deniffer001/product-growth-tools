@@ -26,6 +26,7 @@ import {
   handleProjectEventDefinitionsDataset,
   handleProjectPropertyDefinitionsDataset,
 } from "./handlers/project";
+import { handleQueryActionRun } from "./handlers/query-action";
 import { handleQueryDatasetResults } from "./handlers/query";
 import {
   handleDashboardDatasetDashboards,
@@ -110,6 +111,9 @@ await app.run({
     query: {
       dataset: {
         results: handleQueryDatasetResults,
+      },
+      action: {
+        run: handleQueryActionRun,
       },
     },
     event: {

@@ -50,7 +50,7 @@ describe("posthog schema", () => {
       "doctor{dataset{readiness}}"
     );
     expect(extractOutline(result.stdout)).toContain(
-      "query{dataset{results}}"
+      "query{dataset{results},action{run}}"
     );
     expect(extractOutline(result.stdout)).toContain("event{dataset{counts,map}}");
     expect(extractOutline(result.stdout)).toContain("funnel{analyze}");
@@ -75,6 +75,15 @@ describe("posthog schema", () => {
     expect(result.stdout).toContain("limit?: number | string");
     expect(result.stdout).toContain("noLimitGuard?: boolean");
     expect(result.stdout).toContain("raw?: boolean");
+  });
+
+  test("exposes query artifact action inputs", () => {
+    const result = runCli(["--schema=.query.action.run"]);
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain("run(");
+    expect(result.stdout).toContain("request: string");
+    expect(result.stdout).toContain("out: string");
   });
 
   test("exposes event counts and funnel analysis inputs", () => {

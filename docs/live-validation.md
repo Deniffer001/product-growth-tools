@@ -128,6 +128,27 @@ bun run posthog event dataset map --window 3d --limit 500
 bun run posthog event dataset counts --window 3d --limit 200
 ```
 
+Reproducible query artifact smoke:
+
+```bash
+cat > /tmp/posthog-query-request.json <<'JSON'
+{
+  "schema_version": "provider_query_request.v1",
+  "provider": "posthog",
+  "operation": "query.dataset.results",
+  "profile": "openclaw-web",
+  "input": {
+    "query": "SELECT event, count() FROM events GROUP BY event ORDER BY count() DESC LIMIT 5",
+    "noLimitGuard": true
+  },
+  "metadata": {
+    "purpose": "live-validation-smoke"
+  }
+}
+JSON
+bun run posthog query action run --request /tmp/posthog-query-request.json --out /tmp/posthog-query-artifact
+```
+
 Funnel and instrumentation audit:
 
 ```bash
