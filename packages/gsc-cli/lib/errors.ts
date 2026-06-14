@@ -1,8 +1,17 @@
 /**
  * @input machine-classified CLI error metadata
- * @output stable CliError shape for agent-facing runtime failures
- * @pos shared error contract between handlers, client, and output
+ * @output stable CliError shape for agent-facing runtime failures (built on @deniffer/cli-kit)
+ * @pos GSC error contract = cli-kit core + a Google-specific status mapper
  */
+
+import {
+  CliError,
+  type CliErrorMapper,
+  cliError,
+  normalizeCliError as normalizeWithMappers,
+} from "@deniffer/cli-kit/errors";
+
+export { CliError, cliError };
 
 export type CliErrorCode =
   | "invalid_input"
@@ -12,26 +21,6 @@ export type CliErrorCode =
   | "provider_auth"
   | "provider_rate_limited"
   | "provider_failure";
-
-export class CliError extends Error {
-  code: CliErrorCode;
-  hint?: string;
-
-  constructor(input: { code: CliErrorCode; message: string; hint?: string }) {
-    super(input.message);
-    this.name = "CliError";
-    this.code = input.code;
-    this.hint = input.hint;
-  }
-}
-
-export function cliError(input: {
-  code: CliErrorCode;
-  message: string;
-  hint?: string;
-}) {
-  return new CliError(input);
-}
 
 function readProviderReason(error: Error) {
   const response = Reflect.get(error, "response") as
@@ -45,13 +34,19 @@ function readProviderReason(error: Error) {
   );
 }
 
-function normalizeGoogleProviderError(error: Error) {
+// The GSC-specific divergence, plugged into cli-kit's normalizer seam.
+export const gscErrorMapper: CliErrorMapper = (error) => {
+  if (!(error instanceof Error)) {
+    return null;
+  }
+
   const status = Number(
     Reflect.get(error, "status") ?? Reflect.get(error, "code") ?? 0
   );
   const reason = readProviderReason(error);
 
   if (!status) {
+    // Defer Error-without-status to cli-kit's backend_failure fallback.
     return null;
   }
 
@@ -105,22 +100,8 @@ function normalizeGoogleProviderError(error: Error) {
         ? "Retry later; Google returned a server error."
         : undefined,
   });
-}
+};
 
 export function normalizeCliError(error: unknown) {
-  if (error instanceof CliError) {
-    return error;
-  }
-
-  if (error instanceof Error) {
-    return (
-      normalizeGoogleProviderError(error) ??
-      cliError({ code: "backend_failure", message: error.message })
-    );
-  }
-
-  return cliError({
-    code: "backend_failure",
-    message: "Unknown CLI error",
-  });
+  return normalizeWithMappers(error, [gscErrorMapper]);
 }

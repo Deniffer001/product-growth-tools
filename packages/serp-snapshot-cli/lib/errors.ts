@@ -1,8 +1,17 @@
 /**
  * @input machine-classified SERP provider failures
- * @output stable agent-facing error objects
- * @pos shared error contract for SERP snapshot handlers and provider calls
+ * @output stable agent-facing error objects (built on @deniffer/cli-kit)
+ * @pos SERP error contract = cli-kit core + a SERP-specific status mapper
  */
+
+import {
+  CliError,
+  type CliErrorMapper,
+  cliError,
+  normalizeCliError as normalizeWithMappers,
+} from "@deniffer/cli-kit/errors";
+
+export { CliError, cliError };
 
 export type CliErrorCode =
   | "invalid_input"
@@ -13,36 +22,13 @@ export type CliErrorCode =
   | "parse_error"
   | "backend_failure";
 
-export class CliError extends Error {
-  code: CliErrorCode;
-  hint?: string;
-
-  constructor(input: { code: CliErrorCode; message: string; hint?: string }) {
-    super(input.message);
-    this.name = "CliError";
-    this.code = input.code;
-    this.hint = input.hint;
-  }
-}
-
-export function cliError(input: {
-  code: CliErrorCode;
-  message: string;
-  hint?: string;
-}) {
-  return new CliError(input);
-}
-
 function readStatus(error: Error) {
   const status = Reflect.get(error, "status");
   return typeof status === "number" ? status : null;
 }
 
-export function normalizeCliError(error: unknown) {
-  if (error instanceof CliError) {
-    return error;
-  }
-
+// The SERP-specific divergence, plugged into cli-kit's normalizer seam.
+export const serpSnapshotErrorMapper: CliErrorMapper = (error) => {
   if (error instanceof TypeError) {
     return cliError({
       code: "network_error",
@@ -51,44 +37,40 @@ export function normalizeCliError(error: unknown) {
     });
   }
 
-  if (error instanceof Error) {
-    const status = readStatus(error);
+  if (!(error instanceof Error)) {
+    return null;
+  }
 
-    if (status === 401 || status === 403) {
-      return cliError({
-        code: "auth_error",
-        message: error.message,
-        hint: "Check SERP provider credentials.",
-      });
-    }
-
-    if (status === 402 || status === 429) {
-      return cliError({
-        code: "quota_error",
-        message: error.message,
-        hint: "Check SERP provider credits, rate limits, and retry policy.",
-      });
-    }
-
-    if (status !== null) {
-      return cliError({
-        code: "provider_error",
-        message: error.message,
-        hint:
-          status >= 500
-            ? "The SERP provider returned a server error. Retry later."
-            : "The SERP provider rejected the request. Check input fields.",
-      });
-    }
-
+  const status = readStatus(error);
+  if (status === 401 || status === 403) {
     return cliError({
-      code: "backend_failure",
+      code: "auth_error",
       message: error.message,
+      hint: "Check SERP provider credentials.",
+    });
+  }
+  if (status === 402 || status === 429) {
+    return cliError({
+      code: "quota_error",
+      message: error.message,
+      hint: "Check SERP provider credits, rate limits, and retry policy.",
+    });
+  }
+  if (status !== null) {
+    return cliError({
+      code: "provider_error",
+      message: error.message,
+      hint:
+        status >= 500
+          ? "The SERP provider returned a server error. Retry later."
+          : "The SERP provider rejected the request. Check input fields.",
     });
   }
 
-  return cliError({
-    code: "backend_failure",
-    message: "Unknown CLI error",
-  });
+  // Defer Error-without-status and non-Error to cli-kit's backend_failure fallback.
+  return null;
+};
+
+export function normalizeCliError(error: unknown) {
+  return normalizeWithMappers(error, [serpSnapshotErrorMapper]);
 }

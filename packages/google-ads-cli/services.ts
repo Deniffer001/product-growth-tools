@@ -1,31 +1,29 @@
 /**
- * @input resolved CLI context, Google Ads client factory, and output service
- * @output lazy CLI service container for handlers
- * @pos Google Ads runtime services boundary
+ * @input runtime context, Google Ads client factory, and output service
+ * @output lazy service container for Google Ads handlers (built on @deniffer/cli-kit)
+ * @pos runtime composition layer for provider and serializer boundaries
  */
 
-import {
-  type CliContext,
-  createGoogleAdsClient,
-  type GoogleAdsClient,
-} from "./client";
-import { createOutputService, type OutputService } from "./output";
+import { defineClientAdapter } from "@deniffer/cli-kit/client";
+import { type CliServices as BaseCliServices, createCliServices as createBaseCliServices } from "@deniffer/cli-kit/services";
 
-export type CliServices = {
-  context: CliContext;
-  output: OutputService;
+import { type CliContext, createGoogleAdsClient, type GoogleAdsClient } from "./client";
+import { googleAdsErrorMapper } from "./lib/errors";
+
+const googleAdsAdapter = defineClientAdapter<GoogleAdsClient, CliContext>((context) =>
+  createGoogleAdsClient(context),
+);
+
+export type CliServices = BaseCliServices<GoogleAdsClient, CliContext> & {
   getGoogleAdsClient: () => GoogleAdsClient;
 };
 
 export function createCliServices(context: CliContext): CliServices {
-  let googleAdsClient: GoogleAdsClient | null = null;
-
-  return {
+  const base = createBaseCliServices({
     context,
-    output: createOutputService(context),
-    getGoogleAdsClient() {
-      googleAdsClient ??= createGoogleAdsClient(context);
-      return googleAdsClient;
-    },
-  };
+    adapter: googleAdsAdapter,
+    errorMappers: [googleAdsErrorMapper],
+  });
+
+  return { ...base, getGoogleAdsClient: base.getClient };
 }

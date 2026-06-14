@@ -23,7 +23,7 @@
         "@deniffer/cli-kit": "github:Deniffer001/cli-kit#v0.1.2",
         "@standard-schema/spec": "^1.0.0",
         "@valibot/to-json-schema": "^1.6.0",
-        "argc": "github:ethan-huo/argc",
+        "argc": "github:ethan-huo/argc#b18dad5",
         "dotenv": "^17.2.2",
         "valibot": "^1.2.0",
       },
@@ -43,9 +43,10 @@
         "google-ads-cli": "bin/google-ads-cli.js",
       },
       "dependencies": {
+        "@deniffer/cli-kit": "github:Deniffer001/cli-kit#v0.1.2",
         "@standard-schema/spec": "^1.0.0",
         "@valibot/to-json-schema": "^1.6.0",
-        "argc": "github:ethan-huo/argc",
+        "argc": "github:ethan-huo/argc#b18dad5",
         "dotenv": "^17.2.2",
         "valibot": "^1.2.0",
       },
@@ -65,9 +66,10 @@
         "gsc-cli": "bin/gsc-cli.js",
       },
       "dependencies": {
+        "@deniffer/cli-kit": "github:Deniffer001/cli-kit#v0.1.2",
         "@standard-schema/spec": "^1.0.0",
         "@valibot/to-json-schema": "^1.6.0",
-        "argc": "github:ethan-huo/argc",
+        "argc": "github:ethan-huo/argc#b18dad5",
         "dotenv": "^17.2.2",
         "googleapis": "^166.0.0",
         "valibot": "^1.2.0",
@@ -88,9 +90,10 @@
         "page-extract-cli": "bin/page-extract-cli.js",
       },
       "dependencies": {
+        "@deniffer/cli-kit": "github:Deniffer001/cli-kit#v0.1.2",
         "@standard-schema/spec": "^1.0.0",
         "@valibot/to-json-schema": "^1.6.0",
-        "argc": "github:ethan-huo/argc",
+        "argc": "github:ethan-huo/argc#b18dad5",
         "valibot": "^1.2.0",
       },
       "devDependencies": {
@@ -109,10 +112,11 @@
         "posthog-cli": "bin/posthog-cli.js",
       },
       "dependencies": {
+        "@deniffer/cli-kit": "github:Deniffer001/cli-kit#v0.1.2",
         "@posthog/agent-toolkit": "^0.2.4",
         "@standard-schema/spec": "^1.0.0",
         "@valibot/to-json-schema": "^1.6.0",
-        "argc": "github:ethan-huo/argc",
+        "argc": "github:ethan-huo/argc#b18dad5",
         "dotenv": "^17.2.2",
         "valibot": "^1.2.0",
       },
@@ -132,9 +136,10 @@
         "serp-snapshot-cli": "bin/serp-snapshot-cli.js",
       },
       "dependencies": {
+        "@deniffer/cli-kit": "github:Deniffer001/cli-kit#v0.1.2",
         "@standard-schema/spec": "^1.0.0",
         "@valibot/to-json-schema": "^1.6.0",
-        "argc": "github:ethan-huo/argc",
+        "argc": "github:ethan-huo/argc#b18dad5",
         "dotenv": "^17.2.2",
         "valibot": "^1.2.0",
       },
@@ -154,9 +159,10 @@
         "sitemap-watch-cli": "bin/sitemap-watch-cli.js",
       },
       "dependencies": {
+        "@deniffer/cli-kit": "github:Deniffer001/cli-kit#v0.1.2",
         "@standard-schema/spec": "^1.0.0",
         "@valibot/to-json-schema": "^1.6.0",
-        "argc": "github:ethan-huo/argc",
+        "argc": "github:ethan-huo/argc#b18dad5",
         "fast-xml-parser": "^5.3.0",
         "valibot": "^1.2.0",
       },
@@ -173,7 +179,7 @@
     "@types/bun": "^1.3.10",
     "@types/node": "^25.6.0",
     "@valibot/to-json-schema": "^1.6.0",
-    "argc": "github:ethan-huo/argc",
+    "argc": "github:ethan-huo/argc#b18dad5",
     "bun-types": "^1.3.13",
     "dotenv": "^17.2.2",
     "typescript": "^5",
@@ -762,18 +768,6 @@
     "@ai-sdk/ui-utils/@ai-sdk/provider-utils": ["@ai-sdk/provider-utils@2.2.8", "", { "dependencies": { "@ai-sdk/provider": "1.1.3", "nanoid": "^3.3.8", "secure-json-parse": "^2.7.0" }, "peerDependencies": { "zod": "^3.23.8" } }, "sha512-fqhG+4sCVv8x7nFzYnFo19ryhAa3w096Kmc3hWxMQfW/TubPOmt3A6tYZhl4mUfQWWQMsuSkLrtjlWuXBVSGQA=="],
 
     "@deniffer/cli-kit/argc": ["argc@0.1.1", "", {}, "sha512-Nv1PUrvwahIZUAHk3ZB5zZqEaKYKL76DDX8DqZOZMtNnuWDlSxPmQ5mSVGS/w/Puiib/nEHKAC3h1tpe2QrneA=="],
-
-    "@deniffer/google-ads-cli/argc": ["argc@github:ethan-huo/argc#7d7b60d", { "peerDependencies": { "@standard-schema/spec": "^1.0.0" } }, "ethan-huo-argc-7d7b60d", "sha512-eFUGCZnU2eJoSPzbs/YEJuXOp/K+BxZna2ki9+jXhvdoDbyTyGsFfINY5pULcuahl8PSqKRULNsCutq/f2rPpg=="],
-
-    "@deniffer/gsc-cli/argc": ["argc@github:ethan-huo/argc#7d7b60d", { "peerDependencies": { "@standard-schema/spec": "^1.0.0" } }, "ethan-huo-argc-7d7b60d", "sha512-eFUGCZnU2eJoSPzbs/YEJuXOp/K+BxZna2ki9+jXhvdoDbyTyGsFfINY5pULcuahl8PSqKRULNsCutq/f2rPpg=="],
-
-    "@deniffer/page-extract-cli/argc": ["argc@github:ethan-huo/argc#7d7b60d", { "peerDependencies": { "@standard-schema/spec": "^1.0.0" } }, "ethan-huo-argc-7d7b60d", "sha512-eFUGCZnU2eJoSPzbs/YEJuXOp/K+BxZna2ki9+jXhvdoDbyTyGsFfINY5pULcuahl8PSqKRULNsCutq/f2rPpg=="],
-
-    "@deniffer/posthog-cli/argc": ["argc@github:ethan-huo/argc#7d7b60d", { "peerDependencies": { "@standard-schema/spec": "^1.0.0" } }, "ethan-huo-argc-7d7b60d", "sha512-eFUGCZnU2eJoSPzbs/YEJuXOp/K+BxZna2ki9+jXhvdoDbyTyGsFfINY5pULcuahl8PSqKRULNsCutq/f2rPpg=="],
-
-    "@deniffer/serp-snapshot-cli/argc": ["argc@github:ethan-huo/argc#7d7b60d", { "peerDependencies": { "@standard-schema/spec": "^1.0.0" } }, "ethan-huo-argc-7d7b60d", "sha512-eFUGCZnU2eJoSPzbs/YEJuXOp/K+BxZna2ki9+jXhvdoDbyTyGsFfINY5pULcuahl8PSqKRULNsCutq/f2rPpg=="],
-
-    "@deniffer/sitemap-watch-cli/argc": ["argc@github:ethan-huo/argc#7d7b60d", { "peerDependencies": { "@standard-schema/spec": "^1.0.0" } }, "ethan-huo-argc-7d7b60d", "sha512-eFUGCZnU2eJoSPzbs/YEJuXOp/K+BxZna2ki9+jXhvdoDbyTyGsFfINY5pULcuahl8PSqKRULNsCutq/f2rPpg=="],
 
     "@langchain/core/uuid": ["uuid@10.0.0", "", { "bin": { "uuid": "dist/bin/uuid" } }, "sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ=="],
 
