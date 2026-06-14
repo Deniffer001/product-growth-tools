@@ -1,8 +1,17 @@
 /**
- * @input machine-classified CLI error metadata
- * @output stable CliError shape for agent-facing runtime failures
- * @pos shared error contract between handlers, client, and output
+ * @input machine-classified Google Ads provider failures
+ * @output stable agent-facing error objects (built on @deniffer/cli-kit)
+ * @pos Google Ads error contract = cli-kit core + a Google Ads-specific status mapper
  */
+
+import {
+  CliError,
+  type CliErrorMapper,
+  cliError,
+  normalizeCliError as normalizeWithMappers,
+} from "@deniffer/cli-kit/errors";
+
+export { CliError, cliError };
 
 export type CliErrorCode =
   | "invalid_input"
@@ -12,26 +21,6 @@ export type CliErrorCode =
   | "provider_auth"
   | "provider_rate_limited"
   | "provider_failure";
-
-export class CliError extends Error {
-  code: CliErrorCode;
-  hint?: string;
-
-  constructor(input: { code: CliErrorCode; message: string; hint?: string }) {
-    super(input.message);
-    this.name = "CliError";
-    this.code = input.code;
-    this.hint = input.hint;
-  }
-}
-
-export function cliError(input: {
-  code: CliErrorCode;
-  message: string;
-  hint?: string;
-}) {
-  return new CliError(input);
-}
 
 type ProviderError = {
   message?: string;
@@ -49,7 +38,12 @@ function hasProviderError(errors: ProviderError[], key: string) {
   return errors.some((item) => Boolean(item.error_code?.[key]));
 }
 
-function normalizeProviderError(error: Error) {
+// The Google Ads-specific divergence, plugged into cli-kit's normalizer seam.
+export const googleAdsErrorMapper: CliErrorMapper = (error) => {
+  if (!(error instanceof Error)) {
+    return null;
+  }
+
   const status = Number(Reflect.get(error, "status") ?? 0);
   const providerErrors = readProviderErrors(error);
 
@@ -106,23 +100,10 @@ function normalizeProviderError(error: Error) {
     });
   }
 
+  // Defer Error-without-status and non-Error to cli-kit's backend_failure fallback.
   return null;
-}
+};
 
 export function normalizeCliError(error: unknown) {
-  if (error instanceof CliError) {
-    return error;
-  }
-
-  if (error instanceof Error) {
-    return (
-      normalizeProviderError(error) ??
-      cliError({ code: "backend_failure", message: error.message })
-    );
-  }
-
-  return cliError({
-    code: "backend_failure",
-    message: "Unknown CLI error",
-  });
+  return normalizeWithMappers(error, [googleAdsErrorMapper]);
 }

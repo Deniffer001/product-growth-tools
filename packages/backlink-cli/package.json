@@ -37,9 +37,10 @@
     "test:once": "vitest run"
   },
   "dependencies": {
+    "@deniffer/cli-kit": "github:Deniffer001/cli-kit#v0.1.2",
     "@standard-schema/spec": "^1.0.0",
     "@valibot/to-json-schema": "^1.6.0",
-    "argc": "github:ethan-huo/argc",
+    "argc": "github:ethan-huo/argc#7d7b60d",
     "dotenv": "^17.2.2",
     "valibot": "^1.2.0"
   },

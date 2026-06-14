@@ -1,77 +1,38 @@
 /**
  * @input CLI output mode plus success or error payloads
- * @output agent-first JSON output with optional human-friendly rendering
- * @pos CLI serialization boundary between handlers and terminal
+ * @output agent-first JSON output (built on @deniffer/cli-kit)
+ * @pos serialization boundary between Google Ads handlers and terminal
  */
 
-import { inspect } from "node:util";
-import { normalizeCliError } from "./lib/errors";
+import {
+  createOutputService as createBaseOutputService,
+  type HumanLines,
+  type Output,
+  type OutputService,
+} from "@deniffer/cli-kit/output";
 
-export type Output<T> =
-  | { ok: true; data: T }
-  | { ok: false; error: { code: string; message: string; hint?: string } };
+import { googleAdsErrorMapper, normalizeCliError } from "./lib/errors";
 
-export type HumanLines<T> = string[] | ((data: T) => string[]);
-
-export type OutputService = {
-  success: <T>(data: T, human?: HumanLines<T>) => void;
-  error: (error: unknown, human?: string[]) => void;
-};
-
-function printJson<T>(value: Output<T>) {
-  process.stdout.write(`${JSON.stringify(value, null, 2)}\n`);
-}
-
-function formatUnknown(value: unknown) {
-  return inspect(value, {
-    depth: null,
-    colors: false,
-    compact: false,
-    sorted: true,
-  });
-}
-
-function resolveHumanLines<T>(data: T, human?: HumanLines<T>) {
-  if (!human) {
-    return [formatUnknown(data)];
-  }
-
-  return typeof human === "function" ? human(data) : human;
-}
+export type { HumanLines, Output, OutputService };
 
 export function createOutputService(context: { pretty?: boolean }): OutputService {
   const pretty = context.pretty ?? false;
+  const base = createBaseOutputService({
+    pretty,
+    errorMappers: [googleAdsErrorMapper],
+  });
 
   return {
-    success<T>(data: T, human?: HumanLines<T>) {
-      if (!pretty) {
-        printJson({ ok: true, data });
-        return;
-      }
-
-      process.stdout.write(`${resolveHumanLines(data, human).join("\n")}\n`);
-    },
+    success: base.success,
     error(error: unknown, human?: string[]) {
-      const resolved = normalizeCliError(error);
-
+      // JSON mode + normalization are delegated to cli-kit; only the pretty
+      // error rendering preserves this CLI's pinned "Error Code:" layout.
       if (!pretty) {
-        process.stderr.write(
-          `${JSON.stringify(
-            {
-              ok: false,
-              error: {
-                code: resolved.code,
-                message: resolved.message,
-                ...(resolved.hint ? { hint: resolved.hint } : {}),
-              },
-            } satisfies Output<never>,
-            null,
-            2
-          )}\n`
-        );
+        base.error(error, human);
         return;
       }
 
+      const resolved = normalizeCliError(error);
       const lines = human ?? [
         `Error Code: ${resolved.code}`,
         `Error: ${resolved.message}`,

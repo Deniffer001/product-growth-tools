@@ -1,8 +1,17 @@
 /**
  * @input machine-classified page-extract runtime failures
- * @output stable agent-facing error objects
- * @pos shared error contract for extraction provider and output
+ * @output stable agent-facing error objects (built on @deniffer/cli-kit)
+ * @pos page-extract error contract = cli-kit core + a page-extract-specific mapper
  */
+
+import {
+  CliError,
+  type CliErrorMapper,
+  cliError,
+  normalizeCliError as normalizeWithMappers,
+} from "@deniffer/cli-kit/errors";
+
+export { CliError, cliError };
 
 export type CliErrorCode =
   | "invalid_input"
@@ -11,31 +20,8 @@ export type CliErrorCode =
   | "parse_error"
   | "backend_failure";
 
-export class CliError extends Error {
-  code: CliErrorCode;
-  hint?: string;
-
-  constructor(input: { code: CliErrorCode; message: string; hint?: string }) {
-    super(input.message);
-    this.name = "CliError";
-    this.code = input.code;
-    this.hint = input.hint;
-  }
-}
-
-export function cliError(input: {
-  code: CliErrorCode;
-  message: string;
-  hint?: string;
-}) {
-  return new CliError(input);
-}
-
-export function normalizeCliError(error: unknown) {
-  if (error instanceof CliError) {
-    return error;
-  }
-
+// The page-extract-specific divergence, plugged into cli-kit's normalizer seam.
+export const pageExtractErrorMapper: CliErrorMapper = (error) => {
   if (error instanceof TypeError) {
     return cliError({
       code: "network_error",
@@ -44,15 +30,10 @@ export function normalizeCliError(error: unknown) {
     });
   }
 
-  if (error instanceof Error) {
-    return cliError({
-      code: "backend_failure",
-      message: error.message,
-    });
-  }
+  // Defer Error-without-special-case and non-Error to cli-kit's backend_failure fallback.
+  return null;
+};
 
-  return cliError({
-    code: "backend_failure",
-    message: "Unknown CLI error",
-  });
+export function normalizeCliError(error: unknown) {
+  return normalizeWithMappers(error, [pageExtractErrorMapper]);
 }

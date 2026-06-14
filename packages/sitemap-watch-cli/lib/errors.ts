@@ -1,8 +1,17 @@
 /**
  * @input machine-classified sitemap-watch runtime failures
- * @output stable agent-facing error objects
- * @pos shared error contract for registry parsing, fetching, and output
+ * @output stable agent-facing error objects (built on @deniffer/cli-kit)
+ * @pos sitemap error contract = cli-kit core + a sitemap-specific status mapper
  */
+
+import {
+  CliError,
+  type CliErrorMapper,
+  cliError,
+  normalizeCliError as normalizeWithMappers,
+} from "@deniffer/cli-kit/errors";
+
+export { CliError, cliError };
 
 export type CliErrorCode =
   | "invalid_input"
@@ -11,36 +20,13 @@ export type CliErrorCode =
   | "parse_error"
   | "backend_failure";
 
-export class CliError extends Error {
-  code: CliErrorCode;
-  hint?: string;
-
-  constructor(input: { code: CliErrorCode; message: string; hint?: string }) {
-    super(input.message);
-    this.name = "CliError";
-    this.code = input.code;
-    this.hint = input.hint;
-  }
-}
-
-export function cliError(input: {
-  code: CliErrorCode;
-  message: string;
-  hint?: string;
-}) {
-  return new CliError(input);
-}
-
 function readStatus(error: Error) {
   const status = Reflect.get(error, "status");
   return typeof status === "number" ? status : null;
 }
 
-export function normalizeCliError(error: unknown) {
-  if (error instanceof CliError) {
-    return error;
-  }
-
+// The sitemap-specific divergence, plugged into cli-kit's normalizer seam.
+export const sitemapErrorMapper: CliErrorMapper = (error) => {
   if (error instanceof TypeError) {
     return cliError({
       code: "network_error",
@@ -49,28 +35,26 @@ export function normalizeCliError(error: unknown) {
     });
   }
 
-  if (error instanceof Error) {
-    const status = readStatus(error);
+  if (!(error instanceof Error)) {
+    return null;
+  }
 
-    if (status !== null) {
-      return cliError({
-        code: "network_error",
-        message: error.message,
-        hint:
-          status >= 500
-            ? "The upstream sitemap host returned a server error. Retry later."
-            : "The sitemap endpoint could not be reached successfully. Check the URL and retry.",
-      });
-    }
-
+  const status = readStatus(error);
+  if (status !== null) {
     return cliError({
-      code: "backend_failure",
+      code: "network_error",
       message: error.message,
+      hint:
+        status >= 500
+          ? "The upstream sitemap host returned a server error. Retry later."
+          : "The sitemap endpoint could not be reached successfully. Check the URL and retry.",
     });
   }
 
-  return cliError({
-    code: "backend_failure",
-    message: "Unknown CLI error",
-  });
+  // Defer Error-without-status and non-Error to cli-kit's backend_failure fallback.
+  return null;
+};
+
+export function normalizeCliError(error: unknown) {
+  return normalizeWithMappers(error, [sitemapErrorMapper]);
 }
