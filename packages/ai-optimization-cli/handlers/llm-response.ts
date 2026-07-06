@@ -36,20 +36,50 @@ export type LlmResponseLiveInput = {
 
 const DEFAULT_RESPONSE_PROVIDER: LlmResponseProvider = "chat_gpt";
 
-function renderModels(data: { dataset: string; resultCount: number }) {
-  return [`Dataset: ${data.dataset}`, `Results: ${data.resultCount}`];
+function renderModels(data: {
+  dataset: string;
+  resultCount: number;
+  billing?: { cost: number | null; currency: string };
+}) {
+  return [
+    `Dataset: ${data.dataset}`,
+    `Results: ${data.resultCount}`,
+    `Cost: ${formatCost(data.billing)}`,
+  ];
 }
 
 function renderLiveResponse(data: {
   llmProvider: string;
   modelName: string | null;
   outputTokens: number | null;
+  billing?: { cost: number | null; currency: string; modelCost?: number | null };
 }) {
   return [
     `Provider: ${data.llmProvider}`,
     `Model: ${data.modelName ?? "unknown"}`,
     `Output tokens: ${data.outputTokens ?? "unknown"}`,
+    `Cost: ${formatCost(data.billing)}`,
+    `Model cost: ${formatModelCost(data.billing)}`,
   ];
+}
+
+function formatCost(billing?: { cost: number | null; currency: string }) {
+  if (!billing || billing.cost === null) {
+    return "unknown";
+  }
+
+  return `${billing.cost} ${billing.currency}`;
+}
+
+function formatModelCost(input?: {
+  modelCost?: number | null;
+  currency: string;
+}) {
+  if (!input || input.modelCost === null || input.modelCost === undefined) {
+    return "unknown";
+  }
+
+  return `${input.modelCost} ${input.currency}`;
 }
 
 export async function handleLlmResponseDatasetModels(args: {

@@ -95,6 +95,7 @@ export type AiOptimizationDataset = {
   dataset: string;
   capturedAt: string;
   provider: "dataforseo";
+  billing: DataForSeoBilling;
   status: DataForSeoStatus;
   resultCount: number;
   items: Array<Record<string, unknown>>;
@@ -117,6 +118,9 @@ export type LlmResponseDataset = {
   reasoningTokens: number | null;
   webSearch: boolean | null;
   moneySpent: number | null;
+  billing: DataForSeoBilling & {
+    modelCost: number | null;
+  };
   datetime: string | null;
   text: string | null;
   fanOutQueries: unknown[];
@@ -135,6 +139,7 @@ export type LlmMentionDataset = {
   dataset: LlmMentionDatasetKind;
   capturedAt: string;
   provider: "dataforseo";
+  billing: DataForSeoBilling;
   status: DataForSeoStatus;
   totalCount: number | null;
   itemsCount: number;
@@ -180,6 +185,12 @@ type DataForSeoStatus = {
   taskStatusMessage?: string;
 };
 
+type DataForSeoBilling = {
+  cost: number | null;
+  currency: "USD";
+  source: "task_cost" | "response_cost" | "unknown";
+};
+
 type DataForSeoTask = {
   id?: string;
   status_code?: number;
@@ -192,6 +203,7 @@ type DataForSeoTask = {
 type DataForSeoResponse = {
   status_code?: number;
   status_message?: string;
+  cost?: number;
   tasks?: DataForSeoTask[];
   result?: unknown[];
 };
@@ -401,6 +413,7 @@ function normalizeDataset(
     dataset,
     capturedAt: new Date().toISOString(),
     provider: "dataforseo",
+    billing: billingFrom(parsed, task),
     status: statusFrom(parsed, task),
     resultCount: task?.result_count ?? items.length,
     items,
@@ -416,6 +429,7 @@ function normalizeLlmResponse(
   assertTaskAccepted(task);
   const result = toRecord(task.result?.[0]) ?? {};
   const items = Array.isArray(result.items) ? result.items : [];
+  const moneySpent = readNumber(result.money_spent);
 
   return {
     provider: "dataforseo",
@@ -427,7 +441,11 @@ function normalizeLlmResponse(
     outputTokens: readNumber(result.output_tokens),
     reasoningTokens: readNumber(result.reasoning_tokens),
     webSearch: readBoolean(result.web_search),
-    moneySpent: readNumber(result.money_spent),
+    moneySpent,
+    billing: {
+      ...billingFrom(parsed, task),
+      modelCost: moneySpent,
+    },
     datetime: readString(result.datetime),
     text: collectResponseText(items),
     fanOutQueries: Array.isArray(result.fan_out_queries)
@@ -455,6 +473,7 @@ function normalizeLlmMention(
     dataset,
     capturedAt: new Date().toISOString(),
     provider: "dataforseo",
+    billing: billingFrom(parsed, task),
     status: statusFrom(parsed, task),
     totalCount: readNumber(result.total_count),
     itemsCount: readNumber(result.items_count) ?? items.length,
@@ -549,8 +568,25 @@ function rawTask(parsed: DataForSeoResponse, task?: DataForSeoTask) {
     providerTaskId: task?.id ?? null,
     providerStatusCode: parsed.status_code,
     taskStatusCode: task?.status_code,
-    cost: task?.cost,
+    cost: task?.cost ?? parsed.cost,
   };
+}
+
+function billingFrom(
+  parsed: DataForSeoResponse,
+  task?: DataForSeoTask
+): DataForSeoBilling {
+  const taskCost = readNumber(task?.cost);
+  if (taskCost !== null) {
+    return { cost: taskCost, currency: "USD", source: "task_cost" };
+  }
+
+  const responseCost = readNumber(parsed.cost);
+  if (responseCost !== null) {
+    return { cost: responseCost, currency: "USD", source: "response_cost" };
+  }
+
+  return { cost: null, currency: "USD", source: "unknown" };
 }
 
 function collectResponseText(items: unknown[]) {

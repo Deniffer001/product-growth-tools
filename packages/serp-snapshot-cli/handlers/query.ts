@@ -35,8 +35,24 @@ export function normalizeQueryInput(input: QueryResultsInput, context: CliContex
   };
 }
 
-function renderSnapshot(data: { query: string; resultCount: number }) {
-  return [`Query: ${data.query}`, `Results: ${data.resultCount}`];
+function renderSnapshot(data: {
+  query: string;
+  resultCount: number;
+  billing?: { cost: number | null; currency: string };
+}) {
+  return [
+    `Query: ${data.query}`,
+    `Results: ${data.resultCount}`,
+    `Cost: ${formatCost(data.billing)}`,
+  ];
+}
+
+function formatCost(billing?: { cost: number | null; currency: string }) {
+  if (!billing || billing.cost === null) {
+    return "unknown";
+  }
+
+  return `${billing.cost} ${billing.currency}`;
 }
 
 export async function handleQueryDatasetResults(args: {

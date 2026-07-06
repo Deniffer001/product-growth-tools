@@ -67,6 +67,11 @@ describe("backlink provider", () => {
         target: "openclawai.io",
         dataset: "summary",
         provider: "dataforseo",
+        billing: {
+          cost: 0.02,
+          currency: "USD",
+          source: "task_cost",
+        },
         resultCount: 1,
         totals: expect.objectContaining({
           backlinks: 10,
@@ -84,6 +89,7 @@ describe("backlink provider", () => {
       })
     );
     expect(result.status.providerTaskId).toBe("task-1");
+    expect(result.status.providerCost).toBe(0.02);
     expect(result.capturedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
   });
 

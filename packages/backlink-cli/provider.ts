@@ -39,6 +39,7 @@ export type BacklinkDataset<TItem = unknown> = {
   dataset: BacklinkDatasetKind;
   capturedAt: string;
   provider: "dataforseo";
+  billing: DataForSeoBilling;
   status: {
     providerStatusCode?: number;
     providerStatusMessage?: string;
@@ -56,6 +57,12 @@ export type BacklinkDataset<TItem = unknown> = {
     brokenPages?: number | null;
   };
   items: TItem[];
+};
+
+export type DataForSeoBilling = {
+  cost: number | null;
+  currency: "USD";
+  source: "task_cost" | "response_cost" | "unknown";
 };
 
 export type BacklinkSummaryItem = {
@@ -143,6 +150,7 @@ type DataForSeoTask = {
 type DataForSeoResponse = {
   status_code?: number;
   status_message?: string;
+  cost?: number;
   tasks?: DataForSeoTask[];
 };
 
@@ -192,6 +200,7 @@ export function createBacklinkClient(input: {
       dataset,
       capturedAt: new Date().toISOString(),
       provider: "dataforseo",
+      billing: billingFrom(parsed, task),
       status: {
         providerTaskId: task.id ?? null,
         providerStatusCode: task.status_code,
@@ -247,6 +256,23 @@ export function createBacklinkClient(input: {
       );
     },
   };
+}
+
+function billingFrom(
+  parsed: DataForSeoResponse,
+  task?: DataForSeoTask
+): DataForSeoBilling {
+  const taskCost = readNumber(task?.cost);
+  if (taskCost !== null) {
+    return { cost: taskCost, currency: "USD", source: "task_cost" };
+  }
+
+  const responseCost = readNumber(parsed.cost);
+  if (responseCost !== null) {
+    return { cost: responseCost, currency: "USD", source: "response_cost" };
+  }
+
+  return { cost: null, currency: "USD", source: "unknown" };
 }
 
 function listRequestBody(input: BacklinkListRequest) {

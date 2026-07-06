@@ -44,6 +44,7 @@ export type SerpSnapshot = {
   depth: number;
   capturedAt: string;
   provider: "dataforseo";
+  billing: DataForSeoBilling;
   checkUrl: string | null;
   features: {
     ads: SerpFeatureState;
@@ -63,7 +64,14 @@ export type SerpSnapshot = {
   raw: {
     providerTaskId: string | null;
     providerStatusCode?: number;
+    cost?: number;
   };
+};
+
+export type DataForSeoBilling = {
+  cost: number | null;
+  currency: "USD";
+  source: "task_cost" | "response_cost" | "unknown";
 };
 
 export type SerpQueryRequest = {
@@ -89,6 +97,7 @@ type DataForSeoTask = {
   id?: string;
   status_code?: number;
   status_message?: string;
+  cost?: number;
   result?: Array<{
     keyword?: string;
     check_url?: string;
@@ -99,6 +108,7 @@ type DataForSeoTask = {
 type DataForSeoResponse = {
   status_code?: number;
   status_message?: string;
+  cost?: number;
   tasks?: DataForSeoTask[];
 };
 
@@ -166,7 +176,7 @@ export function createSerpSnapshotClient(input: {
         });
       }
 
-      return normalizeDataForSeoSnapshot(request, task);
+      return normalizeDataForSeoSnapshot(request, parsed, task);
     },
   };
 }
@@ -218,6 +228,7 @@ function assertProviderAccepted(parsed: DataForSeoResponse) {
 
 function normalizeDataForSeoSnapshot(
   request: SerpQueryRequest,
+  parsed: DataForSeoResponse,
   task: DataForSeoTask
 ): SerpSnapshot {
   const result = task.result?.[0];
@@ -243,6 +254,7 @@ function normalizeDataForSeoSnapshot(
     depth: request.depth,
     capturedAt: new Date().toISOString(),
     provider: "dataforseo",
+    billing: billingFrom(parsed, task),
     checkUrl: normalizeString(result?.check_url),
     features: detectFeatures(items),
     resultCount: results.length,
@@ -254,8 +266,26 @@ function normalizeDataForSeoSnapshot(
     raw: {
       providerTaskId: task.id ?? null,
       providerStatusCode: task.status_code,
+      cost: task.cost ?? parsed.cost,
     },
   };
+}
+
+function billingFrom(
+  parsed: DataForSeoResponse,
+  task?: DataForSeoTask
+): DataForSeoBilling {
+  const taskCost = normalizeNumber(task?.cost);
+  if (taskCost !== null) {
+    return { cost: taskCost, currency: "USD", source: "task_cost" };
+  }
+
+  const responseCost = normalizeNumber(parsed.cost);
+  if (responseCost !== null) {
+    return { cost: responseCost, currency: "USD", source: "response_cost" };
+  }
+
+  return { cost: null, currency: "USD", source: "unknown" };
 }
 
 type NormalizedItem =

@@ -41,20 +41,38 @@ export type LlmMentionInput = {
   tag?: string;
 };
 
-function renderMetadata(data: { dataset: string; resultCount: number }) {
-  return [`Dataset: ${data.dataset}`, `Results: ${data.resultCount}`];
+function renderMetadata(data: {
+  dataset: string;
+  resultCount: number;
+  billing?: { cost: number | null; currency: string };
+}) {
+  return [
+    `Dataset: ${data.dataset}`,
+    `Results: ${data.resultCount}`,
+    `Cost: ${formatCost(data.billing)}`,
+  ];
 }
 
 function renderMention(data: {
   dataset: string;
   itemsCount: number;
   totalCount: number | null;
+  billing?: { cost: number | null; currency: string };
 }) {
   return [
     `Dataset: ${data.dataset}`,
     `Items: ${data.itemsCount}`,
     `Total: ${data.totalCount ?? "unknown"}`,
+    `Cost: ${formatCost(data.billing)}`,
   ];
+}
+
+function formatCost(billing?: { cost: number | null; currency: string }) {
+  if (!billing || billing.cost === null) {
+    return "unknown";
+  }
+
+  return `${billing.cost} ${billing.currency}`;
 }
 
 export async function handleLlmMentionDatasetLocationsAndLanguages(args: {

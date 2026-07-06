@@ -22,47 +22,49 @@ describe("serp-snapshot provider", () => {
 
         return new Response(
           JSON.stringify({
-              status_code: 20000,
-              tasks: [
-                {
-                  id: "task-1",
-                  status_code: 20000,
-                  result: [
-                    {
-                      keyword: "typeless alternative for mac",
-                      check_url: "https://www.google.com/search?q=typeless",
-                      items: [
-                        {
-                          type: "ai_overview",
-                          rank_group: 1,
-                          title: "AI overview",
-                          description: "A generated overview.",
-                        },
-                        {
-                          type: "organic",
-                          rank_group: 1,
-                          title: "Typeless Alternatives",
-                          url: "https://alternativeto.net/software/typeless/",
-                          domain: "alternativeto.net",
-                          description: "A list of alternatives.",
-                          breadcrumb: "alternativeto.net > software",
-                        },
-                        {
-                          type: "people_also_ask",
-                        },
-                        {
-                          type: "featured_snippet",
-                          rank_group: 0,
-                          title: "Best voice typing app",
-                          url: "https://example.com/voice-typing",
-                          description: "A featured answer.",
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            }),
+            status_code: 20000,
+            cost: 0.0101,
+            tasks: [
+              {
+                id: "task-1",
+                status_code: 20000,
+                cost: 0.0101,
+                result: [
+                  {
+                    keyword: "typeless alternative for mac",
+                    check_url: "https://www.google.com/search?q=typeless",
+                    items: [
+                      {
+                        type: "ai_overview",
+                        rank_group: 1,
+                        title: "AI overview",
+                        description: "A generated overview.",
+                      },
+                      {
+                        type: "organic",
+                        rank_group: 1,
+                        title: "Typeless Alternatives",
+                        url: "https://alternativeto.net/software/typeless/",
+                        domain: "alternativeto.net",
+                        description: "A list of alternatives.",
+                        breadcrumb: "alternativeto.net > software",
+                      },
+                      {
+                        type: "people_also_ask",
+                      },
+                      {
+                        type: "featured_snippet",
+                        rank_group: 0,
+                        title: "Best voice typing app",
+                        url: "https://example.com/voice-typing",
+                        description: "A featured answer.",
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          }),
           { status: 200 }
         );
       },
@@ -86,6 +88,11 @@ describe("serp-snapshot provider", () => {
         device: "desktop",
         os: "macos",
         provider: "dataforseo",
+        billing: {
+          cost: 0.0101,
+          currency: "USD",
+          source: "task_cost",
+        },
         checkUrl: "https://www.google.com/search?q=typeless",
         resultCount: 3,
         organicResultCount: 1,
@@ -121,6 +128,7 @@ describe("serp-snapshot provider", () => {
       "featured_snippet",
     ]);
     expect(result.raw.providerTaskId).toBe("task-1");
+    expect(result.raw.cost).toBe(0.0101);
     expect(result.capturedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
   });
 });

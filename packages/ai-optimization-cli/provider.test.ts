@@ -103,6 +103,12 @@ describe("ai-optimization provider", () => {
         reasoningTokens: 0,
         webSearch: true,
         moneySpent: 0.002,
+        billing: {
+          cost: 0.002,
+          currency: "USD",
+          source: "task_cost",
+          modelCost: 0.002,
+        },
         datetime: "2026-07-06 09:00:00 +00:00",
         text: "Clonesite.ai is a website cloning tool.",
       })
@@ -143,6 +149,7 @@ describe("ai-optimization provider", () => {
                 id: "task-mention-1",
                 status_code: 20000,
                 status_message: "Ok.",
+                cost: 0.1,
                 result: [
                   {
                     total_count: 2,
@@ -177,6 +184,11 @@ describe("ai-optimization provider", () => {
       expect.objectContaining({
         dataset: "search",
         provider: "dataforseo",
+        billing: {
+          cost: 0.1,
+          currency: "USD",
+          source: "task_cost",
+        },
         totalCount: 2,
         itemsCount: 1,
         currentOffset: 0,

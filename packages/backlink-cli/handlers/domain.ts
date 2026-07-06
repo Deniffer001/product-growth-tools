@@ -51,12 +51,26 @@ function normalizeListInput(input: DomainListInput) {
   };
 }
 
-function renderDataset(data: { target: string; dataset: string; resultCount: number }) {
+function renderDataset(data: {
+  target: string;
+  dataset: string;
+  resultCount: number;
+  billing?: { cost: number | null; currency: string };
+}) {
   return [
     `Target: ${data.target}`,
     `Dataset: ${data.dataset}`,
     `Results: ${data.resultCount}`,
+    `Cost: ${formatCost(data.billing)}`,
   ];
+}
+
+function formatCost(billing?: { cost: number | null; currency: string }) {
+  if (!billing || billing.cost === null) {
+    return "unknown";
+  }
+
+  return `${billing.cost} ${billing.currency}`;
 }
 
 export async function handleDomainDatasetSummary(args: {
