@@ -71,7 +71,7 @@ describe("page-extract schema", () => {
     expect(result.status).toBe(0);
     expect(extractOutline(result.stdout)).toContain("page: {");
     expect(extractOutline(result.stdout)).toContain(
-      "extract(url: string, provider?: string, screenshot?: boolean, screenshotOutput?: string)"
+      "extract(input: { url: string; provider?: string; screenshot?: boolean; screenshotOutput?: string })"
     );
   });
 

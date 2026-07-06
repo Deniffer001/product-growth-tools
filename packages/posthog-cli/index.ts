@@ -9,7 +9,6 @@ import {
   cli,
   generateSchema,
   generateSchemaOutline,
-  parseArgv,
   selectSchema,
 } from "argc";
 import {
@@ -33,9 +32,23 @@ import {
   handleFeatureFlagDatasetFlags,
   handleInsightDatasetInsights,
 } from "./handlers/resources";
+import {
+  createArgcOptions,
+  normalizeLegacyArgv,
+  withLegacyContext,
+} from "./lib/argc-compat";
 import { cliOptions, schema } from "./schema";
 
-const parsedArgv = parseArgv(process.argv.slice(2));
+const parsedArgv = normalizeLegacyArgv({
+  argv: process.argv.slice(2),
+  schema,
+  globalFlags: [
+    "posthogApiToken",
+    "posthogHost",
+    "posthogProjectId",
+    "pretty",
+  ],
+});
 
 if (shouldLoadDefaultCliEnv({ flags: parsedArgv.flags })) {
   loadDefaultCliEnv();
@@ -49,22 +62,25 @@ function printSchema(text: string) {
 
 function maybeHandleExpandedSchemaSelector() {
   const isRootLevel = parsedArgv.positionals.length === 0;
+  const schemaFlag = parsedArgv.flags.schema;
   const selectorValue =
-    typeof parsedArgv.flags.schema === "string"
-      ? parsedArgv.flags.schema
+    typeof schemaFlag === "string"
+      ? schemaFlag
+      : schemaFlag === true
+        ? ""
       : null;
 
-  if (!(isRootLevel && selectorValue)) {
+  if (!(isRootLevel && selectorValue !== null)) {
     return false;
   }
 
   try {
-    const selected = selectSchema(schema, selectorValue, { depth: 2 });
-    const subset = selected.schema;
+    const subset = selectorValue
+      ? selectSchema(schema, selectorValue, { depth: 2 }).schema
+      : schema;
     const schemaOutput = generateSchema(subset, {
       name: cliOptions.name,
       description: cliOptions.description,
-      globals: cliOptions.globals,
     });
     const maxLines = cliOptions.schemaMaxLines ?? 80;
     const lines = schemaOutput.split("\n");
@@ -96,63 +112,70 @@ if (maybeHandleExpandedSchemaSelector()) {
   process.exit(process.exitCode ?? 0);
 }
 
-const app = cli(schema, {
-  ...cliOptions,
-  context: createCliContext,
-});
+const context = createCliContext(parsedArgv.flags);
+const app = cli(schema, createArgcOptions(cliOptions));
 
 await app.run({
   handlers: {
     doctor: {
       dataset: {
-        readiness: handleDoctorReadinessDataset,
+        readiness: withLegacyContext(handleDoctorReadinessDataset, context),
       },
     },
     query: {
       dataset: {
-        results: handleQueryDatasetResults,
+        results: withLegacyContext(handleQueryDatasetResults, context),
       },
       action: {
-        run: handleQueryActionRun,
+        run: withLegacyContext(handleQueryActionRun, context),
       },
     },
     event: {
       dataset: {
-        counts: handleEventDatasetCounts,
-        map: handleEventDatasetMap,
+        counts: withLegacyContext(handleEventDatasetCounts, context),
+        map: withLegacyContext(handleEventDatasetMap, context),
       },
     },
     funnel: {
-      analyze: handleFunnelAnalyze,
+      analyze: withLegacyContext(handleFunnelAnalyze, context),
     },
     audit: {
       dataset: {
-        instrumentation: handleAuditDatasetInstrumentation,
+        instrumentation: withLegacyContext(
+          handleAuditDatasetInstrumentation,
+          context
+        ),
       },
     },
     profile: {
-      validate: handleProfileValidate,
+      validate: withLegacyContext(handleProfileValidate, context),
     },
     project: {
       dataset: {
-        "event-definitions": handleProjectEventDefinitionsDataset,
-        "property-definitions": handleProjectPropertyDefinitionsDataset,
+        "event-definitions": withLegacyContext(
+          handleProjectEventDefinitionsDataset,
+          context
+        ),
+        "property-definitions": withLegacyContext(
+          handleProjectPropertyDefinitionsDataset,
+          context
+        ),
       },
     },
     "feature-flag": {
       dataset: {
-        flags: handleFeatureFlagDatasetFlags,
+        flags: withLegacyContext(handleFeatureFlagDatasetFlags, context),
       },
     },
     insight: {
       dataset: {
-        insights: handleInsightDatasetInsights,
+        insights: withLegacyContext(handleInsightDatasetInsights, context),
       },
     },
     dashboard: {
       dataset: {
-        dashboards: handleDashboardDatasetDashboards,
+        dashboards: withLegacyContext(handleDashboardDatasetDashboards, context),
       },
     },
   },
-});
+} as never, parsedArgv.argvForArgc);

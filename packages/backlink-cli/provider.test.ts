@@ -17,15 +17,14 @@ describe("backlink provider", () => {
           "https://api.dataforseo.com/v3/backlinks/summary/live"
         );
         expect(init?.method).toBe("POST");
-        expect(init?.headers?.Authorization).toContain("Basic ");
-        expect(init?.body).toContain("openclawai.io");
-        expect(init?.body).toContain("include_subdomains");
+        expect(new Headers(init?.headers).get("Authorization")).toContain(
+          "Basic "
+        );
+        expect(String(init?.body)).toContain("openclawai.io");
+        expect(String(init?.body)).toContain("include_subdomains");
 
-        return {
-          ok: true,
-          status: 200,
-          text: async () =>
-            JSON.stringify({
+        return new Response(
+          JSON.stringify({
               status_code: 20000,
               tasks: [
                 {
@@ -51,7 +50,8 @@ describe("backlink provider", () => {
                 },
               ],
             }),
-        };
+          { status: 200 }
+        );
       },
     });
 
@@ -95,14 +95,11 @@ describe("backlink provider", () => {
         expect(url).toBe(
           "https://api.dataforseo.com/v3/backlinks/backlinks/live"
         );
-        expect(init?.body).toContain("https://openclawai.io/");
-        expect(init?.body).toContain('"order_by":["rank,desc"]');
+        expect(String(init?.body)).toContain("https://openclawai.io/");
+        expect(String(init?.body)).toContain('"order_by":["rank,desc"]');
 
-        return {
-          ok: true,
-          status: 200,
-          text: async () =>
-            JSON.stringify({
+        return new Response(
+          JSON.stringify({
               status_code: 20000,
               tasks: [
                 {
@@ -132,7 +129,8 @@ describe("backlink provider", () => {
                 },
               ],
             }),
-        };
+          { status: 200 }
+        );
       },
     });
 
@@ -161,10 +159,8 @@ describe("backlink provider", () => {
     const client = createBacklinkClient({
       login: "login",
       password: "password",
-      fetcher: async () => ({
-        ok: true,
-        status: 200,
-        text: async () =>
+      fetcher: async () =>
+        new Response(
           JSON.stringify({
             status_code: 20000,
             tasks: [
@@ -177,7 +173,8 @@ describe("backlink provider", () => {
               },
             ],
           }),
-      }),
+          { status: 200 }
+        ),
     });
 
     await expect(

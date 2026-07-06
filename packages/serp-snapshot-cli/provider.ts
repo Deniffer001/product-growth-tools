@@ -5,6 +5,11 @@
  */
 
 import { cliError } from "./lib/errors";
+import {
+  createDataForSeoSerpTransport,
+  type DataForSeoFetch,
+  type DataForSeoSerpTransport,
+} from "./lib/dataforseo-transport";
 import type { SerpDevice, SerpOs } from "./lib/input-validation";
 
 export type SerpFeatureState = boolean | "present" | "unknown";
@@ -80,15 +85,6 @@ export type SerpSnapshotClient = {
   query: (input: SerpQueryRequest) => Promise<SerpSnapshot>;
 };
 
-type FetchLike = (
-  url: string,
-  init?: {
-    method?: string;
-    headers?: Record<string, string>;
-    body?: string;
-  }
-) => Promise<{ ok: boolean; status: number; text: () => Promise<string> }>;
-
 type DataForSeoTask = {
   id?: string;
   status_code?: number;
@@ -106,8 +102,6 @@ type DataForSeoResponse = {
   tasks?: DataForSeoTask[];
 };
 
-const DATAFORSEO_ENDPOINT =
-  "https://api.dataforseo.com/v3/serp/google/organic/live/advanced";
 const LOCATION_CODES: Record<string, number> = {
   AU: 2036,
   CA: 2124,
@@ -123,10 +117,9 @@ const LOCATION_CODES: Record<string, number> = {
 export function createSerpSnapshotClient(input: {
   login?: string;
   password?: string;
-  fetcher?: FetchLike;
+  fetcher?: DataForSeoFetch;
+  serpTransport?: DataForSeoSerpTransport;
 }): SerpSnapshotClient {
-  const fetcher = input.fetcher ?? fetch;
-
   return {
     async checkReadiness() {
       return {
@@ -138,31 +131,23 @@ export function createSerpSnapshotClient(input: {
     },
     async query(request) {
       requireCredentials(input);
-      const response = await fetcher(DATAFORSEO_ENDPOINT, {
-        method: "POST",
-        headers: {
-          Authorization: `Basic ${Buffer.from(
-            `${input.login}:${input.password}`
-          ).toString("base64")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify([
-          {
-            keyword: request.query,
-            ...buildLocationInput(request.country),
-            language_code: request.language,
-            device: request.device,
-            os: request.os,
-            depth: request.depth,
-          },
-        ]),
-      });
-
-      if (!response.ok) {
-        throw providerHttpError(response.status);
-      }
-
-      const parsed = parseProviderResponse(await response.text());
+      const transport =
+        input.serpTransport ??
+        createDataForSeoSerpTransport({
+          login: input.login,
+          password: input.password,
+          fetcher: input.fetcher,
+        });
+      const parsed = requireProviderResponse(
+        await transport.googleOrganicLiveAdvanced({
+          keyword: request.query,
+          ...buildLocationInput(request.country),
+          language_code: request.language,
+          device: request.device,
+          os: request.os,
+          depth: request.depth,
+        })
+      );
       assertProviderAccepted(parsed);
       const task = parsed.tasks?.[0];
       if (!task) {
@@ -195,7 +180,9 @@ function buildLocationInput(country: string) {
   return { location_name: country };
 }
 
-function requireCredentials(input: { login?: string; password?: string }) {
+function requireCredentials<TInput extends { login?: string; password?: string }>(
+  input: TInput
+): asserts input is TInput & { login: string; password: string } {
   if (input.login && input.password) {
     return;
   }
@@ -207,22 +194,15 @@ function requireCredentials(input: { login?: string; password?: string }) {
   });
 }
 
-function providerHttpError(status: number) {
-  const error = new Error(`DataForSEO request failed with HTTP ${status}.`);
-  Reflect.set(error, "status", status);
-  return error;
-}
-
-function parseProviderResponse(text: string): DataForSeoResponse {
-  try {
-    return JSON.parse(text) as DataForSeoResponse;
-  } catch {
-    throw cliError({
-      code: "parse_error",
-      message: "DataForSEO returned invalid JSON.",
-      hint: text.slice(0, 200),
-    });
+function requireProviderResponse(parsed: unknown): DataForSeoResponse {
+  if (parsed && typeof parsed === "object") {
+    return parsed as DataForSeoResponse;
   }
+
+  throw cliError({
+    code: "provider_error",
+    message: "DataForSEO returned an empty response.",
+  });
 }
 
 function assertProviderAccepted(parsed: DataForSeoResponse) {

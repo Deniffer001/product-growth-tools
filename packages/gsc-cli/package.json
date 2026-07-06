@@ -1,6 +1,6 @@
 {
   "name": "@deniffer/gsc-cli",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Google Search Console raw-data CLI for product growth and SEO workflows.",
   "type": "module",
   "sideEffects": false,
@@ -40,7 +40,7 @@
     "@standard-schema/spec": "^1.0.0",
     "@valibot/to-json-schema": "^1.6.0",
     "@deniffer/cli-kit": "github:Deniffer001/cli-kit#v0.1.2",
-    "argc": "github:ethan-huo/argc#7d7b60d",
+    "argc": "github:ethan-huo/argc#v7.5.0",
     "dotenv": "^17.2.2",
     "googleapis": "^166.0.0",
     "valibot": "^1.2.0"

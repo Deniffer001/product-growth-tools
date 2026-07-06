@@ -63,8 +63,8 @@ describe("backlink schema", () => {
     expect(result.status).toBe(0);
     expect(result.stdout).toContain("backlinks(");
     expect(result.stdout).toContain("target: string");
-    expect(result.stdout).toContain("limit?: number | string");
-    expect(result.stdout).toContain("offset?: number | string");
+    expect(result.stdout).toContain("limit?: number");
+    expect(result.stdout).toContain("offset?: number");
     expect(result.stdout).toContain("orderBy?: string");
   });
 });

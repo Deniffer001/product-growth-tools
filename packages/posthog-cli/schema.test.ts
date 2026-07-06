@@ -72,7 +72,7 @@ describe("posthog schema", () => {
     expect(result.status).toBe(0);
     expect(result.stdout).toContain("results(");
     expect(result.stdout).toContain("query: string");
-    expect(result.stdout).toContain("limit?: number | string");
+    expect(result.stdout).toContain("limit?: number");
     expect(result.stdout).toContain("noLimitGuard?: boolean");
     expect(result.stdout).toContain("raw?: boolean");
   });
@@ -102,7 +102,7 @@ describe("posthog schema", () => {
     expect(eventMapResult.stdout).toContain("window?: string");
     expect(eventMapResult.stdout).toContain("from?: string");
     expect(eventMapResult.stdout).toContain("to?: string");
-    expect(eventMapResult.stdout).toContain("limit?: number | string");
+    expect(eventMapResult.stdout).toContain("limit?: number");
 
     expect(funnelResult.status).toBe(0);
     expect(funnelResult.stdout).toContain("events?: string");

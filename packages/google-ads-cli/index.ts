@@ -9,7 +9,6 @@ import {
   cli,
   generateSchema,
   generateSchemaOutline,
-  parseArgv,
   selectSchema,
 } from "argc";
 import {
@@ -29,9 +28,24 @@ import {
 import { handleProviderInstallAction } from "./handlers/provider";
 import { handleGaqlDataset } from "./handlers/query";
 import { handleSearchTermPerformanceDataset } from "./handlers/search-term";
+import {
+  createArgcOptions,
+  normalizeLegacyArgv,
+  withLegacyContext,
+} from "./lib/argc-compat";
 import { cliOptions, schema } from "./schema";
 
-const parsedArgv = parseArgv(process.argv.slice(2));
+const parsedArgv = normalizeLegacyArgv({
+  argv: process.argv.slice(2),
+  schema,
+  globalFlags: [
+    "credentialsFile",
+    "customerId",
+    "loginCustomerId",
+    "linkedCustomerId",
+    "pretty",
+  ],
+});
 
 if (shouldLoadDefaultCliEnv(parsedArgv)) {
   loadDefaultCliEnv();
@@ -45,22 +59,25 @@ function printSchema(text: string) {
 
 function maybeHandleExpandedSchemaSelector() {
   const isRootLevel = parsedArgv.positionals.length === 0;
+  const schemaFlag = parsedArgv.flags.schema;
   const selectorValue =
-    typeof parsedArgv.flags.schema === "string"
-      ? parsedArgv.flags.schema
+    typeof schemaFlag === "string"
+      ? schemaFlag
+      : schemaFlag === true
+        ? ""
       : null;
 
-  if (!(isRootLevel && selectorValue)) {
+  if (!(isRootLevel && selectorValue !== null)) {
     return false;
   }
 
   try {
-    const selected = selectSchema(schema, selectorValue, { depth: 2 });
-    const subset = selected.schema;
+    const subset = selectorValue
+      ? selectSchema(schema, selectorValue, { depth: 2 }).schema
+      : schema;
     const schemaOutput = generateSchema(subset, {
       name: cliOptions.name,
       description: cliOptions.description,
-      globals: cliOptions.globals,
     });
     const maxLines = cliOptions.schemaMaxLines ?? 80;
     const lines = schemaOutput.split("\n");
@@ -92,58 +109,71 @@ if (maybeHandleExpandedSchemaSelector()) {
   process.exit(process.exitCode ?? 0);
 }
 
-const app = cli(schema, {
-  ...cliOptions,
-  context: createCliContext,
-});
+const context = createCliContext(parsedArgv.flags);
+const app = cli(schema, createArgcOptions(cliOptions));
 
 await app.run({
   handlers: {
     adGroup: {
       dataset: {
-        performance: handleAdGroupPerformanceDataset,
+        performance: withLegacyContext(
+          handleAdGroupPerformanceDataset,
+          context
+        ),
       },
     },
     campaign: {
       dataset: {
-        performance: handleCampaignPerformanceDataset,
+        performance: withLegacyContext(
+          handleCampaignPerformanceDataset,
+          context
+        ),
       },
     },
     doctor: {
       dataset: {
-        readiness: handleDoctorReadinessDataset,
+        readiness: withLegacyContext(handleDoctorReadinessDataset, context),
       },
     },
     customer: {
       dataset: {
-        accounts: handleCustomerAccountsDataset,
+        accounts: withLegacyContext(handleCustomerAccountsDataset, context),
       },
     },
     keyword: {
       dataset: {
-        performance: handleKeywordPerformanceDataset,
+        performance: withLegacyContext(
+          handleKeywordPerformanceDataset,
+          context
+        ),
       },
     },
     keywordPlan: {
       dataset: {
-        historicalMetrics: handleKeywordPlanHistoricalMetricsDataset,
-        ideas: handleKeywordPlanIdeasDataset,
+        historicalMetrics: withLegacyContext(
+          handleKeywordPlanHistoricalMetricsDataset,
+          context
+        ),
+        ideas: withLegacyContext(handleKeywordPlanIdeasDataset, context),
       },
     },
     provider: {
       action: {
-        install: handleProviderInstallAction,
+        install: withLegacyContext(handleProviderInstallAction, context),
       },
     },
     query: {
       dataset: {
-        gaql: handleGaqlDataset,
+        gaql: withLegacyContext(handleGaqlDataset, context),
       },
     },
     searchTerm: {
       dataset: {
-        performance: handleSearchTermPerformanceDataset,
+        performance: withLegacyContext(
+          handleSearchTermPerformanceDataset,
+          context
+        ),
       },
     },
   },
-});
+} as never, parsedArgv.argvForArgc);

@@ -14,15 +14,14 @@ describe("serp-snapshot provider", () => {
       password: "password",
       fetcher: async (_url, init) => {
         expect(init?.method).toBe("POST");
-        expect(init?.headers?.Authorization).toContain("Basic ");
-        expect(init?.body).toContain("typeless alternative for mac");
-        expect(init?.body).toContain('"location_code":2840');
+        expect(new Headers(init?.headers).get("Authorization")).toContain(
+          "Basic "
+        );
+        expect(String(init?.body)).toContain("typeless alternative for mac");
+        expect(String(init?.body)).toContain('"location_code":2840');
 
-        return {
-          ok: true,
-          status: 200,
-          text: async () =>
-            JSON.stringify({
+        return new Response(
+          JSON.stringify({
               status_code: 20000,
               tasks: [
                 {
@@ -64,7 +63,8 @@ describe("serp-snapshot provider", () => {
                 },
               ],
             }),
-        };
+          { status: 200 }
+        );
       },
     });
 

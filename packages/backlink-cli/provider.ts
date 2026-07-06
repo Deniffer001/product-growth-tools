@@ -5,6 +5,11 @@
  */
 
 import { cliError } from "./lib/errors";
+import {
+  createDataForSeoBacklinksTransport,
+  type DataForSeoBacklinksTransport,
+  type DataForSeoFetch,
+} from "./lib/dataforseo-transport";
 import type { BacklinksStatusType } from "./lib/input-validation";
 
 export type BacklinkSummaryRequest = {
@@ -126,15 +131,6 @@ export type BacklinkClient = {
   ) => Promise<BacklinkDataset<AnchorItem>>;
 };
 
-type FetchLike = (
-  url: string,
-  init?: {
-    method?: string;
-    headers?: Record<string, string>;
-    body?: string;
-  }
-) => Promise<{ ok: boolean; status: number; text: () => Promise<string> }>;
-
 type DataForSeoTask = {
   id?: string;
   status_code?: number;
@@ -150,44 +146,28 @@ type DataForSeoResponse = {
   tasks?: DataForSeoTask[];
 };
 
-const ENDPOINTS: Record<BacklinkDatasetKind, string> = {
-  summary: "https://api.dataforseo.com/v3/backlinks/summary/live",
-  backlinks: "https://api.dataforseo.com/v3/backlinks/backlinks/live",
-  referring_domains:
-    "https://api.dataforseo.com/v3/backlinks/referring_domains/live",
-  anchors: "https://api.dataforseo.com/v3/backlinks/anchors/live",
-};
-
 export function createBacklinkClient(input: {
   login?: string;
   password?: string;
-  fetcher?: FetchLike;
+  fetcher?: DataForSeoFetch;
+  backlinksTransport?: DataForSeoBacklinksTransport;
 }): BacklinkClient {
-  const fetcher = input.fetcher ?? fetch;
-
   async function request<TItem>(
     dataset: BacklinkDatasetKind,
     body: Record<string, unknown>,
     normalize: (item: Record<string, unknown>) => TItem
   ): Promise<BacklinkDataset<TItem>> {
     requireCredentials(input);
-
-    const response = await fetcher(ENDPOINTS[dataset], {
-      method: "POST",
-      headers: {
-        Authorization: `Basic ${Buffer.from(
-          `${input.login}:${input.password}`
-        ).toString("base64")}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify([stripUndefined(body)]),
-    });
-
-    if (!response.ok) {
-      throw providerHttpError(response.status);
-    }
-
-    const parsed = parseProviderResponse(await response.text());
+    const transport =
+      input.backlinksTransport ??
+      createDataForSeoBacklinksTransport({
+        login: input.login,
+        password: input.password,
+        fetcher: input.fetcher,
+      });
+    const parsed = requireProviderResponse(
+      await transport.request(dataset, stripUndefined(body))
+    );
     assertProviderAccepted(parsed);
 
     const task = parsed.tasks?.[0];
@@ -352,7 +332,9 @@ function normalizeTotals(result: Record<string, unknown>) {
   };
 }
 
-function requireCredentials(input: { login?: string; password?: string }) {
+function requireCredentials<TInput extends { login?: string; password?: string }>(
+  input: TInput
+): asserts input is TInput & { login: string; password: string } {
   if (input.login && input.password) {
     return;
   }
@@ -364,22 +346,15 @@ function requireCredentials(input: { login?: string; password?: string }) {
   });
 }
 
-function providerHttpError(status: number) {
-  const error = new Error(`DataForSEO request failed with HTTP ${status}.`);
-  Reflect.set(error, "status", status);
-  return error;
-}
-
-function parseProviderResponse(text: string): DataForSeoResponse {
-  try {
-    return JSON.parse(text) as DataForSeoResponse;
-  } catch {
-    throw cliError({
-      code: "parse_error",
-      message: "DataForSEO returned invalid JSON.",
-      hint: text.slice(0, 200),
-    });
+function requireProviderResponse(parsed: unknown): DataForSeoResponse {
+  if (parsed && typeof parsed === "object") {
+    return parsed as DataForSeoResponse;
   }
+
+  throw cliError({
+    code: "provider_error",
+    message: "DataForSEO returned an empty response.",
+  });
 }
 
 function assertProviderAccepted(parsed: DataForSeoResponse) {

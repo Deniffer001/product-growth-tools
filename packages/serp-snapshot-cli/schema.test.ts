@@ -87,6 +87,6 @@ describe("serp-snapshot schema", () => {
     expect(result.stdout).toContain("country?: string");
     expect(result.stdout).toContain("language?: string");
     expect(result.stdout).toContain("device?: string");
-    expect(result.stdout).toContain("depth?: number | string");
+    expect(result.stdout).toContain("depth?: number");
   });
 });
