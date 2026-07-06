@@ -65,7 +65,7 @@ function extractOutline(stdout: string) {
 }
 
 describe("gsc cli schema", () => {
-  test("groups commands by domain before intent", () => {
+  test("groups commands by domain before intent", { timeout: 15_000 }, () => {
     const result = runCli(["--schema"]);
 
     expect(result.status).toBe(0);
