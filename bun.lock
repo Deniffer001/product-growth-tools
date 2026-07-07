@@ -60,6 +60,29 @@
         "vitest": "^4.0.18",
       },
     },
+    "packages/bing-webmaster-cli": {
+      "name": "@deniffer/bing-webmaster-cli",
+      "version": "0.1.0",
+      "bin": {
+        "bing-webmaster": "bin/bing-webmaster-cli.js",
+        "bing-webmaster-cli": "bin/bing-webmaster-cli.js",
+      },
+      "dependencies": {
+        "@deniffer/cli-kit": "github:Deniffer001/cli-kit#v0.1.2",
+        "@standard-schema/spec": "^1.0.0",
+        "@valibot/to-json-schema": "^1.6.0",
+        "argc": "github:ethan-huo/argc#v7.5.0",
+        "dotenv": "^17.2.2",
+        "valibot": "^1.2.0",
+      },
+      "devDependencies": {
+        "@types/bun": "^1.3.10",
+        "@types/node": "^25.6.0",
+        "bun-types": "^1.3.13",
+        "typescript": "^5",
+        "vitest": "^4.0.18",
+      },
+    },
     "packages/google-ads-cli": {
       "name": "@deniffer/google-ads-cli",
       "version": "0.1.7",
@@ -235,6 +258,8 @@
     "@deniffer/ai-optimization-cli": ["@deniffer/ai-optimization-cli@workspace:packages/ai-optimization-cli"],
 
     "@deniffer/backlink-cli": ["@deniffer/backlink-cli@workspace:packages/backlink-cli"],
+
+    "@deniffer/bing-webmaster-cli": ["@deniffer/bing-webmaster-cli@workspace:packages/bing-webmaster-cli"],
 
     "@deniffer/cli-kit": ["@deniffer/cli-kit@github:Deniffer001/cli-kit#057d30b", { "dependencies": { "dotenv": "^17.4.2" }, "peerDependencies": { "argc": "*", "valibot": "^1" } }, "Deniffer001-cli-kit-057d30b", "sha512-oodW8Z+TpNfSL14uSCjGX7LsVB2av9Tm5EEkwnIE8Gr26NbuCaFl5aMLl7+MaWX/JzDQtAg810ilwJ8DaxXkSA=="],
 
@@ -896,6 +921,10 @@
 
     "@ai-sdk/ui-utils/@ai-sdk/provider-utils": ["@ai-sdk/provider-utils@2.2.8", "", { "dependencies": { "@ai-sdk/provider": "1.1.3", "nanoid": "^3.3.8", "secure-json-parse": "^2.7.0" }, "peerDependencies": { "zod": "^3.23.8" } }, "sha512-fqhG+4sCVv8x7nFzYnFo19ryhAa3w096Kmc3hWxMQfW/TubPOmt3A6tYZhl4mUfQWWQMsuSkLrtjlWuXBVSGQA=="],
 
+    "@deniffer/bing-webmaster-cli/@deniffer/cli-kit": ["@deniffer/cli-kit@github:Deniffer001/cli-kit#057d30b", { "dependencies": { "dotenv": "^17.4.2" }, "peerDependencies": { "argc": "*", "valibot": "^1" } }, "Deniffer001-cli-kit-057d30b", "sha512-oodW8Z+TpNfSL14uSCjGX7LsVB2av9Tm5EEkwnIE8Gr26NbuCaFl5aMLl7+MaWX/JzDQtAg810ilwJ8DaxXkSA=="],
+
+    "@deniffer/bing-webmaster-cli/argc": ["argc@github:ethan-huo/argc#cb4cd8b", { "dependencies": { "oxc-parser": "0.137.0", "yaml": "2.9.0" }, "peerDependencies": { "@standard-schema/spec": "^1.0.0" } }, "ethan-huo-argc-cb4cd8b", "sha512-RL7KAC1Jg3QJl+M2lMrm1Lrq4Wkv0t93S566OmSPqEN52A6Rj/jlrLtrBYcqxa3pTBMmgki/YLa7PS0jNO2/ZQ=="],
+
     "@deniffer/backlink-cli/@deniffer/cli-kit": ["@deniffer/cli-kit@github:Deniffer001/cli-kit#057d30b", { "dependencies": { "dotenv": "^17.4.2" }, "peerDependencies": { "argc": "*", "valibot": "^1" } }, "Deniffer001-cli-kit-057d30b", "sha512-oodW8Z+TpNfSL14uSCjGX7LsVB2av9Tm5EEkwnIE8Gr26NbuCaFl5aMLl7+MaWX/JzDQtAg810ilwJ8DaxXkSA=="],
 
     "@deniffer/backlink-cli/argc": ["argc@github:ethan-huo/argc#cb4cd8b", { "dependencies": { "oxc-parser": "0.137.0", "yaml": "2.9.0" }, "peerDependencies": { "@standard-schema/spec": "^1.0.0" } }, "ethan-huo-argc-cb4cd8b", "sha512-RL7KAC1Jg3QJl+M2lMrm1Lrq4Wkv0t93S566OmSPqEN52A6Rj/jlrLtrBYcqxa3pTBMmgki/YLa7PS0jNO2/ZQ=="],
@@ -977,6 +1006,8 @@
     "@ai-sdk/ui-utils/@ai-sdk/provider-utils/nanoid": ["nanoid@3.3.15", "", { "bin": { "nanoid": "bin/nanoid.cjs" } }, "sha512-y7Wygv/7mEOvxTuEQDB8StXdMRBWf1kR/tlhAzBRUFkB2jfcLOAxO/SHmOO2zgz1pVgK29/kyupn059/bCHdjA=="],
 
     "@deniffer/backlink-cli/@deniffer/cli-kit/argc": ["argc@0.1.1", "", {}, "sha512-Nv1PUrvwahIZUAHk3ZB5zZqEaKYKL76DDX8DqZOZMtNnuWDlSxPmQ5mSVGS/w/Puiib/nEHKAC3h1tpe2QrneA=="],
+
+    "@deniffer/bing-webmaster-cli/@deniffer/cli-kit/argc": ["argc@0.1.1", "", {}, "sha512-Nv1PUrvwahIZUAHk3ZB5zZqEaKYKL76DDX8DqZOZMtNnuWDlSxPmQ5mSVGS/w/Puiib/nEHKAC3h1tpe2QrneA=="],
 
     "@deniffer/google-ads-cli/@deniffer/cli-kit/argc": ["argc@0.1.1", "", {}, "sha512-Nv1PUrvwahIZUAHk3ZB5zZqEaKYKL76DDX8DqZOZMtNnuWDlSxPmQ5mSVGS/w/Puiib/nEHKAC3h1tpe2QrneA=="],
 

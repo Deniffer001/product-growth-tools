@@ -34,6 +34,7 @@
     "sync:runtime": "bun run ./scripts/sync-product-growth-runtime.ts",
     "ai-optimization": "bun run --filter @deniffer/ai-optimization-cli cli",
     "backlink": "bun run --filter @deniffer/backlink-cli cli",
+    "bing-webmaster": "bun run --filter @deniffer/bing-webmaster-cli cli",
     "gsc": "bun run --filter @deniffer/gsc-cli cli",
     "google-ads": "bun run --filter @deniffer/google-ads-cli cli",
     "page-extract": "bun run --filter @deniffer/page-extract-cli cli",
