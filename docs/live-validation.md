@@ -69,6 +69,29 @@ bun run gsc search dataset analytics --start-date 2026-04-01 --end-date 2026-04-
 
 If `GSC_SITE_URL` is not set in the active profile, pass `--site-url` explicitly.
 
+## Bing Webmaster
+
+Set `BING_WEBMASTER_API_KEY` and `BING_WEBMASTER_SITE_URL` in the active
+profile. The API key is a local secret and must not be committed.
+
+Readiness:
+
+```bash
+bun run bing-webmaster doctor dataset readiness
+```
+
+Basic provider truth:
+
+```bash
+bun run bing-webmaster site dataset sites
+bun run bing-webmaster traffic dataset rank
+bun run bing-webmaster traffic dataset queries
+bun run bing-webmaster crawl dataset stats
+```
+
+If `BING_WEBMASTER_SITE_URL` is not set in the active profile, pass `--site-url`
+explicitly.
+
 ## Google Ads
 
 Install the Python provider once:
