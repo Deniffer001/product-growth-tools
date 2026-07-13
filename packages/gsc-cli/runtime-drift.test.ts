@@ -4,7 +4,7 @@
  * @pos release safety test for non-published shared runtime code
  */
 
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, test } from "vitest";
 
@@ -17,12 +17,15 @@ function read(path: string) {
 describe("vendored product-growth runtime", () => {
   test("CLI copies match shared source", () => {
     const shared = read("packages/shared/product-growth-runtime/profile.ts");
+    const packagesRoot = resolve(repoRoot, "packages");
+    const targets = readdirSync(packagesRoot, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory() && entry.name.endsWith("-cli"))
+      .map((entry) => `packages/${entry.name}/lib/product-growth-runtime/profile.ts`)
+      .filter((path) => existsSync(resolve(repoRoot, path)));
 
-    expect(read("packages/gsc-cli/lib/product-growth-runtime/profile.ts")).toBe(
-      shared
-    );
-    expect(
-      read("packages/google-ads-cli/lib/product-growth-runtime/profile.ts")
-    ).toBe(shared);
+    expect(targets.length).toBeGreaterThan(0);
+    for (const target of targets) {
+      expect(read(target), target).toBe(shared);
+    }
   });
 });

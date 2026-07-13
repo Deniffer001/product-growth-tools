@@ -7,8 +7,8 @@ This repo should support real provider checks without committing provider secret
 Real credentials are local runtime inputs, not test fixtures. Keep them in a business profile:
 
 ```text
-~/.config/product-growth-tools/profiles/<business>/.env
-~/.config/product-growth-tools/profiles/<business>/credentials/
+~/.config/gkit/profiles/<business>/.env
+~/.config/gkit/profiles/<business>/credentials/
 ```
 
 Repo-local `.env.live` is allowed only as a temporary compatibility profile and is gitignored.
@@ -18,8 +18,8 @@ Repo-local `.env.live` is allowed only as a temporary compatibility profile and 
 Create a business profile:
 
 ```bash
-mkdir -p ~/.config/product-growth-tools/profiles/openclaw-web/credentials
-cp profile.env.example ~/.config/product-growth-tools/profiles/openclaw-web/.env
+mkdir -p ~/.config/gkit/profiles/openclaw-web/credentials
+cp profile.env.example ~/.config/gkit/profiles/openclaw-web/.env
 ```
 
 Copy the OpenClaw web provider credentials into the profile credentials directory, then edit the profile `.env`.
@@ -27,9 +27,9 @@ Copy the OpenClaw web provider credentials into the profile credentials director
 Recommended profile filenames:
 
 ```text
-~/.config/product-growth-tools/profiles/openclaw-web/credentials/gsc.json
-~/.config/product-growth-tools/profiles/openclaw-web/credentials/google-ads.json
-~/.config/product-growth-tools/profiles/openclaw-web/posthog.funnels.json
+~/.config/gkit/profiles/openclaw-web/credentials/gsc.json
+~/.config/gkit/profiles/openclaw-web/credentials/google-ads.json
+~/.config/gkit/profiles/openclaw-web/posthog.funnels.json
 ```
 
 Set the profile name when running provider reads:
@@ -44,7 +44,7 @@ For a repo checkout that should default to one business, put only the selector i
 PRODUCT_GROWTH_PROFILE=openclaw-web
 ```
 
-The CLI first reads `PRODUCT_GROWTH_PROFILE` / `PRODUCT_GROWTH_PROFILE_ROOT` from repo-local `.env.local` / `.env`, then loads `~/.config/product-growth-tools/profiles/$PRODUCT_GROWTH_PROFILE/.env`, then loads repo-local `.env.local` / `.env` as fallback values. Existing process env values always win.
+The CLI first reads `PRODUCT_GROWTH_PROFILE` / `PRODUCT_GROWTH_PROFILE_ROOT` from repo-local `.env.local` / `.env`, then loads `~/.config/gkit/profiles/$PRODUCT_GROWTH_PROFILE/.env`, then loads repo-local `.env.local` / `.env` as fallback values. Existing process env values always win. If the selected profile does not exist under `~/.config/gkit`, the runtime falls back to the legacy `~/.config/product-growth-tools` location.
 
 For tests or custom layouts, override the profile root:
 

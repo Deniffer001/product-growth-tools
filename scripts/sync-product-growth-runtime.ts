@@ -4,19 +4,16 @@
  * @pos maintenance helper that avoids publishing an internal runtime package
  */
 
-import { copyFileSync, mkdirSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 
 const repoRoot = resolve(import.meta.dirname, "..");
-const profileSource = resolve(
-  repoRoot,
-  "packages/shared/product-growth-runtime/profile.ts"
-);
-const profileTargets = [
-  "packages/backlink-cli/lib/product-growth-runtime/profile.ts",
-  "packages/gsc-cli/lib/product-growth-runtime/profile.ts",
-  "packages/google-ads-cli/lib/product-growth-runtime/profile.ts",
-].map((path) => resolve(repoRoot, path));
+const profileSource = resolve(repoRoot, "packages/shared/product-growth-runtime/profile.ts");
+const packagesRoot = resolve(repoRoot, "packages");
+const profileTargets = readdirSync(packagesRoot, { withFileTypes: true })
+  .filter((entry) => entry.isDirectory() && entry.name.endsWith("-cli"))
+  .map((entry) => resolve(packagesRoot, entry.name, "lib/product-growth-runtime/profile.ts"))
+  .filter(existsSync);
 
 for (const target of profileTargets) {
   mkdirSync(dirname(target), { recursive: true });

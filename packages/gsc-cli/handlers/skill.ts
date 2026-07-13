@@ -15,7 +15,7 @@ import { cliError } from "../lib/errors";
 
 const cliDir = dirname(fileURLToPath(import.meta.url));
 const packageRoot = resolve(cliDir, "..");
-const installRepo = "product-growth-tools";
+const installRepo = "gkit";
 
 const bundledSkills = {
   "gsc-cli": {
@@ -60,21 +60,14 @@ function targetRoot(global?: boolean) {
     return resolve(homedir(), ".agents/skills", installRepo);
   }
 
-  return resolve(
-    invocationRoot(),
-    ".agents/skills",
-    installRepo
-  );
+  return resolve(invocationRoot(), ".agents/skills", installRepo);
 }
 
 function skillMarkdownPath(sourceDir: string) {
   return resolve(sourceDir, "SKILL.md");
 }
 
-export async function handleSkillPath(args: {
-  input: SkillInput;
-  context: CliContext;
-}) {
+export async function handleSkillPath(args: { input: SkillInput; context: CliContext }) {
   await runCliCommand(args.context, async (services) => {
     const skill = resolveSkill(args.input.skill);
 
@@ -86,10 +79,7 @@ export async function handleSkillPath(args: {
   });
 }
 
-export async function handleSkillPrint(args: {
-  input: SkillInput;
-  context: CliContext;
-}) {
+export async function handleSkillPrint(args: { input: SkillInput; context: CliContext }) {
   await runCliCommand(args.context, async (services) => {
     const skill = resolveSkill(args.input.skill);
     const path = skillMarkdownPath(skill.sourceDir);
@@ -102,10 +92,7 @@ export async function handleSkillPrint(args: {
   });
 }
 
-export async function handleSkillInstall(args: {
-  input: SkillInstallInput;
-  context: CliContext;
-}) {
+export async function handleSkillInstall(args: { input: SkillInstallInput; context: CliContext }) {
   await runCliCommand(args.context, async (services) => {
     const skill = resolveSkill(args.input.skill);
     const targetDir = resolve(targetRoot(args.input.global), skill.id);

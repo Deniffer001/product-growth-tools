@@ -1,6 +1,6 @@
-# product-growth-tools
+# gkit
 
-Public CLI tools for product growth, SEO, paid search, and competitor discovery workflows.
+Growth Kit provides public CLI tools for product growth, SEO, paid search, and competitor discovery workflows.
 
 ## Packages
 
@@ -53,7 +53,7 @@ bunx @deniffer/posthog-cli funnel analyze --window 3d --events auth.signup,onboa
 bunx @deniffer/posthog-cli audit dataset instrumentation --window 3d --events auth.signup,purchase.completed
 ```
 
-With a product-growth profile, funnel presets can live in `~/.config/product-growth-tools/profiles/<business>/posthog.funnels.json`:
+With a product-growth profile, funnel presets can live in `~/.config/gkit/profiles/<business>/posthog.funnels.json`:
 
 ```bash
 PRODUCT_GROWTH_PROFILE=openclaw-web bunx @deniffer/posthog-cli profile validate

@@ -46,17 +46,9 @@ describe("gsc skill install", () => {
       };
       expect(payload.ok).toBe(true);
       expect(payload.data.installed).toBe(true);
-      expect(payload.data.target).toBe(
-        resolve(
-          root,
-          ".agents/skills/product-growth-tools/gsc-cli"
-        )
-      );
+      expect(payload.data.target).toBe(resolve(root, ".agents/skills/gkit/gsc-cli"));
 
-      const installed = await readFile(
-        join(payload.data.target, "SKILL.md"),
-        "utf8"
-      );
+      const installed = await readFile(join(payload.data.target, "SKILL.md"), "utf8");
       expect(installed).toContain("name: gsc-cli");
       expect(installed).toContain("gsc doctor dataset readiness");
     } finally {

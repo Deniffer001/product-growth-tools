@@ -16,7 +16,7 @@ BING_WEBMASTER_SITE_URL=https://example.com/
 ```
 
 The CLI loads `.env.local` and `.env` from the invocation workspace, plus
-`~/.config/product-growth-tools/profiles/<profile>/.env` when
+`~/.config/gkit/profiles/<profile>/.env` when
 `PRODUCT_GROWTH_PROFILE` is set.
 
 This package is read-only. It does not submit URLs, submit sitemaps, verify

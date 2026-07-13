@@ -1,8 +1,13 @@
 {
-  "name": "product-growth-tools",
+  "name": "gkit",
   "version": "0.1.0",
+  "description": "Growth Kit: agent-friendly CLI tools for product growth data.",
   "private": true,
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/celados/gkit.git"
+  },
   "packageManager": "bun@1.3.10",
   "workspaces": {
     "packages": [

@@ -1,7 +1,7 @@
 /**
  * @input process env, invocation directory env files, and business profile env files
  * @output profile-first env loading metadata and profile-relative path resolution
- * @pos shared credential profile runtime for product-growth CLIs
+ * @pos shared credential profile runtime for gkit CLIs
  */
 
 import { existsSync, readFileSync } from "node:fs";
@@ -9,11 +9,7 @@ import { homedir } from "node:os";
 import { dirname, isAbsolute, parse as parsePath, resolve } from "node:path";
 import { config, parse } from "dotenv";
 
-export type EnvLoader = (input: {
-  path: string;
-  override?: boolean;
-  quiet?: boolean;
-}) => unknown;
+export type EnvLoader = (input: { path: string; override?: boolean; quiet?: boolean }) => unknown;
 
 export type ProductGrowthProfileMetadata = {
   profile?: string;
@@ -32,8 +28,15 @@ export function getInvocationRoot() {
   return process.env.INIT_CWD ?? process.env.PWD ?? process.cwd();
 }
 
-export function defaultProfileRoot() {
-  return resolve(homedir(), ".config/product-growth-tools/profiles");
+export function defaultProfileRoot(profile?: string) {
+  const home = process.env.HOME ?? homedir();
+  const primaryRoot = resolve(home, ".config/gkit/profiles");
+  if (!profile || existsSync(resolve(primaryRoot, profile))) {
+    return primaryRoot;
+  }
+
+  const legacyRoot = resolve(home, ".config/product-growth-tools/profiles");
+  return existsSync(resolve(legacyRoot, profile)) ? legacyRoot : primaryRoot;
 }
 
 export function resolveInvocationEnvPaths(invocationRoot = getInvocationRoot()) {
@@ -43,21 +46,17 @@ export function resolveInvocationEnvPaths(invocationRoot = getInvocationRoot()) 
     roots.push(workspaceRoot);
   }
 
-  return roots.flatMap((root) =>
-    DEFAULT_ENV_FILES.map((name) => resolve(root, name))
-  );
+  return roots.flatMap((root) => DEFAULT_ENV_FILES.map((name) => resolve(root, name)));
 }
 
-export function loadProductGrowthEnv(
-  loadEnv: EnvLoader = config
-): ProductGrowthProfileMetadata {
+export function loadProductGrowthEnv(loadEnv: EnvLoader = config): ProductGrowthProfileMetadata {
   const invocationRoot = getInvocationRoot();
   const invocationEnvPaths = resolveInvocationEnvPaths(invocationRoot);
 
   loadProfileSelectorFromInvocationEnv(invocationEnvPaths);
 
   const profile = process.env.PRODUCT_GROWTH_PROFILE;
-  const profileRoot = process.env.PRODUCT_GROWTH_PROFILE_ROOT ?? defaultProfileRoot();
+  const profileRoot = process.env.PRODUCT_GROWTH_PROFILE_ROOT ?? defaultProfileRoot(profile);
   const profileDir = profile ? resolve(profileRoot, profile) : undefined;
   const profileEnvPath = profileDir ? resolve(profileDir, ".env") : undefined;
   const profileEnvFound = Boolean(profileEnvPath && existsSync(profileEnvPath));
@@ -111,7 +110,7 @@ export function getActiveProfileMetadata(): ProductGrowthProfileMetadata {
   const invocationEnvPaths = resolveInvocationEnvPaths(invocationRoot);
   const profile = process.env.PRODUCT_GROWTH_PROFILE;
   const profileRoot = profile
-    ? process.env.PRODUCT_GROWTH_PROFILE_ROOT ?? defaultProfileRoot()
+    ? (process.env.PRODUCT_GROWTH_PROFILE_ROOT ?? defaultProfileRoot(profile))
     : undefined;
   const profileDir =
     process.env.PRODUCT_GROWTH_PROFILE_DIR ??

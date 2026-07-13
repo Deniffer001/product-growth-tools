@@ -50,7 +50,7 @@ Then Agent 看到该命令需要的日期、维度、过滤与分页输入
 Given 下游 repo 已能运行 `gsc`
   And 下游 repo 还没有注册 GSC CLI 的调用协议
 When Agent 请求安装 bundled skill
-Then 当前 repo 的 `.agents/skills/product-growth-tools/gsc-cli` 下出现 skill 文件
+Then 当前 repo 的 `.agents/skills/gkit/gsc-cli` 下出现 skill 文件
   And 已存在同名 skill 时不会静默覆盖，除非 Agent 明确要求覆盖
   And 安装行为不需要完整 skill manager 参与
 
