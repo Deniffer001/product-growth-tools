@@ -27,7 +27,8 @@
     "cli": "bun run --filter gkit cli",
     "eval": "bun run --filter gkit eval:slice5",
     "check-types": "bun run --filter gkit check-types",
-    "test": "bun run --filter gkit test:once"
+    "test": "bun run --filter gkit test:once",
+    "verify:package": "bun run ./packages/gkit/scripts/verify-package-artifact.ts"
   },
   "devDependencies": {
     "@types/bun": "catalog:",

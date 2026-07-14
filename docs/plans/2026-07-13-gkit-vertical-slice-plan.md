@@ -314,11 +314,10 @@ $XDG_STATE_HOME/gkit/ledger.jsonl      # 未设置时 ~/.local/state/gkit/ledger
 
 #### Canonical invocation 与付费边界
 
-发现命令继续直接使用 `gkit --schema`、`gkit docs`、`gkit describe`;它们不加载 profile 或 secret。当前本机 profile 的 provider invocation 固定使用显式 secret injection 与显式 App profile:
+发现命令继续直接使用 `gkit --schema`、`gkit docs`、`gkit describe`;它们不加载 profile 或 secret。Provider invocation 显式选择 App profile;真正需要 credential 时,gkit 自动读取可选的 profile-adjacent `.env`,且进程环境优先:
 
 ```bash
-bun --env-file="$HOME/.config/gkit/profiles/clonesite.ai/.env" \
-  gkit --profile clonesite.ai dataforseo ...
+gkit --profile clonesite.ai dataforseo ...
 ```
 
 - 每个付费任务先以**同一 input**执行 `--dry-run`;dry-run 的 invocation cap 使用当前 profile hard cap `$0.03`,live call 再收紧为 dry-run 返回的精确 `costUpperBound.amount`,不使用宽泛的 `$0.05`。若 dry-run 计算出的上界超过 profile cap,任务停在 pre-dispatch gate。
@@ -384,7 +383,7 @@ Raw dogfood event 已追加到 `$XDG_STATE_HOME/gkit/dogfood/events.jsonl`（未
 - 两个 artifact 均为 `0600`,SHA-256 分别为 `a39921fb7cb06655b217dab278c13115b02d3ec71c79351534b52697696944c5` 与 `83aa4a9aabbaeb3e56fc660a94da5ea2aafbaa49c933332afdc7697eb11e65d7`,并实际用于提取 rank 事实。
 - Ledger 从 3 个历史 attempt 增至 5 个,结束时 `unresolved=0`、`activePolicyBreaches=0`;两份 artifact + ledger 对 13 种 resolved/derived credential 形式扫描为阴性。
 
-**Verdict: PASS.** Slice 1 official dogfood 4/4 通过,即时 gate 完成。观察到的唯一操作摩擦是 linked provider 命令仍需显式 `bun --env-file=...` 注入 secret;这是当前 host contract,未造成失败或额外 provider call。
+**Verdict: PASS.** Slice 1 official dogfood 4/4 通过,即时 gate 完成。该窗口观察到的 linked-command secret injection 摩擦已在后续全面 dogfood hardening 中修复;当前直接 profile invocation 不再需要外部 `bun --env-file` wrapper。
 
 下一步进入 Slice 2 的 DataForSEO reviewed-manifest 扩张;本 gate 不直接授权删除旧 package,旧 CLI 仍按逐 workflow behavior golden + 真实验证规则单独退役。
 

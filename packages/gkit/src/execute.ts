@@ -38,6 +38,7 @@ import {
   getProviderEnvironment,
   getProviderProfile,
   loadProfile,
+  loadProfileEnvironment,
   ProfileError,
   resolveProviderSecrets,
   selectProfileName,
@@ -252,7 +253,12 @@ export async function executeDataForSeoCall(options: {
       throw new SpendBlockedError(ledgerPath, blockers);
     }
 
-    const resolvedSecrets = dependencies.resolveProviderSecrets(profile, "dataforseo", env);
+    const profileEnvironment = await loadProfileEnvironment(profile, env);
+    const resolvedSecrets = dependencies.resolveProviderSecrets(
+      profile,
+      "dataforseo",
+      profileEnvironment,
+    );
     const login = resolvedSecrets.login;
     const password = resolvedSecrets.password;
     if (!login || !password) {

@@ -80,6 +80,10 @@ This matched the current profile contract and caused no failed provider call.
 The business-goal task reached the capability through `docs → describe` in the
 two-step discovery target.
 
+This friction was resolved after the baseline: current credentialed execution
+loads the selected profile's optional adjacent `.env`, so the direct
+`gkit --profile ...` invocation no longer needs the external Bun wrapper.
+
 ## Next decision
 
 Slice 1 is complete. Proceed to the Slice 2 DataForSEO reviewed-manifest

@@ -4,7 +4,7 @@ title: Google Search Console operation inventory
 description: >
   Generated inventory of pinned Google Search Console operations and their gkit exposure decisions.
 provider: gsc
-inventoryRevision: 2026-07-14.slice4.gsc.1
+inventoryRevision: 2026-07-14.slice4.gsc.2
 ---
 
 # Google Search Console operation inventory

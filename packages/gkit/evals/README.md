@@ -81,11 +81,11 @@ cannot be confirmed, stop paid dogfood and fail the window as an external
 unknown outcome.
 
 Provider commands on the current machine use the linked binary with explicit
-secret injection and profile selection:
+profile selection. Credentialed execution loads the optional profile-adjacent
+`.env` automatically, while explicit process environment values take priority:
 
 ```bash
-bun --env-file="$HOME/.config/gkit/profiles/clonesite.ai/.env" \
-  gkit --profile clonesite.ai dataforseo ...
+gkit --profile clonesite.ai dataforseo ...
 ```
 
 Append minimal events to `$XDG_STATE_HOME/gkit/dogfood/events.jsonl`, falling

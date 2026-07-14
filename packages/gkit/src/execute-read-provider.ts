@@ -19,6 +19,7 @@ import {
 import {
   getProviderProfile,
   loadProfile,
+  loadProfileEnvironment,
   ProfileError,
   resolveProviderSecrets,
   selectProfileName,
@@ -199,10 +200,11 @@ export async function executeReadProviderCall<TConfig, TOperation, TCredentials>
       destinationPath: options.command.out,
       force: options.command.force,
     });
+    const profileEnvironment = await loadProfileEnvironment(profile, env);
     const resolvedSecrets = dependencies.resolveProviderSecrets(
       profile,
       options.spec.provider,
-      env,
+      profileEnvironment,
     );
     const prepared = await options.spec.prepareCredentials({
       profile,

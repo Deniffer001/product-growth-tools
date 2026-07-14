@@ -11,6 +11,7 @@ import {
   getProviderEnvironment,
   getProviderProfile,
   loadProfile,
+  loadProfileEnvironment,
   ProfileError,
   resolveProviderSecrets,
   selectProfileName,
@@ -71,7 +72,8 @@ export async function runGscDoctor(options: {
       home: options.home,
     });
     const provider = getProviderProfile(profile, "gsc");
-    const resolved = resolveProviderSecrets(profile, "gsc", env);
+    const profileEnvironment = await loadProfileEnvironment(profile, env);
+    const resolved = resolveProviderSecrets(profile, "gsc", profileEnvironment);
     const serviceAccountFile = resolved.serviceAccountFile;
     if (!serviceAccountFile) {
       throw new ProfileError("invalid_profile", "GSC requires a serviceAccountFile env reference.");
@@ -123,7 +125,8 @@ async function runSimpleReadDoctor(options: {
       home: options.home,
     });
     const provider = getProviderProfile(profile, options.provider);
-    const resolved = resolveProviderSecrets(profile, options.provider, env);
+    const profileEnvironment = await loadProfileEnvironment(profile, env);
+    const resolved = resolveProviderSecrets(profile, options.provider, profileEnvironment);
     const secret = resolved[options.secretName];
     if (!secret)
       throw new ProfileError("invalid_profile", "Bing requires an apiKey env reference.");
@@ -190,11 +193,12 @@ export async function runPostHogDoctor(options: {
       home: options.home,
     });
     const provider = getProviderProfile(profile, "posthog");
+    const profileEnvironment = await loadProfileEnvironment(profile, env);
     for (const reference of Object.values(provider.secrets)) {
-      const value = env[reference.slice("env:".length)];
+      const value = profileEnvironment[reference.slice("env:".length)];
       if (value) secrets.register(value);
     }
-    const resolvedSecrets = resolveProviderSecrets(profile, "posthog", env);
+    const resolvedSecrets = resolveProviderSecrets(profile, "posthog", profileEnvironment);
     if (!resolvedSecrets.apiToken) {
       throw new ProfileError(
         "invalid_profile",
@@ -261,7 +265,8 @@ export async function runGoogleAdsDoctor(options: {
       home: options.home,
     });
     const provider = getProviderProfile(profile, "google-ads");
-    const resolvedSecrets = resolveProviderSecrets(profile, "google-ads", env);
+    const profileEnvironment = await loadProfileEnvironment(profile, env);
+    const resolvedSecrets = resolveProviderSecrets(profile, "google-ads", profileEnvironment);
     const developerToken = resolvedSecrets.developerToken;
     const serviceAccountFile = resolvedSecrets.serviceAccountFile;
     if (!developerToken || !serviceAccountFile) {
@@ -329,11 +334,12 @@ export async function runDataForSeoDoctor(options: {
       home: options.home,
     });
     const provider = getProviderProfile(profile, "dataforseo");
+    const profileEnvironment = await loadProfileEnvironment(profile, env);
     for (const reference of Object.values(provider.secrets)) {
-      const value = env[reference.slice("env:".length)];
+      const value = profileEnvironment[reference.slice("env:".length)];
       if (value) secrets.register(value);
     }
-    const resolvedSecrets = resolveProviderSecrets(profile, "dataforseo", env);
+    const resolvedSecrets = resolveProviderSecrets(profile, "dataforseo", profileEnvironment);
     if (!resolvedSecrets.login || !resolvedSecrets.password) {
       throw new ProfileError(
         "invalid_profile",

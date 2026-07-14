@@ -5,7 +5,7 @@ description: >
   Generated, searchable documentation for the reviewed gsc operations
   that gkit is allowed to route and execute.
 provider: gsc
-manifestRevision: 2026-07-14.slice4.gsc.1
+manifestRevision: 2026-07-14.slice4.gsc.2
 ---
 
 # gsc reviewed executable capabilities
@@ -147,7 +147,7 @@ Read details for one exact sitemap URL under one Search Console property.
 
 - Provider: `gsc`
 - Adapter key: `sitemaps.get`
-- Capability revision: `1`
+- Capability revision: `2`
 - Effects: `read`
 
 ### Input schema
@@ -176,6 +176,8 @@ Read details for one exact sitemap URL under one Search Console property.
 ```
 
 ### Invocation
+
+#### Read a sitemap returned by gsc.sitemaps.list for openclaw-web
 
 ```bash
 gkit --profile openclaw-web gsc api call --operation-id gsc.sitemaps.get --input @request.json --out gsc-sitemap.json --dry-run
@@ -224,7 +226,7 @@ Read Google's indexed URL inspection result for one URL under the selected prope
 
 - Provider: `gsc`
 - Adapter key: `url-inspection.inspect`
-- Capability revision: `1`
+- Capability revision: `2`
 - Effects: `read`
 
 ### Input schema
@@ -258,6 +260,8 @@ Read Google's indexed URL inspection result for one URL under the selected prope
 ```
 
 ### Invocation
+
+#### Inspect a URL under the openclaw-web Search Console property
 
 ```bash
 gkit --profile openclaw-web gsc api call --operation-id gsc.url-inspection.inspect --input @request.json --out gsc-inspection.json --dry-run

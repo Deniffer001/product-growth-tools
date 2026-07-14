@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { homedir } from "node:os";
-import { isAbsolute, resolve } from "node:path";
+import { dirname, isAbsolute, resolve } from "node:path";
+import { parse as parseDotenv } from "dotenv";
 import {
   literal,
   optional,
@@ -117,6 +118,10 @@ export type LoadedProfile = {
 export type ProfileLoadOptions = {
   xdgConfigHome?: string;
   home?: string;
+  readTextFile?: (path: string) => Promise<string>;
+};
+
+export type ProfileEnvironmentLoadOptions = {
   readTextFile?: (path: string) => Promise<string>;
 };
 
@@ -243,6 +248,34 @@ export async function loadProfile(
   });
 }
 
+export async function loadProfileEnvironment(
+  profile: LoadedProfile,
+  env: Readonly<Record<string, string | undefined>> = process.env,
+  options: ProfileEnvironmentLoadOptions = {},
+): Promise<Readonly<Record<string, string | undefined>>> {
+  const path = resolve(dirname(profile.path), profile.name, ".env");
+  const readTextFile = options.readTextFile ?? ((target) => readFile(target, "utf8"));
+
+  let profileEnvironment: Record<string, string> = {};
+  try {
+    profileEnvironment = parseDotenv(await readTextFile(path));
+  } catch (error) {
+    if (!isMissingFileError(error)) {
+      throw new ProfileError(
+        "invalid_profile",
+        `Unable to read profile environment at ${path}.`,
+        error,
+      );
+    }
+  }
+
+  const merged: Record<string, string | undefined> = { ...profileEnvironment };
+  for (const [name, value] of Object.entries(env)) {
+    if (value !== undefined) merged[name] = value;
+  }
+  return Object.freeze(merged);
+}
+
 export function getProviderProfile(profile: LoadedProfile, providerId: string): ProviderProfile {
   const provider = profile.providers[providerId];
   if (!provider) {
@@ -295,6 +328,15 @@ function assertProfileSlug(profileName: string): void {
       "Profile name must use lowercase letters, digits, dots, or hyphens and be between 1 and 64 characters.",
     );
   }
+}
+
+function isMissingFileError(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code?: unknown }).code === "ENOENT"
+  );
 }
 
 function parseDataForSeoConfig(config: Record<string, unknown>): Readonly<Record<string, unknown>> {

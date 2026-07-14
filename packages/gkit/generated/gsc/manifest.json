@@ -1,7 +1,7 @@
 {
   "version": 1,
   "provider": "gsc",
-  "revision": "2026-07-14.slice4.gsc.1",
+  "revision": "2026-07-14.slice4.gsc.2",
   "source": {
     "url": "https://searchconsole.googleapis.com/$discovery/rest?version=v1",
     "revision": "2026-07-14-reviewed-contract",
@@ -141,7 +141,7 @@
     {
       "id": "gsc.sitemaps.get",
       "provider": "gsc",
-      "revision": "1",
+      "revision": "2",
       "adapterKey": "sitemaps.get",
       "title": "Read one Search Console sitemap",
       "description": "Read details for one exact sitemap URL under one Search Console property.",
@@ -170,8 +170,9 @@
       },
       "examples": [
         {
+          "title": "Read a sitemap returned by gsc.sitemaps.list for openclaw-web",
           "input": {
-            "feedpath": "https://example.com/sitemap.xml"
+            "feedpath": "https://openclawai.io/sitemap-index.xml"
           },
           "command": "gkit --profile openclaw-web gsc api call --operation-id gsc.sitemaps.get --input @request.json --out gsc-sitemap.json --dry-run"
         }
@@ -214,7 +215,7 @@
     {
       "id": "gsc.url-inspection.inspect",
       "provider": "gsc",
-      "revision": "1",
+      "revision": "2",
       "adapterKey": "url-inspection.inspect",
       "title": "Inspect one URL in Google's index",
       "description": "Read Google's indexed URL inspection result for one URL under the selected property.",
@@ -248,8 +249,9 @@
       },
       "examples": [
         {
+          "title": "Inspect a URL under the openclaw-web Search Console property",
           "input": {
-            "inspectionUrl": "https://example.com/docs"
+            "inspectionUrl": "https://openclawai.io/"
           },
           "command": "gkit --profile openclaw-web gsc api call --operation-id gsc.url-inspection.inspect --input @request.json --out gsc-inspection.json --dry-run"
         }

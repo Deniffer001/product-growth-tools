@@ -3,6 +3,7 @@ import {
   ProfileError,
   getProviderEnvironment,
   loadProfile,
+  loadProfileEnvironment,
   profilePath,
   resolveProviderSecrets,
   selectProfileName,
@@ -75,6 +76,59 @@ describe("profile selection", () => {
 });
 
 describe("profile loading and secret resolution", () => {
+  test("loads the profile-adjacent .env without overriding explicit environment values", async () => {
+    const profile = await loadDocument(profileDocument());
+    const loaded = await loadProfileEnvironment(
+      profile,
+      {
+        APP_A_DATAFORSEO_LOGIN: "process-login",
+        PROCESS_ONLY: "process-value",
+      },
+      {
+        readTextFile: async (path) => {
+          expect(path).toBe("/tmp/gkit-profile-test/gkit/profiles/app-a/.env");
+          return [
+            "APP_A_DATAFORSEO_LOGIN=file-login",
+            "APP_A_DATAFORSEO_PASSWORD=file-password",
+            "FILE_ONLY=file-value",
+          ].join("\n");
+        },
+      },
+    );
+
+    expect(loaded).toEqual({
+      APP_A_DATAFORSEO_LOGIN: "process-login",
+      APP_A_DATAFORSEO_PASSWORD: "file-password",
+      FILE_ONLY: "file-value",
+      PROCESS_ONLY: "process-value",
+    });
+    expect(Object.isFrozen(loaded)).toBe(true);
+  });
+
+  test("treats a missing profile .env as optional but surfaces other read failures", async () => {
+    const profile = await loadDocument(profileDocument());
+    const missing = Object.assign(new Error("missing"), { code: "ENOENT" });
+
+    await expect(
+      loadProfileEnvironment(profile, { AMBIENT: "value" }, {
+        readTextFile: async () => {
+          throw missing;
+        },
+      }),
+    ).resolves.toEqual({ AMBIENT: "value" });
+
+    await expect(
+      loadProfileEnvironment(profile, {}, {
+        readTextFile: async () => {
+          throw Object.assign(new Error("denied"), { code: "EACCES" });
+        },
+      }),
+    ).rejects.toMatchObject({
+      reason: "invalid_profile",
+      message: expect.stringContaining("profile environment"),
+    });
+  });
+
   test("defaults DataForSEO to the fixed production environment", async () => {
     const profile = await loadDocument(profileDocument());
 

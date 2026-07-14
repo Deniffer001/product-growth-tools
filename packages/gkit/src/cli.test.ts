@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import { access, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 
 import { appendSettled, authorizeIfUnblocked } from "./ledger";
 
@@ -467,6 +467,35 @@ describe("gkit process contract", () => {
       ok: false,
       error: { code: "PROFILE_ERROR" },
       meta: { profile: "[REDACTED]" },
+    });
+  });
+
+  it("loads doctor credentials from the selected profile's adjacent .env", async () => {
+    const fixture = await createCliFixture();
+    const profileEnvironmentDirectory = join(dirname(fixture.profilePath), "app-a");
+    await mkdir(profileEnvironmentDirectory, { recursive: true });
+    await writeFile(
+      join(profileEnvironmentDirectory, ".env"),
+      [
+        "TEST_DATAFORSEO_LOGIN=profile-login",
+        "TEST_DATAFORSEO_PASSWORD=profile-password",
+      ].join("\n"),
+      { mode: 0o600 },
+    );
+
+    const result = await runCli(["--profile", "app-a", "dataforseo", "doctor"], fixture.env);
+
+    expect(result.exitCode).toBe(0);
+    expect(result.stderr).toBe("");
+    expect(result.stdout).not.toContain("profile-login");
+    expect(result.stdout).not.toContain("profile-password");
+    expect(JSON.parse(result.stdout)).toMatchObject({
+      ok: true,
+      data: {
+        provider: "dataforseo",
+        profileConfigured: true,
+        secretsConfigured: true,
+      },
     });
   });
 

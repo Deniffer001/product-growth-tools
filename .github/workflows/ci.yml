@@ -34,5 +34,5 @@ jobs:
       - name: Evaluate agent contract
         run: bun run eval
 
-      - name: Verify private package artifact
-        run: npm pack --dry-run --json ./packages/gkit
+      - name: Verify installable package artifact
+        run: bun run verify:package

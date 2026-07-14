@@ -26,6 +26,7 @@ import {
 import {
   getProviderProfile,
   loadProfile,
+  loadProfileEnvironment,
   ProfileError,
   resolveProviderSecrets,
   selectProfileName,
@@ -207,7 +208,12 @@ export async function executeGoogleAdsCall(options: {
       destinationPath: options.command.out,
       force: options.command.force,
     });
-    const resolvedSecrets = dependencies.resolveProviderSecrets(profile, "google-ads", env);
+    const profileEnvironment = await loadProfileEnvironment(profile, env);
+    const resolvedSecrets = dependencies.resolveProviderSecrets(
+      profile,
+      "google-ads",
+      profileEnvironment,
+    );
     const developerToken = resolvedSecrets.developerToken;
     const serviceAccountFile = resolvedSecrets.serviceAccountFile;
     if (!developerToken || !serviceAccountFile) {

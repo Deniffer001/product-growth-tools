@@ -27,6 +27,7 @@ import {
 import {
   getProviderProfile,
   loadProfile,
+  loadProfileEnvironment,
   ProfileError,
   resolveProviderSecrets,
   selectProfileName,
@@ -190,7 +191,12 @@ export async function executePostHogCall(options: {
       destinationPath: options.command.out,
       force: options.command.force,
     });
-    const resolvedSecrets = dependencies.resolveProviderSecrets(profile, "posthog", env);
+    const profileEnvironment = await loadProfileEnvironment(profile, env);
+    const resolvedSecrets = dependencies.resolveProviderSecrets(
+      profile,
+      "posthog",
+      profileEnvironment,
+    );
     const apiToken = resolvedSecrets.apiToken;
     if (!apiToken) {
       throw new ProfileError(
