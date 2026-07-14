@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "provider": "dataforseo",
+  "revision": "2026-07-13.slice1.1",
+  "reviewedAt": "2026-07-13T16:00:00.000Z",
+  "capabilities": [
+    {
+      "id": "dataforseo.backlinks.bulk_ranks.live",
+      "provider": "dataforseo",
+      "revision": "1",
+      "title": "Bulk backlink ranks",
+      "description": "Return DataForSEO backlink ranks for up to 1,000 targets in one live request.",
+      "adapterKey": "backlinks.bulk_ranks.live",
+      "effects": ["read", "spend"],
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["targets"],
+        "properties": {
+          "targets": {
+            "type": "array",
+            "description": "Domains, subdomains, or absolute URLs to rank.",
+            "minItems": 1,
+            "maxItems": 1000,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "rank_scale": {
+            "type": "string",
+            "enum": ["one_hundred", "one_thousand"]
+          },
+          "tag": {
+            "type": "string",
+            "maxLength": 255
+          }
+        }
+      },
+      "cost": {
+        "currency": "USD",
+        "policyRevision": "dataforseo-backlinks-pricing-2026-07-01-v1",
+        "model": {
+          "type": "linear-items",
+          "baseMicros": 24000,
+          "perItemMicros": 36,
+          "itemsJsonPointer": "/targets",
+          "maxItems": 1000
+        }
+      },
+      "examples": [
+        {
+          "title": "Safe preflight",
+          "input": {
+            "targets": ["clonesite.ai", "example.com"],
+            "rank_scale": "one_hundred",
+            "tag": "slice1-smoke"
+          },
+          "command": "gkit --profile app-a dataforseo api call --operation-id dataforseo.backlinks.bulk_ranks.live --input @req.json --allow-spend --max-spend-usd 0.05 --out ranks.json --dry-run"
+        },
+        {
+          "title": "Live call after reviewing the dry-run",
+          "input": {
+            "targets": ["clonesite.ai", "example.com"],
+            "rank_scale": "one_hundred",
+            "tag": "slice1-smoke"
+          },
+          "command": "gkit --profile app-a dataforseo api call --operation-id dataforseo.backlinks.bulk_ranks.live --input @req.json --allow-spend --max-spend-usd 0.05 --out ranks.json"
+        }
+      ]
+    }
+  ]
+}

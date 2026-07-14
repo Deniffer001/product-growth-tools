@@ -1,0 +1,300 @@
+import { readFile } from "node:fs/promises";
+import { homedir } from "node:os";
+import { isAbsolute, resolve } from "node:path";
+import {
+  literal,
+  optional,
+  picklist,
+  pipe,
+  record,
+  regex,
+  safeParse,
+  strictObject,
+  string,
+  unknown,
+} from "valibot";
+
+const PROFILE_SLUG_PATTERN = /^[a-z0-9](?:[a-z0-9.-]{0,62}[a-z0-9])?$/;
+const PROVIDER_ID_PATTERN = /^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?$/;
+const ENV_REFERENCE_PATTERN = /^env:[A-Z_][A-Z0-9_]*$/;
+const USD_DECIMAL_PATTERN = /^(?:0|[1-9]\d*)(?:\.\d{1,6})?$/;
+
+const forbiddenConfigKeys = new Set([
+  "apikey",
+  "apitoken",
+  "baseurl",
+  "clientsecret",
+  "credential",
+  "credentials",
+  "credentialsjson",
+  "developertoken",
+  "oauthclientsecret",
+  "origin",
+  "password",
+  "refreshtoken",
+  "secret",
+  "token",
+]);
+
+const providerPolicySchema = strictObject({
+  maxSpendUsdPerCall: optional(pipe(string(), regex(USD_DECIMAL_PATTERN))),
+});
+
+const providerProfileSchema = strictObject({
+  config: optional(record(string(), unknown()), {}),
+  policy: optional(providerPolicySchema, {}),
+  secrets: optional(record(string(), pipe(string(), regex(ENV_REFERENCE_PATTERN))), {}),
+});
+
+const profileDocumentSchema = strictObject({
+  version: literal(1),
+  name: pipe(string(), regex(PROFILE_SLUG_PATTERN)),
+  providers: record(pipe(string(), regex(PROVIDER_ID_PATTERN)), providerProfileSchema),
+});
+
+const dataForSeoConfigSchema = strictObject({
+  environment: optional(picklist(["production", "sandbox"]), "production"),
+});
+
+const dataForSeoSecretsSchema = strictObject({
+  login: pipe(string(), regex(ENV_REFERENCE_PATTERN)),
+  password: pipe(string(), regex(ENV_REFERENCE_PATTERN)),
+});
+
+export type ProviderEnvironment = "production" | "sandbox";
+
+export type ProviderPolicy = {
+  maxSpendUsdPerCall?: string;
+};
+
+export type ProviderProfile = {
+  config: Readonly<Record<string, unknown>>;
+  policy: Readonly<ProviderPolicy>;
+  secrets: Readonly<Record<string, `env:${string}`>>;
+};
+
+export type LoadedProfile = {
+  version: 1;
+  name: string;
+  path: string;
+  providers: Readonly<Record<string, ProviderProfile>>;
+};
+
+export type ProfileLoadOptions = {
+  xdgConfigHome?: string;
+  home?: string;
+  readTextFile?: (path: string) => Promise<string>;
+};
+
+export type ProfileErrorReason =
+  | "missing_selector"
+  | "invalid_slug"
+  | "not_found"
+  | "invalid_profile"
+  | "name_mismatch"
+  | "provider_missing"
+  | "secret_env_missing";
+
+export class ProfileError extends Error {
+  readonly reason: ProfileErrorReason;
+
+  constructor(reason: ProfileErrorReason, message: string, cause?: unknown) {
+    super(message, cause === undefined ? undefined : { cause });
+    this.name = "ProfileError";
+    this.reason = reason;
+  }
+}
+
+export function selectProfileName(
+  profileFlag: string | undefined,
+  env: Readonly<Record<string, string | undefined>> = process.env,
+): string {
+  const selected = profileFlag ?? env.GKIT_PROFILE;
+  if (!selected) {
+    throw new ProfileError(
+      "missing_selector",
+      "Provider execution requires --profile or GKIT_PROFILE.",
+    );
+  }
+  assertProfileSlug(selected);
+  return selected;
+}
+
+export function profilePath(profileName: string, options: ProfileLoadOptions = {}): string {
+  assertProfileSlug(profileName);
+  const configuredHome = options.xdgConfigHome ?? process.env.XDG_CONFIG_HOME;
+  const configHome = configuredHome?.trim()
+    ? configuredHome
+    : resolve(options.home ?? homedir(), ".config");
+  if (!isAbsolute(configHome)) {
+    throw new ProfileError(
+      "invalid_profile",
+      "XDG_CONFIG_HOME must be an absolute path when set.",
+    );
+  }
+  return resolve(configHome, "gkit", "profiles", `${profileName}.json`);
+}
+
+export async function loadProfile(
+  profileName: string,
+  options: ProfileLoadOptions = {},
+): Promise<LoadedProfile> {
+  const path = profilePath(profileName, options);
+  const readTextFile = options.readTextFile ?? ((target) => readFile(target, "utf8"));
+
+  let source: string;
+  try {
+    source = await readTextFile(path);
+  } catch (error) {
+    throw new ProfileError("not_found", `Unable to read profile ${profileName} at ${path}.`, error);
+  }
+
+  let input: unknown;
+  try {
+    input = JSON.parse(source);
+  } catch (error) {
+    throw new ProfileError("invalid_profile", `Profile ${profileName} is not valid JSON.`, error);
+  }
+
+  const parsed = safeParse(profileDocumentSchema, input);
+  if (!parsed.success) {
+    throw new ProfileError(
+      "invalid_profile",
+      `Profile ${profileName} failed structural validation.`,
+    );
+  }
+  if (parsed.output.name !== profileName) {
+    throw new ProfileError(
+      "name_mismatch",
+      `Profile filename ${profileName}.json does not match profile name ${parsed.output.name}.`,
+    );
+  }
+
+  const providers: Record<string, ProviderProfile> = {};
+  for (const [providerId, provider] of Object.entries(parsed.output.providers)) {
+    assertNonSecretConfig(provider.config, providerId);
+    const isDataForSeo = providerId === "dataforseo";
+    const config = isDataForSeo
+      ? parseDataForSeoConfig(provider.config)
+      : freezeRecord(provider.config);
+    const secrets = isDataForSeo
+      ? parseDataForSeoSecrets(provider.secrets)
+      : Object.freeze(provider.secrets as Record<string, `env:${string}`>);
+    providers[providerId] = Object.freeze({
+      config,
+      policy: Object.freeze(provider.policy),
+      secrets,
+    });
+  }
+
+  return Object.freeze({
+    version: 1,
+    name: parsed.output.name,
+    path,
+    providers: Object.freeze(providers),
+  });
+}
+
+export function getProviderProfile(profile: LoadedProfile, providerId: string): ProviderProfile {
+  const provider = profile.providers[providerId];
+  if (!provider) {
+    throw new ProfileError(
+      "provider_missing",
+      `Profile ${profile.name} does not configure provider ${providerId}.`,
+    );
+  }
+  return provider;
+}
+
+export function getProviderEnvironment(
+  profile: LoadedProfile,
+  providerId: string,
+): ProviderEnvironment {
+  const provider = getProviderProfile(profile, providerId);
+  if (providerId !== "dataforseo") {
+    return "production";
+  }
+  return provider.config.environment as ProviderEnvironment;
+}
+
+export function resolveProviderSecrets(
+  profile: LoadedProfile,
+  providerId: string,
+  env: Readonly<Record<string, string | undefined>> = process.env,
+): Readonly<Record<string, string>> {
+  const provider = getProviderProfile(profile, providerId);
+  const resolved: Record<string, string> = {};
+
+  for (const [name, reference] of Object.entries(provider.secrets)) {
+    const environmentName = reference.slice("env:".length);
+    const value = env[environmentName];
+    if (!value) {
+      throw new ProfileError(
+        "secret_env_missing",
+        `Secret environment variable ${environmentName} is not set for provider ${providerId}.`,
+      );
+    }
+    resolved[name] = value;
+  }
+
+  return Object.freeze(resolved);
+}
+
+function assertProfileSlug(profileName: string): void {
+  if (!PROFILE_SLUG_PATTERN.test(profileName)) {
+    throw new ProfileError(
+      "invalid_slug",
+      "Profile name must use lowercase letters, digits, dots, or hyphens and be between 1 and 64 characters.",
+    );
+  }
+}
+
+function parseDataForSeoConfig(config: Record<string, unknown>): Readonly<Record<string, unknown>> {
+  const parsed = safeParse(dataForSeoConfigSchema, config);
+  if (!parsed.success) {
+    throw new ProfileError(
+      "invalid_profile",
+      "DataForSEO config only accepts environment=production or environment=sandbox.",
+    );
+  }
+  return Object.freeze(parsed.output);
+}
+
+function parseDataForSeoSecrets(
+  secrets: Record<string, string>,
+): Readonly<Record<string, `env:${string}`>> {
+  const parsed = safeParse(dataForSeoSecretsSchema, secrets);
+  if (!parsed.success) {
+    throw new ProfileError(
+      "invalid_profile",
+      "DataForSEO secrets must contain only login and password env: references.",
+    );
+  }
+  return Object.freeze(parsed.output as Record<string, `env:${string}`>);
+}
+
+function assertNonSecretConfig(value: unknown, providerId: string): void {
+  if (value === null || typeof value !== "object") {
+    return;
+  }
+
+  for (const [key, child] of Object.entries(value)) {
+    const normalizedKey = key.replaceAll(/[-_.]/g, "").toLowerCase();
+    if (forbiddenConfigKeys.has(normalizedKey)) {
+      throw new ProfileError(
+        "invalid_profile",
+        `Provider ${providerId} config contains secret or transport override field ${key}; use an env: reference under secrets instead.`,
+      );
+    }
+    assertNonSecretConfig(child, providerId);
+  }
+}
+
+function freezeRecord(input: Record<string, unknown>): Readonly<Record<string, unknown>> {
+  for (const child of Object.values(input)) {
+    if (child !== null && typeof child === "object") {
+      freezeRecord(child as Record<string, unknown>);
+    }
+  }
+  return Object.freeze(input);
+}

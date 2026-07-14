@@ -1,0 +1,39 @@
+{
+  "name": "gkit",
+  "version": "0.1.0",
+  "description": "Profile-bound, agent-first growth provider CLI.",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "bin": {
+    "gkit": "bin/gkit.js"
+  },
+  "files": [
+    "bin",
+    "docs",
+    "generated",
+    "src",
+    "evals",
+    "!**/*.test.ts"
+  ],
+  "scripts": {
+    "cli": "bun run ./src/cli.ts",
+    "check-types": "tsc --noEmit",
+    "test": "vitest",
+    "test:once": "vitest run"
+  },
+  "dependencies": {
+    "@standard-schema/spec": "^1.0.0",
+    "@valibot/to-json-schema": "catalog:",
+    "ajv": "catalog:",
+    "argc": "catalog:",
+    "valibot": "catalog:"
+  },
+  "devDependencies": {
+    "@types/bun": "catalog:",
+    "@types/node": "catalog:",
+    "bun-types": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
