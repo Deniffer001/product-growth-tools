@@ -1,14 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
-import {
-  access,
-  mkdir,
-  mkdtemp,
-  readFile,
-  readdir,
-  rm,
-  writeFile,
-} from "node:fs/promises";
+import { access, mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -34,12 +26,16 @@ describe("gkit process contract", () => {
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     expect(Buffer.byteLength(result.stdout)).toBeLessThan(2_000);
-    expect(result.stdout).toContain("gkit --profile app-a dataforseo api call");
+    expect(result.stdout).toContain("gkit --profile <app> dataforseo api call");
+    expect(result.stdout).toContain("gkit --profile <app> posthog api call");
     expect(result.stdout).toContain("gkit describe --id <capability-id>");
-    expect(result.stdout).toContain(
-      "argc dotted commands and @run are intentionally not exposed",
-    );
+    expect(result.stdout).toContain("argc dotted commands and @run are intentionally not exposed");
     expect(result.stdout).not.toContain("gkit dataforseo.api.call");
+
+    const selected = await runCli(["--schema", "posthog"], fixture.env);
+    expect(selected.exitCode).toBe(0);
+    expect(selected.stdout).toContain("posthog:");
+    expect(selected.stdout).not.toContain("dataforseo:");
   });
 
   it("keeps describe offline and profile-free", async () => {
@@ -54,6 +50,56 @@ describe("gkit process contract", () => {
     const description = JSON.parse(result.stdout) as Record<string, unknown>;
     expect(description.id).toBe("dataforseo.backlinks.bulk_ranks.live");
     expect(description.effects).toEqual(["read", "spend"]);
+
+    const posthog = await runCli(["describe", "--id", "posthog.query.run"], fixture.env);
+    expect(posthog.exitCode).toBe(0);
+    expect(JSON.parse(posthog.stdout)).toMatchObject({
+      id: "posthog.query.run",
+      provider: "posthog",
+      effects: ["read"],
+    });
+  });
+
+  it("dry-runs and executes PostHog without touching the spend ledger", async () => {
+    const fixture = await createCliFixture();
+    const args = [
+      "--profile",
+      "app-a",
+      "posthog",
+      "api",
+      "call",
+      "--operation-id",
+      "posthog.query.run",
+      "--input",
+      `@${fixture.posthogRequestPath}`,
+      "--out",
+      fixture.outPath,
+    ];
+    const dryRun = await runCli([...args, "--dry-run"], fixture.env);
+    expect(dryRun.exitCode).toBe(0);
+    expect(JSON.parse(dryRun.stdout)).toMatchObject({
+      ok: true,
+      data: { dryRun: true, requestPlan: { rowLimit: 10 } },
+      meta: { provider: "posthog", cost: null, attemptId: null },
+    });
+    expect(await pathExists(fixture.outPath)).toBe(false);
+    expect(await pathExists(fixture.ledgerPath)).toBe(false);
+
+    const raw = JSON.stringify({ columns: ["event", "total"], results: [["$pageview", 4]] });
+    const live = await runMainHarness(
+      args,
+      { ...fixture.env, TEST_POSTHOG_TOKEN: "phx_process_secret" },
+      `async () => new Response(${JSON.stringify(raw)}, { status: 200, headers: { "x-posthog-request-id": "req_123" } })`,
+    ).result;
+    expect(live.exitCode).toBe(0);
+    expect(live.stdout).not.toContain("phx_process_secret");
+    expect(JSON.parse(live.stdout)).toMatchObject({
+      ok: true,
+      data: { rowCount: 1, columnCount: 2 },
+      meta: { provider: "posthog", cost: null, attemptId: null, providerRequestId: "req_123" },
+    });
+    expect(await readFile(fixture.outPath, "utf8")).toBe(raw);
+    expect(await pathExists(fixture.ledgerPath)).toBe(false);
   });
 
   it("emits exactly one JSON envelope and exits 1 for argv errors", async () => {
@@ -120,7 +166,7 @@ describe("gkit process contract", () => {
         provider: "dataforseo",
         capability: "dataforseo.backlinks.bulk_ranks.live",
         manifestRevision: "manifest-v1",
-        costPolicyRevision: "dataforseo-backlinks-pricing-2026-07-01-v1",
+        costPolicyRevision: "dataforseo-backlinks-pricing-2026-07-14-v1",
         inputSha256: "f".repeat(64),
         maxCostMicros: 50_000,
         acknowledgement: {
@@ -287,14 +333,11 @@ describe("gkit process contract", () => {
   it("redacts resolved credentials from doctor success and failure envelopes", async () => {
     const fixture = await createCliFixture();
     const secretMatchingProfile = "app-a";
-    const success = await runCli(
-      ["--profile", "app-a", "dataforseo", "doctor"],
-      {
-        ...fixture.env,
-        TEST_DATAFORSEO_LOGIN: "doctor-login",
-        TEST_DATAFORSEO_PASSWORD: secretMatchingProfile,
-      },
-    );
+    const success = await runCli(["--profile", "app-a", "dataforseo", "doctor"], {
+      ...fixture.env,
+      TEST_DATAFORSEO_LOGIN: "doctor-login",
+      TEST_DATAFORSEO_PASSWORD: secretMatchingProfile,
+    });
     expect(success.exitCode).toBe(0);
     expect(success.stdout).not.toContain(secretMatchingProfile);
     expect(JSON.parse(success.stdout)).toMatchObject({
@@ -319,14 +362,11 @@ describe("gkit process contract", () => {
         },
       }),
     );
-    const failure = await runCli(
-      ["--profile", "app-a", "dataforseo", "doctor"],
-      {
-        ...fixture.env,
-        TEST_DATAFORSEO_LOGIN: "doctor-login",
-        TEST_DATAFORSEO_PASSWORD: secretMatchingProfile,
-      },
-    );
+    const failure = await runCli(["--profile", "app-a", "dataforseo", "doctor"], {
+      ...fixture.env,
+      TEST_DATAFORSEO_LOGIN: "doctor-login",
+      TEST_DATAFORSEO_PASSWORD: secretMatchingProfile,
+    });
     expect(failure.exitCode).toBe(1);
     expect(failure.stdout).not.toContain(secretMatchingProfile);
     expect(JSON.parse(failure.stdout)).toMatchObject({
@@ -374,9 +414,7 @@ describe("gkit process contract", () => {
       { type: "authorized" },
       { type: "settled", outcome: "unknown" },
     ]);
-    expect((await readdir(fixture.root)).some((name) => name.endsWith(".lock"))).toBe(
-      false,
-    );
+    expect((await readdir(fixture.root)).some((name) => name.endsWith(".lock"))).toBe(false);
   });
 
   it("treats a second SIGINT as the documented one-envelope exception", async () => {
@@ -402,9 +440,7 @@ describe("gkit process contract", () => {
 
     expect(result.exitCode).toBe(130);
     expect(result.stdout).toBe("");
-    const ledgerLines = (await readFile(fixture.ledgerPath, "utf8"))
-      .trimEnd()
-      .split("\n");
+    const ledgerLines = (await readFile(fixture.ledgerPath, "utf8")).trimEnd().split("\n");
     expect(ledgerLines).toHaveLength(1);
     expect(JSON.parse(ledgerLines[0]!)).toMatchObject({ type: "authorized" });
   });
@@ -431,6 +467,11 @@ async function createCliFixture() {
             password: "env:TEST_DATAFORSEO_PASSWORD",
           },
         },
+        posthog: {
+          config: { host: "https://us.posthog.com", projectId: "12345" },
+          policy: {},
+          secrets: { apiToken: "env:TEST_POSTHOG_TOKEN" },
+        },
       },
     }),
   );
@@ -442,9 +483,18 @@ async function createCliFixture() {
       rank_scale: "one_hundred",
     }),
   );
+  const posthogRequestPath = join(root, "posthog-request.json");
+  await writeFile(
+    posthogRequestPath,
+    JSON.stringify({
+      query: "SELECT event, count() AS total FROM events GROUP BY event ORDER BY total DESC",
+      limit: 10,
+    }),
+  );
   return {
     root,
     requestPath,
+    posthogRequestPath,
     outPath: join(root, "result.json"),
     ledgerPath: join(stateHome, "gkit", "ledger.jsonl"),
     profilePath: join(profiles, "app-a.json"),

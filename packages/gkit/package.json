@@ -1,10 +1,8 @@
 {
   "name": "gkit",
   "version": "0.1.0",
-  "description": "Profile-bound, agent-first growth provider CLI.",
   "private": true,
-  "type": "module",
-  "sideEffects": false,
+  "description": "Profile-bound, agent-first growth provider CLI.",
   "bin": {
     "gkit": "bin/gkit.js"
   },
@@ -12,13 +10,22 @@
     "bin",
     "docs",
     "generated",
+    "policy",
+    "scripts",
+    "sources",
     "src",
     "evals",
     "!**/*.test.ts"
   ],
+  "type": "module",
+  "sideEffects": false,
   "scripts": {
     "cli": "bun run ./src/cli.ts",
     "check-types": "tsc --noEmit",
+    "generate:dataforseo": "bun run ./scripts/generate-dataforseo.ts",
+    "generate:dataforseo:check": "bun run ./scripts/generate-dataforseo.ts --check",
+    "generate:posthog": "bun run ./scripts/generate-posthog.ts",
+    "generate:posthog:check": "bun run ./scripts/generate-posthog.ts --check",
     "test": "vitest",
     "test:once": "vitest run"
   },
@@ -27,7 +34,8 @@
     "@valibot/to-json-schema": "catalog:",
     "ajv": "catalog:",
     "argc": "catalog:",
-    "valibot": "catalog:"
+    "valibot": "catalog:",
+    "yaml": "catalog:"
   },
   "devDependencies": {
     "@types/bun": "catalog:",

@@ -1,44 +1,24 @@
 import { toStandardJsonSchema } from "@valibot/to-json-schema";
-import { c, generateSchema, group, selectSchema, type Router, type Schema } from "argc";
+import { c, generateSchema, group, selectSchema, type Router } from "argc";
 import * as v from "valibot";
 
 import { GkitFailure } from "./envelope";
-import {
-  type LoadedExecutableManifest,
-  type ManifestRecord,
-  validateManifestInput,
-} from "./manifest";
+import type { LoadedExecutableManifest } from "./manifest";
 
 const s = toStandardJsonSchema;
 
-function schemaFromManifest(record: ManifestRecord): Schema {
-  return {
-    "~standard": {
-      version: 1,
-      vendor: "gkit-executable-manifest",
-      validate: (value: unknown) => {
-        const result = validateManifestInput(record, value);
-        if (result.ok) return { value: result.value };
-        return {
-          issues: result.issues.map((issue) => ({
-            message: `${issue.instancePath || "/"}: ${issue.message}`,
-          })),
-        };
-      },
-      jsonSchema: {
-        input: () => record.inputSchema,
-        output: () => record.inputSchema,
-      },
-    },
-  } as Schema;
-}
-
-export function buildGkitSchema(manifest: LoadedExecutableManifest): Router {
-  const [bulkRanks] = manifest.document.capabilities;
-  if (!bulkRanks || manifest.document.capabilities.length !== 1) {
+export function buildGkitSchema(
+  manifest: LoadedExecutableManifest | readonly LoadedExecutableManifest[],
+): Router {
+  const manifests = Array.isArray(manifest) ? manifest : [manifest];
+  const capabilities = manifests.flatMap((candidate) => candidate.document.capabilities);
+  const dataForSeoCapabilityCount = capabilities.filter(
+    (capability) => capability.provider === "dataforseo",
+  ).length;
+  if (capabilities.length === 0) {
     throw new GkitFailure({
       code: "INTERNAL_ERROR",
-      message: "The Slice 1 schema renderer requires exactly one reviewed capability.",
+      message: "The executable manifest has no reviewed capabilities.",
     });
   }
 
@@ -75,10 +55,7 @@ export function buildGkitSchema(manifest: LoadedExecutableManifest): Router {
             s(
               v.strictObject({
                 attempt: v.string(),
-                outcome: v.picklist([
-                  "confirmed_charged",
-                  "confirmed_not_charged",
-                ]),
+                outcome: v.picklist(["confirmed_charged", "confirmed_not_charged"]),
                 evidenceRef: v.string(),
                 costUsd: v.optional(v.string()),
                 providerRequestId: v.optional(v.string()),
@@ -92,7 +69,8 @@ export function buildGkitSchema(manifest: LoadedExecutableManifest): Router {
       {
         doctor: c
           .meta({
-            description: "Check readiness without a network probe: gkit --profile <app> dataforseo doctor.",
+            description:
+              "Check readiness without a network probe: gkit --profile <app> dataforseo doctor.",
             examples: ["gkit --profile app-a dataforseo doctor"],
           })
           .input(s(v.strictObject({}))),
@@ -101,10 +79,37 @@ export function buildGkitSchema(manifest: LoadedExecutableManifest): Router {
           {
             call: c
               .meta({
-                description: bulkRanks.description,
-                examples: bulkRanks.examples.map((example) => example.command),
+                description: `Call one of ${dataForSeoCapabilityCount} reviewed operations; gkit --profile <app> dataforseo api call --operation-id <id> --input @request.json --allow-spend --max-spend-usd <decimal> --out <path> --dry-run.`,
+                examples: [
+                  "gkit --profile <app> dataforseo api call --operation-id <id> --input @request.json --allow-spend --max-spend-usd <decimal> --out <path> --dry-run",
+                ],
               })
-              .input(schemaFromManifest(bulkRanks)),
+              .input(s(v.strictObject({}))),
+          },
+        ),
+      },
+    ),
+    posthog: group(
+      { description: "Reviewed PostHog reads." },
+      {
+        doctor: c
+          .meta({
+            description: "Check local PostHog readiness without a network probe.",
+            examples: ["gkit --profile app-a posthog doctor"],
+          })
+          .input(s(v.strictObject({}))),
+        api: group(
+          { description: "Call a reviewed native PostHog operation." },
+          {
+            call: c
+              .meta({
+                description:
+                  "Run a bounded read-only HogQL query: gkit --profile <app> posthog api call --operation-id posthog.query.run --input @request.json --out <path> --dry-run.",
+                examples: [
+                  "gkit --profile <app> posthog api call --operation-id posthog.query.run --input @request.json --out <path> --dry-run",
+                ],
+              })
+              .input(s(v.strictObject({}))),
           },
         ),
       },
@@ -113,7 +118,7 @@ export function buildGkitSchema(manifest: LoadedExecutableManifest): Router {
 }
 
 export function renderGkitSchema(
-  manifest: LoadedExecutableManifest,
+  manifest: LoadedExecutableManifest | readonly LoadedExecutableManifest[],
   selector: string | null,
 ): string {
   const root = buildGkitSchema(manifest);
@@ -126,7 +131,8 @@ export function renderGkitSchema(
 
   let selected: ReturnType<typeof selectSchema>;
   try {
-    selected = selectSchema(root, selector, { depth: 4 });
+    const normalizedSelector = selector.startsWith(".") ? selector : `.${selector}`;
+    selected = selectSchema(root, normalizedSelector, { depth: 4 });
   } catch {
     throw new GkitFailure({
       code: "INVALID_INPUT",
@@ -157,25 +163,21 @@ function schemaPreamble(): string {
 
 function rewriteArgcExamples(
   generated: string,
-  manifest: LoadedExecutableManifest,
+  _manifest: LoadedExecutableManifest | readonly LoadedExecutableManifest[],
 ): string {
-  const callExample = manifest.document.capabilities[0]?.examples[0]?.command;
   return generated
-    .replace(
-      /gkit describe "\{ id: 'value' \}"/g,
-      "gkit describe --id <capability-id>",
-    )
-    .replace(
-      /gkit docs "\{ provider: 'value' \}"/g,
-      "gkit docs --provider <provider>",
-    )
+    .replace(/gkit describe "\{ id: 'value' \}"/g, "gkit describe --id <capability-id>")
+    .replace(/gkit docs "\{ provider: 'value' \}"/g, "gkit docs --provider <provider>")
     .replace(
       /gkit ledger\.reconcile "[^"]*"/g,
       "gkit ledger reconcile --attempt <id> --outcome <outcome> --evidence-ref <ref> [--cost-usd <decimal>]",
     )
     .replace(
       /gkit dataforseo\.api\.call "[^"]*"/g,
-      callExample ??
-        "gkit --profile <app> dataforseo api call --operation-id <id> --input @request.json --allow-spend --max-spend-usd <decimal> --out <path>",
+      "gkit --profile <app> dataforseo api call --operation-id <id> --input @request.json --allow-spend --max-spend-usd <decimal> --out <path> --dry-run",
+    )
+    .replace(
+      /gkit posthog\.api\.call "[^"]*"/g,
+      "gkit --profile <app> posthog api call --operation-id posthog.query.run --input @request.json --out <path> --dry-run",
     );
 }

@@ -1,18 +1,21 @@
 import type { LoadedExecutableManifest, ManifestRecord } from "./manifest";
 
 export function renderProviderDocs(manifest: LoadedExecutableManifest): string {
+  const providerLabel =
+    { dataforseo: "DataForSEO", posthog: "PostHog" }[manifest.document.provider] ??
+    manifest.document.provider;
   const lines = [
     "---",
     "type: Reference",
-    "title: DataForSEO reviewed executable capabilities",
+    `title: ${providerLabel} reviewed executable capabilities`,
     "description: >",
-    "  Generated, searchable documentation for the reviewed DataForSEO operations",
+    `  Generated, searchable documentation for the reviewed ${providerLabel} operations`,
     "  that gkit is allowed to route and execute.",
     `provider: ${manifest.document.provider}`,
     `manifestRevision: ${manifest.document.revision}`,
     "---",
     "",
-    "# DataForSEO reviewed executable capabilities",
+    `# ${providerLabel} reviewed executable capabilities`,
     "",
     "This file is byte-stably rendered from `generated/dataforseo/manifest.json`.",
     "The committed manifest remains the only runtime, validation, effect, cost, and discovery source.",
@@ -40,7 +43,7 @@ function renderCapability(record: ManifestRecord): string[] {
   if (record.cost) {
     lines.push(
       `- Cost-policy revision: \`${record.cost.policyRevision}\``,
-      `- Conservative cost model: \`${record.cost.model.baseMicros}\` base micros + \`${record.cost.model.perItemMicros}\` micros per item at \`${record.cost.model.itemsJsonPointer}\` (max \`${record.cost.model.maxItems}\`)`,
+      `- Conservative cost model: ${renderCostModel(record.cost.model)}`,
     );
   }
 
@@ -52,4 +55,14 @@ function renderCapability(record: ManifestRecord): string[] {
     lines.push("```bash", example.command, "```", "");
   }
   return lines;
+}
+
+function renderCostModel(model: NonNullable<ManifestRecord["cost"]>["model"]): string {
+  if (model.type === "fixed") {
+    return `\`${model.micros}\` micros per request`;
+  }
+  if (model.type === "linear-items") {
+    return `\`${model.baseMicros}\` base micros + \`${model.perItemMicros}\` micros per item at \`${model.itemsJsonPointer}\` (max \`${model.maxItems}\`)`;
+  }
+  return `\`${model.baseMicros}\` base micros + \`${model.perUnitMicros}\` micros per numeric unit at \`${model.valueJsonPointer}\` (max \`${model.maxValue}\`)`;
 }

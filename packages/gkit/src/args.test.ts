@@ -47,6 +47,45 @@ describe("gkit argv parser", () => {
     expect(parseArgs(["ledger", "status"])).toEqual({ kind: "ledger-status" });
   });
 
+  it("accepts the read-only PostHog command without spend flags", () => {
+    expect(
+      parseArgs([
+        "--profile",
+        "app-a",
+        "posthog",
+        "api",
+        "call",
+        "--operation-id",
+        "posthog.query.run",
+        "--input",
+        "@req.json",
+        "--out",
+        "result.json",
+        "--dry-run",
+      ]),
+    ).toEqual({
+      kind: "posthog-call",
+      profileFlag: "app-a",
+      operationId: "posthog.query.run",
+      input: "@req.json",
+      out: "result.json",
+      force: false,
+      dryRun: true,
+    });
+    expect(() =>
+      parseArgs([
+        "posthog",
+        "api",
+        "call",
+        "--operation-id",
+        "posthog.query.run",
+        "--input",
+        "@req.json",
+        "--allow-spend",
+      ]),
+    ).toThrow("Unknown flag");
+  });
+
   it("rejects unknown or duplicate flags before execution", () => {
     expect(() =>
       parseArgs([
@@ -75,13 +114,7 @@ describe("gkit argv parser", () => {
       ]),
     ).toThrow("Unknown flag");
     expect(() =>
-      parseArgs([
-        "--profile",
-        "app-a",
-        "--profile=app-b",
-        "dataforseo",
-        "doctor",
-      ]),
+      parseArgs(["--profile", "app-a", "--profile=app-b", "dataforseo", "doctor"]),
     ).toThrow("--profile may be provided only once");
   });
 });

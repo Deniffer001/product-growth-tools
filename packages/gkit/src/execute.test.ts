@@ -1,32 +1,18 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import {
-  mkdir,
-  mkdtemp,
-  readFile,
-  realpath,
-  rm,
-  writeFile,
-} from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, realpath, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import type { ParsedCommand } from "./args";
 import { reserveArtifactDestination } from "./artifact";
 import { executeDataForSeoCall } from "./execute";
-import {
-  authorizeIfUnblocked,
-  LedgerError,
-  readLedger,
-} from "./ledger";
+import { authorizeIfUnblocked, LedgerError, readLedger } from "./ledger";
 import { compileExecutableManifest, loadExecutableManifest } from "./manifest";
 import { resolveProviderSecrets } from "./profile";
 import type { DataForSeoDispatchResult } from "./providers/dataforseo";
 
 const temporaryDirectories: string[] = [];
-const manifestPath = new URL(
-  "../generated/dataforseo/manifest.json",
-  import.meta.url,
-).pathname;
+const manifestPath = new URL("../generated/dataforseo/manifest.json", import.meta.url).pathname;
 const providerTaskId = "10131644-1535-0347-0000-750206cf57d8";
 const createdTaskId = "10131644-1535-0347-0000-750206cf57d9";
 const credentialShapedTaskId = "10131644-1535-0347-0000-750206cf57da";
@@ -361,10 +347,7 @@ describe("DataForSEO execution pipeline", () => {
         loadDataForSeoAdapter: async () =>
           adapter({
             ...successResult(60_000),
-            rawBytes: Buffer.from(
-              '{"echo":"super-secret-password"}',
-              "utf8",
-            ),
+            rawBytes: Buffer.from('{"echo":"super-secret-password"}', "utf8"),
           }),
       },
     });
@@ -577,10 +560,7 @@ describe("DataForSEO execution pipeline", () => {
         loadDataForSeoAdapter: async () =>
           adapter({
             ok: true,
-            rawBytes: Buffer.from(
-              JSON.stringify({ id: credentialShapedTaskId }),
-              "utf8",
-            ),
+            rawBytes: Buffer.from(JSON.stringify({ id: credentialShapedTaskId }), "utf8"),
             providerRequestId: credentialShapedTaskId,
             costMicros: 24_072,
             costIsConfirmed: true,
@@ -594,9 +574,7 @@ describe("DataForSEO execution pipeline", () => {
       error: { code: "LOCAL_IO_ERROR", outcome: "confirmed" },
       meta: { providerRequestId: null, spendOutcome: "confirmed_charged" },
     });
-    expect(await readFile(fixture.ledgerPath, "utf8")).not.toContain(
-      credentialShapedTaskId,
-    );
+    expect(await readFile(fixture.ledgerPath, "utf8")).not.toContain(credentialShapedTaskId);
     const ledger = await readLedger({ ledgerPath: fixture.ledgerPath });
     expect(ledger.attempts[0]?.latestSettlement?.providerRequestId).toBeNull();
   });
@@ -779,12 +757,9 @@ function successResult(costMicros: number): DataForSeoDispatchResult {
   };
 }
 
-function adapter(
-  result: DataForSeoDispatchResult,
-  onDispatch: () => void = () => undefined,
-) {
+function adapter(result: DataForSeoDispatchResult, onDispatch: () => void = () => undefined) {
   return {
-    dispatchDataForSeoBulkRanks: async () => {
+    dispatchDataForSeo: async () => {
       onDispatch();
       return result;
     },

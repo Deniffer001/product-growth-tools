@@ -17,6 +17,7 @@ import {
   safeParse,
   strictObject,
   string,
+  union,
   unknown,
   type InferOutput,
 } from "valibot";
@@ -45,10 +46,23 @@ const linearItemsCostModelSchema = strictObject({
   maxItems: pipe(number(), integer(), minValue(1), maxValue(1_000_000)),
 });
 
+const linearNumberCostModelSchema = strictObject({
+  type: literal("linear-number"),
+  baseMicros: nonNegativeSafeInteger,
+  perUnitMicros: nonNegativeSafeInteger,
+  valueJsonPointer: pipe(string(), regex(/^(?:$|\/)/)),
+  maxValue: pipe(number(), integer(), minValue(1), maxValue(1_000_000)),
+});
+
+const fixedCostModelSchema = strictObject({
+  type: literal("fixed"),
+  micros: nonNegativeSafeInteger,
+});
+
 const capabilityCostSchema = strictObject({
   currency: literal("USD"),
   policyRevision: nonEmptyString,
-  model: linearItemsCostModelSchema,
+  model: union([linearItemsCostModelSchema, linearNumberCostModelSchema, fixedCostModelSchema]),
 });
 
 export const manifestRecordSchema = pipe(

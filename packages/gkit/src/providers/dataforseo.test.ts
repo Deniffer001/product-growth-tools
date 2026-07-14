@@ -1,9 +1,99 @@
 import { describe, expect, it, vi } from "vitest";
 
 import {
+  dispatchDataForSeo,
   dispatchDataForSeoBulkRanks,
   type DataForSeoFetch,
 } from "./dataforseo";
+
+describe("DataForSEO reviewed adapter routing", () => {
+  it.each([
+    {
+      adapterKey: "backlinks.summary.live" as const,
+      endpoint: "/v3/backlinks/summary/live",
+      input: { target: "clonesite.ai" },
+      cost: 0.024036,
+      result: {
+        target: "clonesite.ai",
+        rank: 42,
+        backlinks: 12,
+        referring_domains: 4,
+      },
+      itemsCount: 1,
+    },
+    {
+      adapterKey: "backlinks.referring_domains.live" as const,
+      endpoint: "/v3/backlinks/referring_domains/live",
+      input: { target: "clonesite.ai", limit: 2, order_by: ["rank,desc"] },
+      cost: 0.024072,
+      result: {
+        target: "clonesite.ai",
+        items_count: 2,
+        items: [
+          { domain: "example.com", rank: 80, backlinks: 5 },
+          { domain: "example.org", rank: 70, backlinks: 2 },
+        ],
+      },
+      itemsCount: 2,
+    },
+    {
+      adapterKey: "serp.google.organic.live.advanced" as const,
+      endpoint: "/v3/serp/google/organic/live/advanced",
+      input: {
+        keyword: "website cloner",
+        location_code: 2840,
+        language_code: "en",
+        device: "desktop" as const,
+        os: "windows" as const,
+        depth: 10,
+      },
+      cost: 0.002,
+      result: {
+        keyword: "website cloner",
+        location_code: 2840,
+        language_code: "en",
+        items_count: 1,
+        items: [{ type: "organic", rank_group: 1 }],
+      },
+      itemsCount: 1,
+    },
+  ])("routes and validates $adapterKey", async (fixture) => {
+    const calls: Array<Parameters<DataForSeoFetch>> = [];
+    const result = await dispatchDataForSeo({
+      adapterKey: fixture.adapterKey,
+      input: fixture.input,
+      credentials: { login: "login", password: "password" },
+      environment: "sandbox",
+      signal: new AbortController().signal,
+      fetch: async (...args) => {
+        calls.push(args);
+        return response({
+          status_code: 20_000,
+          cost: fixture.cost,
+          tasks_count: 1,
+          tasks_error: 0,
+          tasks: [
+            {
+              id: successTaskId,
+              status_code: 20_000,
+              cost: fixture.cost,
+              result_count: 1,
+              result: [fixture.result],
+            },
+          ],
+        });
+      },
+    });
+
+    expect(calls[0]?.[0]).toBe(`https://sandbox.dataforseo.com${fixture.endpoint}`);
+    expect(JSON.parse(String(calls[0]?.[1]?.body))).toEqual([fixture.input]);
+    expect(result).toMatchObject({
+      ok: true,
+      costIsConfirmed: true,
+      data: { itemsCount: fixture.itemsCount },
+    });
+  });
+});
 
 const input = {
   targets: ["clonesite.ai", "example.com"],

@@ -5,8 +5,8 @@ description: >
   gkit 的另一版 0→1 方案:锁死六条不变量(profile/effect/envelope/落盘/无全局 run/spend outcome),
   纯 Bun/TypeScript 单进程,纵切生长、逐包退役,内建 search 与 polyglot runtime 延后。
 status: active
-version: 0.4
-timestamp: 2026-07-14T10:13:32+08:00
+version: 0.6
+timestamp: 2026-07-14T10:43:02+08:00
 resource: ./2026-07-13-gkit-provider-native-agent-surface.md
 ---
 
@@ -78,7 +78,11 @@ Profile 文件:`$XDG_CONFIG_HOME/gkit/profiles/<name>.json`(未设置时 `~/.con
       "secrets": { "credentialsJson": "env:APP_A_GSC_CREDENTIALS_JSON" }
     },
     "google-ads": {
-      "config": { "customerId": "1234567890", "loginCustomerId": "0987654321", "oauthClientId": "xxx.apps.googleusercontent.com" },
+      "config": {
+        "customerId": "1234567890",
+        "loginCustomerId": "0987654321",
+        "oauthClientId": "xxx.apps.googleusercontent.com"
+      },
       "secrets": {
         "developerToken": "env:APP_A_GOOGLE_ADS_DEVELOPER_TOKEN",
         "oauthClientSecret": "env:APP_A_GOOGLE_ADS_OAUTH_CLIENT_SECRET",
@@ -240,13 +244,13 @@ gkit docs [--provider <p>]             # 打印文档目录路径,agent 自行 r
 
 ## 4. Provider 映射(全部 in-process TypeScript)
 
-| Provider | Contract 来源 | 执行面 | 认证 |
-|---|---|---|---|
-| DataForSEO | 官方 OpenAPI(pinned) | `api call --operation-id <id> --input @req.json` | basic auth(login/password) |
-| GSC | Google Discovery | `search-analytics query` 等 resource/method | service account JSON |
-| PostHog | Query API + OpenAPI reads | `query hogql --input @query.json` | personal API token |
-| Google Ads | 官方 REST reference(`googleAds:search`、`googleAdsFields:search`、Keyword Plan services),固定 API major version | `query gaql`(默认显式分页)、`fields search/describe`、经保留决策的 Keyword Planner read | OAuth2 refresh token + developer token;access token 作为派生 secret |
-| Bing Webmaster | 现有 JSON REST API contract,WSDL 仅在 REST 不覆盖时考虑 | provider method + native input | 现有 API key 走 `apikey` query parameter(完整 URL 永不打印);未来采用 OAuth 时才用 Bearer |
+| Provider       | Contract 来源                                                                                                   | 执行面                                                                                  | 认证                                                                                     |
+| -------------- | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| DataForSEO     | 官方 OpenAPI(pinned)                                                                                            | `api call --operation-id <id> --input @req.json`                                        | basic auth(login/password)                                                               |
+| GSC            | Google Discovery                                                                                                | `search-analytics query` 等 resource/method                                             | service account JSON                                                                     |
+| PostHog        | Query API + OpenAPI reads                                                                                       | `query hogql --input @query.json`                                                       | personal API token                                                                       |
+| Google Ads     | 官方 REST reference(`googleAds:search`、`googleAdsFields:search`、Keyword Plan services),固定 API major version | `query gaql`(默认显式分页)、`fields search/describe`、经保留决策的 Keyword Planner read | OAuth2 refresh token + developer token;access token 作为派生 secret                      |
+| Bing Webmaster | 现有 JSON REST API contract,WSDL 仅在 REST 不覆盖时考虑                                                         | provider method + native input                                                          | 现有 API key 走 `apikey` query parameter(完整 URL 永不打印);未来采用 OAuth 时才用 Bearer |
 
 关于 Google Ads 的暂定决策:v1 的 bounded read surface 先走 REST;默认使用可控的 `googleAds:search` 分页,不以 `searchStream` 一次吞入任意大结果。此决定必须通过 Slice 1.5 的真实账号 spike,并覆盖 OAuth refresh、manager account header、field metadata、request ID/error projection、分页和当前 Keyword Planner 用法。若 spike 失败,在实现前修改本方案;不预留没有第二实现的 `ProviderRuntime` seam。未来若开放 mutate、REST 无法覆盖必需能力或引入不可信依赖,再设计 polyglot/isolated runtime。
 
@@ -291,7 +295,101 @@ $XDG_STATE_HOME/gkit/ledger.jsonl      # 未设置时 ~/.local/state/gkit/ledger
 - Sandbox 真实 gate 已通过且费用为 `$0`:DataForSEO sandbox 返回固定 dummy result,不会按任意请求 target 回显结果;第一次 `clonesite.ai` 输入因此被严格 result validator 以 `PROVIDER_ERROR` 拒绝,但仍安全落盘并结算为 `confirmed_not_charged`。随后使用 sandbox 固定的三个 dummy targets 完成 `ok:true` 验证。此 friction 记录在案,不据此放宽 production result contract。
 - Production 最小 live call 已完成:`clonesite.ai` 返回 `rank=55`,attempt `d9fe47a2-eaf8-4a99-9e7b-dd6353f5f31e`,provider request `07140512-2032-0347-0000-2f0c9a4fb51f`,实际费用 `$0.024036`,artifact `557 bytes` / SHA-256 `f67981b9fdedf6adae0b7069a41e64a15b4817390739765b2cd361e168f53f01`。Ledger 按顺序持久化 `authorized(max=24036 micros) → settled(confirmed_charged,24036 micros)`,无 policy breach。
 - Gate 后 ledger 共 3 个已结算 attempt(两次 sandbox、一次 production),`unresolved=0`,`activePolicyBreaches=0`;production artifact 与 ledger 的 resolved/Basic/URL-encoded secret 扫描均为阴性。
-- Slice 1 剩余 gate 是随后一周真实使用并记录摩擦点;在它完成前不进入 Slice 1.5 或 Slice 2,也不删除旧 CLI。
+- Slice 1 immediate dogfood 已完成:官方 2 个 executable + 2 个 negative 用例全部真实执行并通过;证据与结论见下节。旧 CLI 仍按逐 workflow gate 退役,但不再等待日历窗口才进入下一 slice。
+
+### Slice 1 immediate dogfood gate（2026-07-14 已完成）
+
+**Decision:** 当前 CLI 消费者只有一人,且用户明确要求立即 dogfood,因此不设置日历等待期。Gate 直接使用仓库已有的 Slice 1 answer key:2 个 executable 用例各执行 `discovery → same-input dry-run → 单次 live`,再执行 2 个 zero-dispatch negative 用例。付费调用严格串行;出现 unknown/unresolved 就停止,不 retry 或 fallback。通过本 gate 只证明 Slice 1 的 `dataforseo.backlinks.bulk_ranks.live` 可用,不代表整个 DataForSEO surface 已替代旧 CLI。
+
+#### 默认路由
+
+| 真实需求                                                                      | 默认 route                                   | Dogfood 判定                                                                            |
+| ----------------------------------------------------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------- |
+| DataForSEO backlink bulk ranks,1–166 targets                                  | 必须先走 `gkit`                              | eligible;失败按下方 fallback 规则处理                                                   |
+| DataForSEO backlink bulk ranks,167–1,000 targets                              | 在 profile cost gate 阻断,要求缩小范围       | 记录 `route:"blocked"` + `friction.code:"blocked_by_profile_cap"`;不自动拆批或走 legacy |
+| backlink summary/referring domains、SERP、LLM mentions 等 manifest 未覆盖能力 | 直接走对应 legacy CLI                        | `legacy_keep`;记录 capability gap,不算 gkit 失败                                        |
+| unsupported write/destructive 请求                                            | 直接阻断                                     | `blocked`;必须是零 provider network call                                                |
+| 跨 provider 分析/报告                                                         | 各 provider 分开取事实,再由 shell/agent join | 不进入 gkit curated surface                                                             |
+
+本窗口的 eligible 明确定义为**当前 manifest 覆盖、且输入可被 `$0.03` profile hard cap 授权的 1–166 target bulk-ranks 任务**。当前 cost model 下 166 targets 的上界是 `$0.029976`,167 targets 是 `$0.030012`;后者必须在 pre-dispatch gate 停止。Dogfood 不隐式拆批,因为这会把一个真实任务变成多次付费 dispatch 并改变 unknown-outcome/fallback 边界。
+
+不为了制造失败而把 manifest 未覆盖的任务先塞给 gkit,也不为了对比而同时发起 gkit 与 legacy 的付费请求。Dogfood 期间已标为 `replace` 的 eligible bulk-ranks workflow 不自动 fallback。
+
+#### Canonical invocation 与付费边界
+
+发现命令继续直接使用 `gkit --schema`、`gkit docs`、`gkit describe`;它们不加载 profile 或 secret。当前本机 profile 的 provider invocation 固定使用显式 secret injection 与显式 App profile:
+
+```bash
+bun --env-file="$HOME/.config/gkit/profiles/clonesite.ai/.env" \
+  gkit --profile clonesite.ai dataforseo ...
+```
+
+- 每个付费任务先以**同一 input**执行 `--dry-run`;dry-run 的 invocation cap 使用当前 profile hard cap `$0.03`,live call 再收紧为 dry-run 返回的精确 `costUpperBound.amount`,不使用宽泛的 `$0.05`。若 dry-run 计算出的上界超过 profile cap,任务停在 pre-dispatch gate。
+- 只有真实 prompt 明确要求实时/provider 数据时才允许 live dispatch;仍必须传 `--allow-spend` 与精确 `--max-spend-usd`。否则只做到 discovery/dry-run。
+- 本次 immediate dogfood 总预算上限固定为 **`$0.15`**,最多 **2 次 paid dispatch**,且每个 executable task 最多 1 次。实际执行 2 次,授权上界与最终费用合计均为 `$0.048180`;它不是 provider escrow,实际费用若触发 policy breach 仍会立即停止。
+- 不增加 answer key 之外的付费 canary;这次 4 个官方 Slice 1 用例就是完整 gate。
+- 每次 `--out` 使用新的 local-only 路径;dogfood 期间禁止 `--force`。默认目录是 `$XDG_STATE_HOME/gkit/dogfood/artifacts`（未设置时 `~/.local/state/gkit/dogfood/artifacts`）。
+
+#### Fallback 与停止规则
+
+- `legacy_keep` workflow 直接走 legacy,不先触发一次已知的 `CAPABILITY_NOT_FOUND`。
+- Eligible gkit task 只有在同时满足 `outcome:not_dispatched`、`attemptId:null` 且 ledger 没有新增 durable authorization 时,才允许修正一次输入/调用错误。紧急任务需要 break-glass 时,还必须先确认 `gkit ledger` 的 `unresolved=0`,记录 `fallbackReason`,并用同一 reviewed cost model 证明 legacy 调用的 `externalMaxCostMicros` 不会突破剩余 window budget,才可人工执行;该任务计为 dogfood failure。
+- Break-glass paid call 同样占用 2 次 dispatch 配额与 `$0.15` window budget。调用后必须从 provider/legacy artifact 提取 `externalActualCostMicros`,并记录不含 secret 的 `externalEvidenceRef`;实际费用无法确认时按 external unknown outcome 处理,立即停止 paid dogfood,且本 window 不能通过 exit gate。本次执行没有使用 break-glass。
+- 一旦出现非空 `attemptId` 或 durable authorization,该 task 不再 retry/fallback/双跑。若 ledger 已 settled 为 `confirmed_charged` 或 `confirmed_not_charged`,直接记录结果,不做多余 reconcile;只有 unresolved/unknown 才必须依据 provider evidence reconcile。
+- 任一出现即停止后续 paid dogfood:unresolved/unknown attempt、policy breach、费用超过授权上界、疑似 secret 泄漏、ledger/artifact integrity 异常、疑似重复 dispatch、同一 pre-dispatch friction 连续出现 2 次、或达到 window budget。
+
+#### Local-only evidence
+
+Raw dogfood event 已追加到 `$XDG_STATE_HOME/gkit/dogfood/events.jsonl`（未设置时 `~/.local/state/gkit/dogfood/events.jsonl`）,脱敏 command/envelope receipt 写入同目录 `receipts.jsonl`;二者都不进入 Git。Window 固定为 `slice1-2026-07-14`;前述 3 个 implementation-gate attempt 都发生在 window 前,不计入本次 dogfood 样本或预算。本次新增 4 个 event、6 个 phase receipt、2 个 paid dispatch。
+
+每行保留足以计算 exit gate 的最小 routing evidence:
+
+```json
+{
+  "ts": "<iso8601>",
+  "windowId": "slice1-2026-07-14",
+  "taskId": "<stable-id>",
+  "kind": "explicit_provider|business_goal|negative",
+  "eligible": true,
+  "route": "gkit|legacy_keep|blocked|break_glass",
+  "profile": "clonesite.ai|null",
+  "capability": "<id|null>",
+  "targetCount": 1,
+  "discoverySteps": 0,
+  "firstExecutableCommandCorrect": true,
+  "paidDispatch": false,
+  "providerNetworkCalls": 0,
+  "attemptId": null,
+  "artifactBytes": null,
+  "artifactSha256": null,
+  "externalMaxCostMicros": null,
+  "externalActualCostMicros": null,
+  "externalEvidenceRef": null,
+  "result": "success|safe_block|failure",
+  "artifactUsedDownstream": false,
+  "fallbackReason": null,
+  "friction": null
+}
+```
+
+不适用的 `targetCount`、`firstExecutableCommandCorrect` 与 `artifactUsedDownstream` 使用 `null`;不要用默认值制造成功证据。`fallbackReason` 只在 `break_glass` 时写稳定枚举;`friction` 为 `null` 或 `{ "code": "<stable-code>", "note": "<short non-secret note>" }`。禁止记录 raw argv、request body、artifact 内容或 credential。
+
+正常 gkit route 的费用、provider request ID、spend outcome 与 policy breach 不复制进 dogfood log,统一用同一 window 内的非空 `attemptId` join append-only ledger。只有没有 gkit attemptId 的 break-glass route 使用三个 `external*` 字段;`externalEvidenceRef` 只保存 local artifact receipt/path 等非敏感引用,不内嵌 evidence。Window 聚合时,paid dispatch 数量取所有 `paidDispatch:true` event;授权上界取 gkit authorized `maxCostMicros` 加 `externalMaxCostMicros`;实际费用取 gkit settled cost 加 `externalActualCostMicros`。窗口结束后只把脱敏聚合与结论写入 `packages/gkit/evals/baseline.md`。
+
+#### 执行结果与 exit gate
+
+官方 Slice 1 eval set 已一次性执行完毕:
+
+- 2/2 negative 通过:`no_spend_negative` 只做 discovery;`unsupported_mutation_negative` 返回 exit 1 + `CAPABILITY_NOT_FOUND/outcome:not_dispatched`;两者 provider network calls 与 ledger delta 都是 0。
+- Explicit-provider 用例 discovery 1 步;2-target dry-run/actual cost 均为 `$0.024072`,首次 live 成功。
+- Business-goal 用例 discovery 2 步;3-target dry-run/actual cost 均为 `$0.024108`,首次 live 成功。
+- 两次 paid dispatch 均为 `confirmed_charged`,各自 durable `authorized → settled`,无 retry、fallback、`--force` 或 duplicate dispatch。
+- 两个 artifact 均为 `0600`,SHA-256 分别为 `a39921fb7cb06655b217dab278c13115b02d3ec71c79351534b52697696944c5` 与 `83aa4a9aabbaeb3e56fc660a94da5ea2aafbaa49c933332afdc7697eb11e65d7`,并实际用于提取 rank 事实。
+- Ledger 从 3 个历史 attempt 增至 5 个,结束时 `unresolved=0`、`activePolicyBreaches=0`;两份 artifact + ledger 对 13 种 resolved/derived credential 形式扫描为阴性。
+
+**Verdict: PASS.** Slice 1 official dogfood 4/4 通过,即时 gate 完成。观察到的唯一操作摩擦是 linked provider 命令仍需显式 `bun --env-file=...` 注入 secret;这是当前 host contract,未造成失败或额外 provider call。
+
+下一步进入 Slice 2 的 DataForSEO reviewed-manifest 扩张;本 gate 不直接授权删除旧 package,旧 CLI 仍按逐 workflow behavior golden + 真实验证规则单独退役。
 
 ### Slice 0: 先写 eval,不写代码
 
@@ -374,7 +472,7 @@ git add packages/gkit
 git commit -m "feat: gkit vertical slice with dataforseo"
 ```
 
-**Gate:** 本 slice 完成后,用它做一周真实增长工作,记录摩擦点,再进入 Slice 2。
+**Gate:** 执行本节定义的 2 个 executable + 2 个 negative dogfood 用例;全部通过且 ledger/secret/artifact closure 成立后进入 Slice 2。该 gate 已于 2026-07-14 完成。
 
 ### Slice 1.5: Google Ads REST feasibility spike,先验证再锁 runtime
 
@@ -412,6 +510,25 @@ git commit -m "feat: gkit vertical slice with dataforseo"
 - runtime routing、input validation、effect/cost gate、describe 与 docs 对同一 manifest 做一致性 contract test;CI 禁止第二份可执行 registry。
 - describe/docs 离线;root `--schema` < 2,000 tokens。
 
+**2026-07-14 implementation result:**
+
+- 固定 DataForSEO 官方 OpenAPI revision
+  `2d905ad34863444e2f1eb4272f8c9569032e4628` 与 SHA-256;generator 从该
+  snapshot 和 reviewed policy 字节稳定地产生 manifest、554-operation
+  inventory 与 docs,`--check` 已通过。
+- executable manifest 现有四项:Bulk Ranks、Backlink Summary、Referring
+  Domains、Google Organic Live Advanced;其余 operation 都只在 inventory。
+- Summary、Referring Domains、SERP 均通过同 input dry-run 和一次最小 live
+  gate;新增实际费用 `$0.050072`,ledger 最终 `unresolved=0` 且无 policy
+  breach。证据见
+  [`packages/gkit/evals/slice2-baseline.md`](../../packages/gkit/evals/slice2-baseline.md)。
+- LLM Mentions 保持 inventory-only:官方最低 request cost `$0.10` 高于当前
+  profile 的 `$0.03/call` hard cap,不得为了迁移静默抬高 profile policy。
+- 已完成命令级 migration matrix;Backlink 的 anchors/backlinks 与 page
+  summary gate、SERP batch、全部 AI Optimization data workflow 仍为 `keep`,
+  因此本 slice 不删除三个旧 package。见
+  [`packages/gkit/evals/dataforseo-migration-matrix.md`](../../packages/gkit/evals/dataforseo-migration-matrix.md)。
+
 ```bash
 bun run --cwd packages/gkit generate:dataforseo -- --check
 bun test packages/gkit
@@ -429,6 +546,27 @@ git commit -m "feat: generate reviewed dataforseo manifest and docs"
 - Create: `packages/gkit/src/providers/<gsc|posthog>/**` + manifest generator + docs
 - Delete: 对应旧 package(完成命令级 `replace | keep | drop` 与 behavior gate 后)
 - `doctor` 约定:检查 profile section、secret 注入、可选无副作用 probe;无法安全 probe 时返回 `unknown`,不伪造 ready。
+
+**2026-07-14 implementation result:**
+
+- 按真实重复需求选择 PostHog;固定官方 schema snapshot 与 SHA-256,生成
+  2,516-operation inventory,仅 `posthog.query.run` 进入 executable manifest。
+- gkit 的 schema/describe/docs 现可同时发现 DataForSEO 与 PostHog;执行仍按
+  provider 独立路由,PostHog profile 只允许固定 US/EU origin、数字 project ID
+  与一个 token env reference。
+- `clonesite.ai` 真实 dry-run 与一次 live HogQL gate 通过:返回 10 行 × 2 列,
+  raw artifact 为 2,838 bytes;token 未进入 artifact。
+- 内嵌 `LIMIT`、write statement、comment bypass 均在 dispatch 前拒绝;PostHog
+  read 前后 ledger 都保持 8 attempts、0 unresolved、0 breach。
+- 未创建 `src/core/provider.ts`:两个 provider 的稳定公共面已经由 manifest、
+  profile、envelope、discovery 与 artifact contracts 承担,但 DataForSEO 的
+  spend authorization/settlement 与 PostHog 的 bounded read 执行仍有实质差异;
+  此时提炼只会搬运分支,不会删除分支。
+- 命令级 matrix 仅将 `query dataset results` 标为 `replace`;其余 12 个旧命令
+  为 `keep`,因此不删除 `packages/posthog-cli`。证据见
+  [`packages/gkit/evals/slice3-baseline.md`](../../packages/gkit/evals/slice3-baseline.md)
+  与
+  [`packages/gkit/evals/posthog-migration-matrix.md`](../../packages/gkit/evals/posthog-migration-matrix.md)。
 
 ```bash
 git commit -m "feat: add second gkit provider"
@@ -482,15 +620,15 @@ git commit -m "feat: evaluated curated commands and final cleanup"
 
 ## 7. 扩张门槛(触发条件成立前不做)
 
-| 延后项 | 触发条件 |
-|---|---|
-| 内建 `gkit search` | eval 中 rg+describe 两步发现成功率 < 90% |
-| Python/polyglot/isolated runtime | Slice 1.5 证明 REST 不能可靠覆盖必需能力、开放 Google Ads mutate,或引入不可信 provider/dependency |
-| npm 发布 | gkit 需要分发到本 workspace 之外 |
-| sandboxed `gkit exec` / code runner | 出现真实 shell-less host |
-| write/destructive capability | 逐 provider 有真实用例,随附 dry-run、idempotency/unknown-outcome 与 audit contract |
-| 统一 async job subsystem | 多 provider async task 需要统一监控的真实场景 |
-| external plugin protocol | 第三方需要独立发布 provider;必须同时定义隔离与 credential boundary |
+| 延后项                              | 触发条件                                                                                          |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------- |
+| 内建 `gkit search`                  | eval 中 rg+describe 两步发现成功率 < 90%                                                          |
+| Python/polyglot/isolated runtime    | Slice 1.5 证明 REST 不能可靠覆盖必需能力、开放 Google Ads mutate,或引入不可信 provider/dependency |
+| npm 发布                            | gkit 需要分发到本 workspace 之外                                                                  |
+| sandboxed `gkit exec` / code runner | 出现真实 shell-less host                                                                          |
+| write/destructive capability        | 逐 provider 有真实用例,随附 dry-run、idempotency/unknown-outcome 与 audit contract                |
+| 统一 async job subsystem            | 多 provider async task 需要统一监控的真实场景                                                     |
+| external plugin protocol            | 第三方需要独立发布 provider;必须同时定义隔离与 credential boundary                                |
 
 ## 8. Review gates
 

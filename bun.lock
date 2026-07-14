@@ -95,6 +95,7 @@
         "ajv": "catalog:",
         "argc": "catalog:",
         "valibot": "catalog:",
+        "yaml": "catalog:",
       },
       "devDependencies": {
         "@types/bun": "catalog:",
@@ -257,6 +258,7 @@
     "typescript": "^5",
     "valibot": "^1.2.0",
     "vitest": "^4.0.18",
+    "yaml": "^2.9.0",
   },
   "packages": {
     "@ai-sdk/gateway": ["@ai-sdk/gateway@2.0.109", "", { "dependencies": { "@ai-sdk/provider": "2.0.3", "@ai-sdk/provider-utils": "3.0.28", "@vercel/oidc": "3.1.0" }, "peerDependencies": { "zod": "^3.25.76 || ^4.1.8" } }, "sha512-jvTQnfmcKD/bc8fbp2bbaO8QvqSPaj7lv5rj9kj/GLHUfTGpjQV3pH7GdO4fDi1SX2PdHpPQY0y6rxJ05Xo5cg=="],

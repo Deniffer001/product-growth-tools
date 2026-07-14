@@ -16,6 +16,43 @@ export type DataForSeoBulkRanksInput = {
   tag?: string;
 };
 
+export type DataForSeoBacklinkSummaryInput = {
+  target: string;
+  include_subdomains?: boolean;
+  exclude_internal_backlinks?: boolean;
+  internal_list_limit?: number;
+  backlinks_status_type?: "all" | "live" | "lost";
+  rank_scale?: "one_hundred" | "one_thousand";
+  tag?: string;
+};
+
+export type DataForSeoReferringDomainsInput = {
+  target: string;
+  limit: number;
+  order_by?: string[];
+  include_subdomains?: boolean;
+  exclude_internal_backlinks?: boolean;
+  backlinks_status_type?: "all" | "live" | "lost";
+  rank_scale?: "one_hundred" | "one_thousand";
+  tag?: string;
+};
+
+export type DataForSeoSerpInput = {
+  keyword: string;
+  location_code: number;
+  language_code: string;
+  device: "desktop" | "mobile";
+  os: "windows" | "macos" | "android" | "ios";
+  depth: number;
+  tag?: string;
+};
+
+export type DataForSeoAdapterKey =
+  | "backlinks.bulk_ranks.live"
+  | "backlinks.referring_domains.live"
+  | "backlinks.summary.live"
+  | "serp.google.organic.live.advanced";
+
 export type DataForSeoDispatchSuccess = {
   ok: true;
   rawBytes: Uint8Array;
@@ -40,9 +77,7 @@ export type DataForSeoDispatchFailure = {
   costIsConfirmed: boolean;
 };
 
-export type DataForSeoDispatchResult =
-  | DataForSeoDispatchSuccess
-  | DataForSeoDispatchFailure;
+export type DataForSeoDispatchResult = DataForSeoDispatchSuccess | DataForSeoDispatchFailure;
 
 export type DataForSeoFetch = (
   input: string | URL | Request,
@@ -77,9 +112,7 @@ function asString(value: unknown): string | null {
 function asTaskId(value: unknown): string | null {
   const candidate = asString(value);
   return candidate !== null &&
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-      candidate,
-    )
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(candidate)
     ? candidate
     : null;
 }
@@ -151,10 +184,119 @@ function validBulkRanksItemsCount(
     }
     remainingTargets.set(target, remainingTargets.get(target)! - 1);
   }
-  return [...remainingTargets.values()].every((count) => count === 0)
+  return [...remainingTargets.values()].every((count) => count === 0) ? itemsCount : null;
+}
+
+function validSummaryItemsCount(
+  result: JsonRecord | null,
+  input: DataForSeoBacklinkSummaryInput,
+): number | null {
+  if (!result || asString(result.target) !== input.target) return null;
+  const metricKeys = ["rank", "backlinks", "referring_domains"];
+  if (!metricKeys.some((key) => Object.hasOwn(result, key))) return null;
+  return metricKeys.every((key) => {
+    if (!Object.hasOwn(result, key)) return true;
+    const value = result[key];
+    return (
+      value === null || (typeof value === "number" && Number.isSafeInteger(value) && value >= 0)
+    );
+  })
+    ? 1
+    : null;
+}
+
+function validReferringDomainsItemsCount(
+  result: JsonRecord | null,
+  input: DataForSeoReferringDomainsInput,
+): number | null {
+  if (!result || asString(result.target) !== input.target) return null;
+  const itemsCount = asNumber(result.items_count);
+  const items = result.items;
+  if (
+    itemsCount === null ||
+    !Number.isSafeInteger(itemsCount) ||
+    itemsCount < 0 ||
+    itemsCount > input.limit ||
+    !Array.isArray(items) ||
+    items.length !== itemsCount
+  ) {
+    return null;
+  }
+  return items.every((item) => {
+    const record = asRecord(item);
+    const rank = record?.rank;
+    const backlinks = record?.backlinks;
+    return (
+      record !== null &&
+      Boolean(asString(record.domain)) &&
+      (rank === null || (typeof rank === "number" && Number.isSafeInteger(rank) && rank >= 0)) &&
+      (backlinks === null ||
+        (typeof backlinks === "number" && Number.isSafeInteger(backlinks) && backlinks >= 0))
+    );
+  })
     ? itemsCount
     : null;
 }
+
+function validSerpItemsCount(result: JsonRecord | null, input: DataForSeoSerpInput): number | null {
+  if (
+    !result ||
+    asString(result.keyword) !== input.keyword ||
+    asNumber(result.location_code) !== input.location_code ||
+    asString(result.language_code) !== input.language_code
+  ) {
+    return null;
+  }
+  const itemsCount = asNumber(result.items_count);
+  const items = result.items;
+  if (itemsCount === null || !Number.isSafeInteger(itemsCount) || itemsCount < 0) {
+    return null;
+  }
+  if (itemsCount === 0)
+    return items === null || (Array.isArray(items) && items.length === 0) ? 0 : null;
+  return Array.isArray(items) &&
+    items.length === itemsCount &&
+    items.every((item) => item === null || isRecord(item))
+    ? itemsCount
+    : null;
+}
+
+type AdapterDefinition = {
+  endpoint: string;
+  terminalStatusContract: string;
+  resultContract: string;
+  validateResult: (result: JsonRecord | null, input: unknown) => number | null;
+};
+
+const adapterDefinitions: Record<DataForSeoAdapterKey, AdapterDefinition> = {
+  "backlinks.bulk_ranks.live": {
+    endpoint: "/v3/backlinks/bulk_ranks/live",
+    terminalStatusContract: "bulk_ranks_terminal_status_unconfirmed",
+    resultContract: "bulk_ranks_result_invalid",
+    validateResult: (result, input) =>
+      validBulkRanksItemsCount(result, input as DataForSeoBulkRanksInput),
+  },
+  "backlinks.referring_domains.live": {
+    endpoint: "/v3/backlinks/referring_domains/live",
+    terminalStatusContract: "referring_domains_terminal_status_unconfirmed",
+    resultContract: "referring_domains_result_invalid",
+    validateResult: (result, input) =>
+      validReferringDomainsItemsCount(result, input as DataForSeoReferringDomainsInput),
+  },
+  "backlinks.summary.live": {
+    endpoint: "/v3/backlinks/summary/live",
+    terminalStatusContract: "backlinks_summary_terminal_status_unconfirmed",
+    resultContract: "backlinks_summary_result_invalid",
+    validateResult: (result, input) =>
+      validSummaryItemsCount(result, input as DataForSeoBacklinkSummaryInput),
+  },
+  "serp.google.organic.live.advanced": {
+    endpoint: "/v3/serp/google/organic/live/advanced",
+    terminalStatusContract: "serp_google_organic_terminal_status_unconfirmed",
+    resultContract: "serp_google_organic_result_invalid",
+    validateResult: (result, input) => validSerpItemsCount(result, input as DataForSeoSerpInput),
+  },
+};
 
 function parseCostMicros(raw: unknown): number | null {
   if (typeof raw !== "number" && typeof raw !== "string") return null;
@@ -171,11 +313,7 @@ function readCostReport(
 ): { costMicros: number | null; costIsConfirmed: boolean } {
   const topCostMicros = parseCostMicros(payload.cost);
   const taskCostMicros = parseCostMicros(task?.cost);
-  if (
-    topCostMicros !== null &&
-    taskCostMicros !== null &&
-    topCostMicros === taskCostMicros
-  ) {
+  if (topCostMicros !== null && taskCostMicros !== null && topCostMicros === taskCostMicros) {
     return { costMicros: topCostMicros, costIsConfirmed: true };
   }
   const observed = [topCostMicros, taskCostMicros].filter(
@@ -283,14 +421,16 @@ function httpFailure(
   return null;
 }
 
-export async function dispatchDataForSeoBulkRanks(options: {
-  input: DataForSeoBulkRanksInput;
+export async function dispatchDataForSeo(options: {
+  adapterKey: DataForSeoAdapterKey;
+  input: unknown;
   credentials: DataForSeoCredentials;
   environment: DataForSeoEnvironment;
   signal: AbortSignal;
   fetch?: DataForSeoFetch;
   timeoutMs?: number;
 }): Promise<DataForSeoDispatchResult> {
+  const definition = adapterDefinitions[options.adapterKey];
   const fetchImplementation = options.fetch ?? globalThis.fetch;
   const timeoutMs = options.timeoutMs ?? defaultDataForSeoTimeoutMs;
   if (!Number.isSafeInteger(timeoutMs) || timeoutMs <= 0) {
@@ -305,28 +445,21 @@ export async function dispatchDataForSeoBulkRanks(options: {
   let response: Response;
   let rawBytes: Uint8Array;
   try {
-    response = await fetchImplementation(
-      `${origins[options.environment]}/v3/backlinks/bulk_ranks/live`,
-      {
-        method: "POST",
-        headers: {
-          authorization: `Basic ${authorization}`,
-          "content-type": "application/json",
-        },
-        body: JSON.stringify([options.input]),
-        signal: dispatchSignal.signal,
+    response = await fetchImplementation(`${origins[options.environment]}${definition.endpoint}`, {
+      method: "POST",
+      headers: {
+        authorization: `Basic ${authorization}`,
+        "content-type": "application/json",
       },
-    );
+      body: JSON.stringify([options.input]),
+      signal: dispatchSignal.signal,
+    });
     rawBytes = new Uint8Array(await response.arrayBuffer());
   } catch {
     const timedOut = dispatchSignal.timedOut();
     return {
       ok: false,
-      code: timedOut
-        ? "TIMEOUT"
-        : options.signal.aborted
-          ? "UNKNOWN_OUTCOME"
-          : "NETWORK_ERROR",
+      code: timedOut ? "TIMEOUT" : options.signal.aborted ? "UNKNOWN_OUTCOME" : "NETWORK_ERROR",
       message: timedOut
         ? "The dispatched DataForSEO request exceeded its deadline before the outcome was confirmed."
         : options.signal.aborted
@@ -421,15 +554,11 @@ export async function dispatchDataForSeoBulkRanks(options: {
     };
   }
 
-  if (
-    topStatus !== 20_000 ||
-    taskStatus !== 20_000 ||
-    asNumber(payload.tasks_error) !== 0
-  ) {
+  if (topStatus !== 20_000 || taskStatus !== 20_000 || asNumber(payload.tasks_error) !== 0) {
     return {
       ok: false,
       code: "UNKNOWN_OUTCOME",
-      message: "DataForSEO did not confirm a terminal successful bulk-ranks result.",
+      message: "DataForSEO did not confirm a terminal successful result.",
       retryable: false,
       outcome: "unknown",
       details: {
@@ -437,7 +566,7 @@ export async function dispatchDataForSeoBulkRanks(options: {
           httpStatus: response.status,
           providerRequestId,
         }),
-        contract: "bulk_ranks_terminal_status_unconfirmed",
+        contract: definition.terminalStatusContract,
       },
       rawBytes,
       providerRequestId,
@@ -465,12 +594,12 @@ export async function dispatchDataForSeoBulkRanks(options: {
   }
 
   const result = singleResult(task);
-  const itemsCount = validBulkRanksItemsCount(result, options.input);
+  const itemsCount = definition.validateResult(result, options.input);
   if (itemsCount === null) {
     return {
       ok: false,
       code: "PROVIDER_ERROR",
-      message: "DataForSEO returned a successful status with an invalid bulk-ranks result.",
+      message: "DataForSEO returned a successful status with an invalid reviewed result.",
       retryable: false,
       outcome: "confirmed",
       details: {
@@ -478,7 +607,7 @@ export async function dispatchDataForSeoBulkRanks(options: {
           httpStatus: response.status,
           providerRequestId,
         }),
-        contract: "bulk_ranks_result_invalid",
+        contract: definition.resultContract,
       },
       rawBytes,
       providerRequestId,
@@ -516,6 +645,20 @@ export async function dispatchDataForSeoBulkRanks(options: {
       itemsCount,
     },
   };
+}
+
+export async function dispatchDataForSeoBulkRanks(options: {
+  input: DataForSeoBulkRanksInput;
+  credentials: DataForSeoCredentials;
+  environment: DataForSeoEnvironment;
+  signal: AbortSignal;
+  fetch?: DataForSeoFetch;
+  timeoutMs?: number;
+}): Promise<DataForSeoDispatchResult> {
+  return await dispatchDataForSeo({
+    ...options,
+    adapterKey: "backlinks.bulk_ranks.live",
+  });
 }
 
 function createDispatchSignal(

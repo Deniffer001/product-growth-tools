@@ -9,7 +9,8 @@ Each line is one independent prompt with:
 - `legacy`: the current workflow disposition. `replace` requires behavioral
   evidence before retirement; `keep` means the current CLI remains available;
   `drop` means the sole consumer explicitly rejects that surface.
-- `slice1`: whether the task must work in the first DataForSEO vertical slice.
+- `slice1` / `slice2`: the task's exposure state at each DataForSEO vertical
+  slice; `inventory` is discoverable evidence but cannot be routed.
 
 ## Manual evaluation
 
@@ -18,8 +19,8 @@ Each line is one independent prompt with:
 2. Record discovery steps before the first executable command.
 3. Compare the selected provider, capability ID, effects, command, exit code,
    stdout envelope, stderr, and artifact behavior with the answer key.
-4. A future-slice task is not a Slice 1 failure. Slice 1 requires the two
-   `executable` tasks and both negative tasks to match their keys.
+4. A future-slice task is not an earlier-slice failure. Evaluate the selected
+   slice's `executable`, `inventory`, and `negative` tasks against their keys.
 5. Never execute a paid command during evaluation unless the profile cap,
    invocation cap, and explicit spend acknowledgement are all present.
 
@@ -29,3 +30,86 @@ The initial targets are:
 - discovery: at most two steps before `describe` or execution;
 - first executable command: correct for both Slice 1 executable tasks;
 - negative precision: 100%, with zero provider network calls.
+
+## Slice 1 dogfood
+
+The canonical policy is defined in
+[`docs/plans/2026-07-13-gkit-vertical-slice-plan.md`](../../../docs/plans/2026-07-13-gkit-vertical-slice-plan.md#slice-1-immediate-dogfood-gate2026-07-14-已完成).
+The operational decision is:
+
+- execute the two Slice 1 `executable` tasks and both `negative` tasks
+  immediately; no calendar wait is required for the sole CLI consumer;
+- keep live bulk-ranks inputs within 1–166 targets; the current `$0.03` profile
+  cap blocks 167–1,000 targets and dogfood must not split them automatically;
+- do not shadow, double-dispatch, or automatically fall back to a paid legacy
+  path;
+- keep unsupported manifest gaps on their current legacy CLI and record them as
+  `legacy_keep` rather than manufacturing a gkit failure;
+- cap this gate at `$0.15` of authorized exposure and two paid dispatches, with
+  exactly one allowed live attempt per executable task;
+- run the same-input dry-run with the current `$0.03` profile hard cap, then
+  tighten the live invocation cap to the exact returned cost upper bound;
+- stop paid dogfood on unknown/unresolved spend, policy breach, suspected
+  credential exposure, ledger/artifact integrity failure, or duplicate
+  dispatch.
+
+Only a pre-authorization failure with `outcome:not_dispatched`,
+`attemptId:null`, and no new durable ledger authorization may be corrected
+once. A non-null attempt ID ends retries and fallback for that task. Settled
+confirmed outcomes are recorded as-is; only unresolved/unknown outcomes require
+reconciliation.
+
+The single allowed break-glass legacy call is not outside the budget: it counts
+as one of the two paid dispatches and must fit the remaining `$0.15` authorized
+exposure. Record its reviewed maximum, actual cost in integer micros, and a
+non-secret local evidence reference in the dogfood event. If actual legacy cost
+cannot be confirmed, stop paid dogfood and fail the window as an external
+unknown outcome.
+
+Provider commands on the current machine use the linked binary with explicit
+secret injection and profile selection:
+
+```bash
+bun --env-file="$HOME/.config/gkit/profiles/clonesite.ai/.env" \
+  gkit --profile clonesite.ai dataforseo ...
+```
+
+Append minimal events to `$XDG_STATE_HOME/gkit/dogfood/events.jsonl`, falling
+back to `~/.local/state/gkit/dogfood/events.jsonl`, and keep sanitized
+command/envelope receipts in `receipts.jsonl` beside it. These files, request
+bodies, and raw artifacts stay local and never enter Git. Join cost and spend
+outcome from the spend ledger by `attemptId`; do not copy secrets into dogfood
+evidence. After the gate, commit only a redacted aggregate to
+`evals/baseline.md`.
+
+The immediate run completed on 2026-07-14 with all four tasks passing, two
+first-attempt live successes, `$0.048180` total cost, and zero unresolved spend,
+policy breaches, retries, fallbacks, secret findings, or artifact integrity
+failures. See [`evals/baseline.md`](./baseline.md) for the redacted evidence.
+
+## Slice 2 evidence
+
+Slice 2 generated a 554-operation inventory from a pinned upstream OpenAPI
+snapshot while exposing only four reviewed operations. Summary, referring
+domains, and Google Organic Live Advanced each passed same-input dry-run and a
+single live dispatch. Actual new spend was `$0.050072`; the ledger ended with
+zero unresolved attempts and zero policy breaches.
+
+LLM Mentions remains inventory-only because its `$0.10` request floor is above
+the current `$0.03` profile hard cap. See
+[`slice2-baseline.md`](./slice2-baseline.md) for redacted execution evidence and
+[`dataforseo-migration-matrix.md`](./dataforseo-migration-matrix.md) for the
+command-level retirement decisions. No legacy package is deleted by this slice.
+
+## Slice 3 evidence
+
+Slice 3 selected PostHog from current repeated workspace demand. A pinned
+2,516-operation OpenAPI inventory exposes only one reviewed capability:
+`posthog.query.run`. One bounded live HogQL read returned ten rows and two
+columns into an atomic raw artifact without changing the spend ledger.
+
+See [`slice3-baseline.md`](./slice3-baseline.md) for the redacted gate evidence
+and [`posthog-migration-matrix.md`](./posthog-migration-matrix.md) for the
+command-level retirement decisions. The legacy PostHog package remains because
+twelve command behaviors are still `keep`; no provider runtime interface was
+extracted because the second adapter did not reveal a branch-removing seam.

@@ -142,7 +142,7 @@ describe("profile loading and secret resolution", () => {
     input.providers = {
       ...input.providers,
       posthog: {
-        config: { host: "https://us.posthog.com" },
+        config: { host: "https://us.posthog.com", projectId: "12345" },
         policy: {},
         secrets: { apiToken: "env:APP_A_POSTHOG_TOKEN" },
       },
@@ -155,6 +155,54 @@ describe("profile loading and secret resolution", () => {
     });
     expect(resolved).toEqual({ login: "login", password: "password" });
     expect(Object.isFrozen(resolved)).toBe(true);
+  });
+
+  test("accepts only the fixed PostHog origins, numeric project id, and api token reference", async () => {
+    const input = profileDocument();
+    input.providers = {
+      ...input.providers,
+      posthog: {
+        config: { host: "https://eu.posthog.com", projectId: "12345" },
+        policy: {},
+        secrets: { apiToken: "env:APP_A_POSTHOG_TOKEN" },
+      },
+    } as typeof input.providers;
+
+    const profile = await loadDocument(input);
+    expect(profile.providers.posthog?.config).toEqual({
+      host: "https://eu.posthog.com",
+      projectId: "12345",
+    });
+    expect(resolveProviderSecrets(profile, "posthog", { APP_A_POSTHOG_TOKEN: "phx_test" })).toEqual(
+      {
+        apiToken: "phx_test",
+      },
+    );
+
+    for (const posthog of [
+      {
+        config: { host: "https://attacker.invalid", projectId: "12345" },
+        policy: {},
+        secrets: { apiToken: "env:APP_A_POSTHOG_TOKEN" },
+      },
+      {
+        config: { host: "https://us.posthog.com", projectId: "not-numeric" },
+        policy: {},
+        secrets: { apiToken: "env:APP_A_POSTHOG_TOKEN" },
+      },
+      {
+        config: { host: "https://us.posthog.com", projectId: "12345" },
+        policy: {},
+        secrets: {
+          apiToken: "env:APP_A_POSTHOG_TOKEN",
+          extra: "env:APP_A_POSTHOG_EXTRA",
+        },
+      },
+    ]) {
+      const invalid = profileDocument();
+      invalid.providers = { ...invalid.providers, posthog } as typeof invalid.providers;
+      await expect(loadDocument(invalid)).rejects.toMatchObject({ reason: "invalid_profile" });
+    }
   });
 
   test("reports a missing referenced env var without reading arbitrary secrets", async () => {

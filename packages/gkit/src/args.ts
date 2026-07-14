@@ -15,6 +15,7 @@ export type ParsedCommand =
       providerRequestId: string | null;
     }
   | { kind: "dataforseo-doctor"; profileFlag: string | null }
+  | { kind: "posthog-doctor"; profileFlag: string | null }
   | {
       kind: "dataforseo-call";
       profileFlag: string | null;
@@ -22,6 +23,15 @@ export type ParsedCommand =
       input: string;
       allowSpend: boolean;
       maxSpendUsd: string | null;
+      out: string | null;
+      force: boolean;
+      dryRun: boolean;
+    }
+  | {
+      kind: "posthog-call";
+      profileFlag: string | null;
+      operationId: string;
+      input: string;
       out: string | null;
       force: boolean;
       dryRun: boolean;
@@ -65,10 +75,7 @@ function takeGlobalProfile(argv: string[]): {
   return { profileFlag, rest };
 }
 
-function parseFlags(
-  argv: string[],
-  booleanNames: ReadonlySet<string>,
-): Map<string, FlagValue> {
+function parseFlags(argv: string[], booleanNames: ReadonlySet<string>): Map<string, FlagValue> {
   const flags = new Map<string, FlagValue>();
   for (let index = 0; index < argv.length; index++) {
     const token = argv[index]!;
@@ -121,9 +128,7 @@ export function parseArgs(argv: string[]): ParsedCommand {
   if (rest[0] === "--schema" || rest[0]!.startsWith("--schema=")) {
     if (profileFlag) invalid("--schema does not load a profile.");
     const first = rest[0]!;
-    const inline = first.startsWith("--schema=")
-      ? first.slice("--schema=".length)
-      : null;
+    const inline = first.startsWith("--schema=") ? first.slice("--schema=".length) : null;
     const selector = inline || rest[1] || null;
     if (rest.length > (selector && !inline ? 2 : 1)) {
       invalid("--schema accepts at most one selector.");
@@ -161,10 +166,7 @@ export function parseArgs(argv: string[]): ParsedCommand {
       "--provider-request-id",
     ]);
     const outcome = requiredString(flags, "--outcome");
-    if (
-      outcome !== "confirmed_charged" &&
-      outcome !== "confirmed_not_charged"
-    ) {
+    if (outcome !== "confirmed_charged" && outcome !== "confirmed_not_charged") {
       invalid("--outcome must be confirmed_charged or confirmed_not_charged.");
     }
     return {
@@ -177,16 +179,34 @@ export function parseArgs(argv: string[]): ParsedCommand {
     };
   }
 
-  if (rest[0] !== "dataforseo") invalid(`Unknown command: ${rest[0]}`);
+  if (rest[0] !== "dataforseo" && rest[0] !== "posthog") {
+    invalid(`Unknown command: ${rest[0]}`);
+  }
+  const provider = rest[0];
   if (rest[1] === "doctor" && rest.length === 2) {
-    return { kind: "dataforseo-doctor", profileFlag };
+    return {
+      kind: provider === "dataforseo" ? "dataforseo-doctor" : "posthog-doctor",
+      profileFlag,
+    };
   }
   if (rest[1] !== "api" || rest[2] !== "call") {
-    invalid("Expected dataforseo doctor or dataforseo api call.");
+    invalid(`Expected ${provider} doctor or ${provider} api call.`);
   }
 
   const booleanNames = new Set(["--allow-spend", "--force", "--dry-run"]);
   const flags = parseFlags(rest.slice(3), booleanNames);
+  if (provider === "posthog") {
+    requireOnly(flags, ["--operation-id", "--input", "--out", "--force", "--dry-run"]);
+    return {
+      kind: "posthog-call",
+      profileFlag,
+      operationId: requiredString(flags, "--operation-id"),
+      input: requiredString(flags, "--input"),
+      out: optionalString(flags, "--out"),
+      force: flags.get("--force") === true,
+      dryRun: flags.get("--dry-run") === true,
+    };
+  }
   requireOnly(flags, [
     "--operation-id",
     "--input",
@@ -223,6 +243,11 @@ export function renderHelp(): string {
     "  gkit --profile <app> dataforseo api call --operation-id <id> --input @request.json --allow-spend --max-spend-usd <decimal> --out <path> --dry-run",
     "  gkit --profile <app> dataforseo api call --operation-id <id> --input @request.json --allow-spend --max-spend-usd <decimal> --out <path>",
     "  Default artifact behavior is no-replace; add --force only after reviewing the destination.",
+    "",
+    "PostHog:",
+    "  gkit --profile <app> posthog doctor",
+    "  gkit --profile <app> posthog api call --operation-id posthog.query.run --input @request.json --out <path> --dry-run",
+    "  gkit --profile <app> posthog api call --operation-id posthog.query.run --input @request.json --out <path>",
     "",
     "Spend ledger:",
     "  gkit ledger",

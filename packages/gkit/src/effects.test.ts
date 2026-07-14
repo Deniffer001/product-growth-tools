@@ -78,6 +78,49 @@ describe("integer USD amounts", () => {
 });
 
 describe("effect gate", () => {
+  test("bounds fixed and linear-number reviewed cost models", () => {
+    const fixedRecord = {
+      ...spendRecord(),
+      cost: {
+        currency: "USD" as const,
+        policyRevision: "fixed-v1",
+        model: { type: "fixed" as const, micros: 2_000 },
+      },
+    };
+    expect(
+      evaluateEffects({
+        record: fixedRecord,
+        input: {},
+        profilePolicy: { maxSpendUsdPerCall: "0.03" },
+        authorization: { allowSpend: true, maxSpendUsd: "0.002" },
+        environment: "production",
+      }),
+    ).toMatchObject({ allowed: true, maxCostMicros: 2_000 });
+
+    const linearRecord = {
+      ...spendRecord(),
+      cost: {
+        currency: "USD" as const,
+        policyRevision: "linear-v1",
+        model: {
+          type: "linear-number" as const,
+          baseMicros: 24_000,
+          perUnitMicros: 36,
+          valueJsonPointer: "/limit",
+          maxValue: 100,
+        },
+      },
+    };
+    expect(
+      evaluateEffects({
+        record: linearRecord,
+        input: { limit: 20 },
+        profilePolicy: { maxSpendUsdPerCall: "0.03" },
+        authorization: { allowSpend: true, maxSpendUsd: "0.024720" },
+        environment: "production",
+      }),
+    ).toMatchObject({ allowed: true, maxCostMicros: 24_720 });
+  });
   test("allows read effects without spend metadata", () => {
     const record = {
       ...spendRecord(),

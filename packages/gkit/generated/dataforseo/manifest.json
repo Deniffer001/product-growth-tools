@@ -1,22 +1,32 @@
 {
   "version": 1,
   "provider": "dataforseo",
-  "revision": "2026-07-13.slice1.1",
-  "reviewedAt": "2026-07-13T16:00:00.000Z",
+  "revision": "2026-07-14.slice2.1",
+  "source": {
+    "url": "https://github.com/dataforseo/OpenApiDocumentation/blob/2d905ad34863444e2f1eb4272f8c9569032e4628/openapi_specification.yaml",
+    "revision": "2d905ad34863444e2f1eb4272f8c9569032e4628",
+    "checksum": "sha256:c73904b057e143acf571bf681a53131e429218169d9bf2c79a2ca026e0678235"
+  },
+  "reviewedAt": "2026-07-14T02:35:00.000Z",
   "capabilities": [
     {
       "id": "dataforseo.backlinks.bulk_ranks.live",
       "provider": "dataforseo",
-      "revision": "1",
+      "revision": "2",
       "title": "Bulk backlink ranks",
       "description": "Return DataForSEO backlink ranks for up to 1,000 targets in one live request.",
       "adapterKey": "backlinks.bulk_ranks.live",
-      "effects": ["read", "spend"],
+      "effects": [
+        "read",
+        "spend"
+      ],
       "inputSchema": {
         "$schema": "http://json-schema.org/draft-07/schema#",
         "type": "object",
         "additionalProperties": false,
-        "required": ["targets"],
+        "required": [
+          "targets"
+        ],
         "properties": {
           "targets": {
             "type": "array",
@@ -30,7 +40,10 @@
           },
           "rank_scale": {
             "type": "string",
-            "enum": ["one_hundred", "one_thousand"]
+            "enum": [
+              "one_hundred",
+              "one_thousand"
+            ]
           },
           "tag": {
             "type": "string",
@@ -40,7 +53,7 @@
       },
       "cost": {
         "currency": "USD",
-        "policyRevision": "dataforseo-backlinks-pricing-2026-07-01-v1",
+        "policyRevision": "dataforseo-backlinks-pricing-2026-07-14-v1",
         "model": {
           "type": "linear-items",
           "baseMicros": 24000,
@@ -53,20 +66,352 @@
         {
           "title": "Safe preflight",
           "input": {
-            "targets": ["clonesite.ai", "example.com"],
+            "targets": [
+              "clonesite.ai",
+              "example.com"
+            ],
             "rank_scale": "one_hundred",
-            "tag": "slice1-smoke"
+            "tag": "slice2-smoke"
           },
-          "command": "gkit --profile app-a dataforseo api call --operation-id dataforseo.backlinks.bulk_ranks.live --input @req.json --allow-spend --max-spend-usd 0.05 --out ranks.json --dry-run"
+          "command": "gkit --profile clonesite.ai dataforseo api call --operation-id dataforseo.backlinks.bulk_ranks.live --input @req.json --allow-spend --max-spend-usd 0.024072 --out ranks.json --dry-run"
         },
         {
           "title": "Live call after reviewing the dry-run",
           "input": {
-            "targets": ["clonesite.ai", "example.com"],
+            "targets": [
+              "clonesite.ai",
+              "example.com"
+            ],
             "rank_scale": "one_hundred",
-            "tag": "slice1-smoke"
+            "tag": "slice2-smoke"
           },
-          "command": "gkit --profile app-a dataforseo api call --operation-id dataforseo.backlinks.bulk_ranks.live --input @req.json --allow-spend --max-spend-usd 0.05 --out ranks.json"
+          "command": "gkit --profile clonesite.ai dataforseo api call --operation-id dataforseo.backlinks.bulk_ranks.live --input @req.json --allow-spend --max-spend-usd 0.024072 --out ranks.json"
+        }
+      ]
+    },
+    {
+      "id": "dataforseo.backlinks.referring_domains.live",
+      "provider": "dataforseo",
+      "revision": "1",
+      "title": "Referring domains",
+      "description": "Return up to 100 reviewed referring-domain rows for one target.",
+      "adapterKey": "backlinks.referring_domains.live",
+      "effects": [
+        "read",
+        "spend"
+      ],
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "target",
+          "limit"
+        ],
+        "properties": {
+          "target": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "order_by": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "items": {
+              "type": "string",
+              "enum": [
+                "rank,asc",
+                "rank,desc",
+                "backlinks,asc",
+                "backlinks,desc"
+              ]
+            }
+          },
+          "include_subdomains": {
+            "type": "boolean"
+          },
+          "exclude_internal_backlinks": {
+            "type": "boolean"
+          },
+          "backlinks_status_type": {
+            "type": "string",
+            "enum": [
+              "all",
+              "live",
+              "lost"
+            ]
+          },
+          "rank_scale": {
+            "type": "string",
+            "enum": [
+              "one_hundred",
+              "one_thousand"
+            ]
+          },
+          "tag": {
+            "type": "string",
+            "maxLength": 255
+          }
+        }
+      },
+      "cost": {
+        "currency": "USD",
+        "policyRevision": "dataforseo-backlinks-pricing-2026-07-14-v1",
+        "model": {
+          "type": "linear-number",
+          "baseMicros": 24000,
+          "perUnitMicros": 36,
+          "valueJsonPointer": "/limit",
+          "maxValue": 100
+        }
+      },
+      "examples": [
+        {
+          "title": "Safe preflight",
+          "input": {
+            "target": "clonesite.ai",
+            "limit": 20,
+            "order_by": [
+              "rank,desc"
+            ],
+            "exclude_internal_backlinks": true
+          },
+          "command": "gkit --profile clonesite.ai dataforseo api call --operation-id dataforseo.backlinks.referring_domains.live --input @req.json --allow-spend --max-spend-usd 0.024720 --out referring-domains.json --dry-run"
+        },
+        {
+          "title": "Live call after reviewing the dry-run",
+          "input": {
+            "target": "clonesite.ai",
+            "limit": 20,
+            "order_by": [
+              "rank,desc"
+            ],
+            "exclude_internal_backlinks": true
+          },
+          "command": "gkit --profile clonesite.ai dataforseo api call --operation-id dataforseo.backlinks.referring_domains.live --input @req.json --allow-spend --max-spend-usd 0.024720 --out referring-domains.json"
+        }
+      ]
+    },
+    {
+      "id": "dataforseo.backlinks.summary.live",
+      "provider": "dataforseo",
+      "revision": "1",
+      "title": "Backlink summary",
+      "description": "Return the reviewed live backlink summary for one domain, subdomain, or page.",
+      "adapterKey": "backlinks.summary.live",
+      "effects": [
+        "read",
+        "spend"
+      ],
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "target"
+        ],
+        "properties": {
+          "target": {
+            "type": "string",
+            "minLength": 1
+          },
+          "include_subdomains": {
+            "type": "boolean"
+          },
+          "exclude_internal_backlinks": {
+            "type": "boolean"
+          },
+          "internal_list_limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "backlinks_status_type": {
+            "type": "string",
+            "enum": [
+              "all",
+              "live",
+              "lost"
+            ]
+          },
+          "rank_scale": {
+            "type": "string",
+            "enum": [
+              "one_hundred",
+              "one_thousand"
+            ]
+          },
+          "tag": {
+            "type": "string",
+            "maxLength": 255
+          }
+        }
+      },
+      "cost": {
+        "currency": "USD",
+        "policyRevision": "dataforseo-backlinks-pricing-2026-07-14-v1",
+        "model": {
+          "type": "fixed",
+          "micros": 24036
+        }
+      },
+      "examples": [
+        {
+          "title": "Safe preflight",
+          "input": {
+            "target": "clonesite.ai",
+            "include_subdomains": true,
+            "backlinks_status_type": "live"
+          },
+          "command": "gkit --profile clonesite.ai dataforseo api call --operation-id dataforseo.backlinks.summary.live --input @req.json --allow-spend --max-spend-usd 0.024036 --out summary.json --dry-run"
+        },
+        {
+          "title": "Live call after reviewing the dry-run",
+          "input": {
+            "target": "clonesite.ai",
+            "include_subdomains": true,
+            "backlinks_status_type": "live"
+          },
+          "command": "gkit --profile clonesite.ai dataforseo api call --operation-id dataforseo.backlinks.summary.live --input @req.json --allow-spend --max-spend-usd 0.024036 --out summary.json"
+        }
+      ]
+    },
+    {
+      "id": "dataforseo.serp.google.organic.live.advanced",
+      "provider": "dataforseo",
+      "revision": "1",
+      "title": "Google Organic live advanced SERP",
+      "description": "Return one Google Organic live advanced SERP with a reviewed maximum depth of 10.",
+      "adapterKey": "serp.google.organic.live.advanced",
+      "effects": [
+        "read",
+        "spend"
+      ],
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "keyword",
+          "location_code",
+          "language_code",
+          "device",
+          "os",
+          "depth"
+        ],
+        "properties": {
+          "keyword": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 700,
+            "not": {
+              "pattern": "(?:[Aa][Ll][Ll][Ii][Nn][Aa][Nn][Cc][Hh][Oo][Rr]|[Aa][Ll][Ll][Ii][Nn][Tt][Ee][Xx][Tt]|[Aa][Ll][Ll][Ii][Nn][Tt][Ii][Tt][Ll][Ee]|[Aa][Ll][Ll][Ii][Nn][Uu][Rr][Ll]|[Dd][Ee][Ff][Ii][Nn][Ee]|[Dd][Ee][Ff][Ii][Nn][Ii][Tt][Ii][Oo][Nn]|[Ff][Ii][Ll][Ee][Tt][Yy][Pp][Ee]|[Ii][Dd]|[Ii][Nn][Aa][Nn][Cc][Hh][Oo][Rr]|[Ii][Nn][Ff][Oo]|[Ii][Nn][Tt][Ee][Xx][Tt]|[Ii][Nn][Tt][Ii][Tt][Ll][Ee]|[Ii][Nn][Uu][Rr][Ll]|[Ll][Ii][Nn][Kk]|[Rr][Ee][Ll][Aa][Tt][Ee][Dd]|[Ss][Ii][Tt][Ee]|[Cc][Aa][Cc][Hh][Ee]):"
+            }
+          },
+          "location_code": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "language_code": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 10
+          },
+          "device": {
+            "type": "string",
+            "enum": [
+              "desktop",
+              "mobile"
+            ]
+          },
+          "os": {
+            "type": "string",
+            "enum": [
+              "windows",
+              "macos",
+              "android",
+              "ios"
+            ]
+          },
+          "depth": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "tag": {
+            "type": "string",
+            "maxLength": 255
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "device": {
+                  "const": "desktop"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "os": {
+                  "enum": [
+                    "windows",
+                    "macos"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "os": {
+                  "enum": [
+                    "android",
+                    "ios"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "cost": {
+        "currency": "USD",
+        "policyRevision": "dataforseo-google-organic-live-pricing-2026-07-14-v1",
+        "model": {
+          "type": "fixed",
+          "micros": 2000
+        }
+      },
+      "examples": [
+        {
+          "title": "Safe preflight",
+          "input": {
+            "keyword": "website cloner",
+            "location_code": 2840,
+            "language_code": "en",
+            "device": "desktop",
+            "os": "windows",
+            "depth": 10
+          },
+          "command": "gkit --profile clonesite.ai dataforseo api call --operation-id dataforseo.serp.google.organic.live.advanced --input @req.json --allow-spend --max-spend-usd 0.002000 --out serp.json --dry-run"
+        },
+        {
+          "title": "Live call after reviewing the dry-run",
+          "input": {
+            "keyword": "website cloner",
+            "location_code": 2840,
+            "language_code": "en",
+            "device": "desktop",
+            "os": "windows",
+            "depth": 10
+          },
+          "command": "gkit --profile clonesite.ai dataforseo api call --operation-id dataforseo.serp.google.organic.live.advanced --input @req.json --allow-spend --max-spend-usd 0.002000 --out serp.json"
         }
       ]
     }

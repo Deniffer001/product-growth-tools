@@ -2,7 +2,7 @@ import { fileURLToPath } from "node:url";
 
 import { parseArgs, renderHelp } from "./args";
 import { describeCapability } from "./describe";
-import { runDataForSeoDoctor } from "./doctor";
+import { runDataForSeoDoctor, runPostHogDoctor } from "./doctor";
 import {
   type Envelope,
   type EnvelopeMeta,
@@ -13,6 +13,7 @@ import {
   toFailureEnvelope,
 } from "./envelope";
 import { executeDataForSeoCall } from "./execute";
+import { executePostHogCall } from "./execute-posthog";
 import {
   appendSettled,
   defaultLedgerPath,
@@ -29,6 +30,13 @@ export const dataForSeoManifestPath = fileURLToPath(
 export const dataForSeoDocsDirectory = fileURLToPath(
   new URL("../docs/providers/dataforseo", import.meta.url),
 );
+export const postHogManifestPath = fileURLToPath(
+  new URL("../generated/posthog/manifest.json", import.meta.url),
+);
+export const postHogDocsDirectory = fileURLToPath(
+  new URL("../docs/providers/posthog", import.meta.url),
+);
+export const providerDocsDirectory = fileURLToPath(new URL("../docs/providers", import.meta.url));
 
 type TerminalEmitter = {
   writeText(text: string): Promise<void>;
@@ -61,7 +69,7 @@ function createTerminalEmitter(): TerminalEmitter {
 
 export async function main(
   argv: string[] = process.argv.slice(2),
-  options: { manifestPath?: string } = {},
+  options: { manifestPath?: string; postHogManifestPath?: string } = {},
 ): Promise<void> {
   const emitter = createTerminalEmitter();
   const abortController = new AbortController();
@@ -85,13 +93,19 @@ export async function main(
     }
 
     if (command.kind === "docs") {
-      if (command.provider && command.provider !== "dataforseo") {
+      if (command.provider && command.provider !== "dataforseo" && command.provider !== "posthog") {
         throw new GkitFailure({
           code: "CAPABILITY_NOT_FOUND",
           message: "Provider documentation is not available for that provider.",
         });
       }
-      await emitter.writeText(`${dataForSeoDocsDirectory}\n`);
+      const directory =
+        command.provider === "dataforseo"
+          ? dataForSeoDocsDirectory
+          : command.provider === "posthog"
+            ? postHogDocsDirectory
+            : providerDocsDirectory;
+      await emitter.writeText(`${directory}\n`);
       process.exitCode = abortController.signal.aborted ? 130 : 0;
       return;
     }
@@ -172,33 +186,42 @@ export async function main(
     if (command.kind === "dataforseo-doctor") {
       const result = await runDataForSeoDoctor({ profileFlag: command.profileFlag });
       await emitter.writeEnvelope(result.envelope, result.secrets);
-      process.exitCode = abortController.signal.aborted
-        ? 130
-        : result.envelope.ok
-          ? 0
-          : 1;
+      process.exitCode = abortController.signal.aborted ? 130 : result.envelope.ok ? 0 : 1;
+      return;
+    }
+    if (command.kind === "posthog-doctor") {
+      const result = await runPostHogDoctor({ profileFlag: command.profileFlag });
+      await emitter.writeEnvelope(result.envelope, result.secrets);
+      process.exitCode = abortController.signal.aborted ? 130 : result.envelope.ok ? 0 : 1;
       return;
     }
 
-    const manifest = await loadExecutableManifest(
-      options.manifestPath ?? dataForSeoManifestPath,
-    );
     if (command.kind === "schema") {
-      await emitter.writeText(renderGkitSchema(manifest, command.selector));
+      const manifests = await loadDiscoveryManifests(options);
+      await emitter.writeText(renderGkitSchema(manifests, command.selector));
       process.exitCode = abortController.signal.aborted ? 130 : 0;
       return;
     }
     if (command.kind === "describe") {
-      await emitter.writeText(describeCapability(manifest, command.id));
+      const manifests = await loadDiscoveryManifests(options);
+      await emitter.writeText(describeCapability(manifests, command.id));
       process.exitCode = abortController.signal.aborted ? 130 : 0;
       return;
     }
-
-    const result = await executeDataForSeoCall({
-      command,
-      manifest,
-      signal: abortController.signal,
-    });
+    const result =
+      command.kind === "dataforseo-call"
+        ? await executeDataForSeoCall({
+            command,
+            manifest: await loadExecutableManifest(options.manifestPath ?? dataForSeoManifestPath),
+            signal: abortController.signal,
+          })
+        : await executePostHogCall({
+            command,
+            manifest: await loadExecutableManifest(
+              options.postHogManifestPath ?? postHogManifestPath,
+            ),
+            signal: abortController.signal,
+          });
     await emitter.writeEnvelope(result.envelope, result.secrets);
     process.exitCode = abortController.signal.aborted ? 130 : result.exitCode;
   } catch (error) {
@@ -211,9 +234,17 @@ export async function main(
   }
 }
 
-async function loadCurrentCostPolicies(
-  manifestPath: string,
-): Promise<Map<string, string> | null> {
+async function loadDiscoveryManifests(options: {
+  manifestPath?: string;
+  postHogManifestPath?: string;
+}) {
+  return await Promise.all([
+    loadExecutableManifest(options.manifestPath ?? dataForSeoManifestPath),
+    loadExecutableManifest(options.postHogManifestPath ?? postHogManifestPath),
+  ]);
+}
+
+async function loadCurrentCostPolicies(manifestPath: string): Promise<Map<string, string> | null> {
   try {
     const manifest = await loadExecutableManifest(manifestPath);
     return new Map(
@@ -228,11 +259,7 @@ async function loadCurrentCostPolicies(
 
 function normalizeTopLevelError(error: unknown): unknown {
   if (!(error instanceof LedgerError)) return error;
-  const localIoCodes = new Set([
-    "LEDGER_CORRUPT",
-    "LEDGER_IO_ERROR",
-    "LEDGER_LOCKED",
-  ]);
+  const localIoCodes = new Set(["LEDGER_CORRUPT", "LEDGER_IO_ERROR", "LEDGER_LOCKED"]);
   if (localIoCodes.has(error.code)) {
     return new GkitFailure({
       code: "LOCAL_IO_ERROR",

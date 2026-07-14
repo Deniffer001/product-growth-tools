@@ -200,12 +200,29 @@ function calculateLiveCostBound(record: ManifestRecord, input: unknown): number 
     return null;
   }
   const model = record.cost.model;
-  const items = resolveJsonPointer(input, model.itemsJsonPointer);
-  if (!Array.isArray(items) || items.length > model.maxItems) {
-    return null;
+  if (model.type === "fixed") {
+    return model.micros;
   }
 
-  const cost = BigInt(model.baseMicros) + BigInt(model.perItemMicros) * BigInt(items.length);
+  let units: number;
+  if (model.type === "linear-items") {
+    const items = resolveJsonPointer(input, model.itemsJsonPointer);
+    if (!Array.isArray(items) || items.length > model.maxItems) return null;
+    units = items.length;
+  } else {
+    const value = resolveJsonPointer(input, model.valueJsonPointer);
+    if (
+      !Number.isSafeInteger(value) ||
+      (value as number) < 0 ||
+      (value as number) > model.maxValue
+    ) {
+      return null;
+    }
+    units = value as number;
+  }
+
+  const perUnitMicros = model.type === "linear-items" ? model.perItemMicros : model.perUnitMicros;
+  const cost = BigInt(model.baseMicros) + BigInt(perUnitMicros) * BigInt(units);
   if (cost > BigInt(Number.MAX_SAFE_INTEGER)) {
     return null;
   }

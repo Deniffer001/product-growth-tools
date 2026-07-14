@@ -61,6 +61,15 @@ const dataForSeoSecretsSchema = strictObject({
   password: pipe(string(), regex(ENV_REFERENCE_PATTERN)),
 });
 
+const postHogConfigSchema = strictObject({
+  host: picklist(["https://us.posthog.com", "https://eu.posthog.com"]),
+  projectId: pipe(string(), regex(/^[1-9]\d*$/)),
+});
+
+const postHogSecretsSchema = strictObject({
+  apiToken: pipe(string(), regex(ENV_REFERENCE_PATTERN)),
+});
+
 export type ProviderEnvironment = "production" | "sandbox";
 
 export type ProviderPolicy = {
@@ -127,10 +136,7 @@ export function profilePath(profileName: string, options: ProfileLoadOptions = {
     ? configuredHome
     : resolve(options.home ?? homedir(), ".config");
   if (!isAbsolute(configHome)) {
-    throw new ProfileError(
-      "invalid_profile",
-      "XDG_CONFIG_HOME must be an absolute path when set.",
-    );
+    throw new ProfileError("invalid_profile", "XDG_CONFIG_HOME must be an absolute path when set.");
   }
   return resolve(configHome, "gkit", "profiles", `${profileName}.json`);
 }
@@ -173,13 +179,18 @@ export async function loadProfile(
   const providers: Record<string, ProviderProfile> = {};
   for (const [providerId, provider] of Object.entries(parsed.output.providers)) {
     assertNonSecretConfig(provider.config, providerId);
-    const isDataForSeo = providerId === "dataforseo";
-    const config = isDataForSeo
-      ? parseDataForSeoConfig(provider.config)
-      : freezeRecord(provider.config);
-    const secrets = isDataForSeo
-      ? parseDataForSeoSecrets(provider.secrets)
-      : Object.freeze(provider.secrets as Record<string, `env:${string}`>);
+    const config =
+      providerId === "dataforseo"
+        ? parseDataForSeoConfig(provider.config)
+        : providerId === "posthog"
+          ? parsePostHogConfig(provider.config)
+          : freezeRecord(provider.config);
+    const secrets =
+      providerId === "dataforseo"
+        ? parseDataForSeoSecrets(provider.secrets)
+        : providerId === "posthog"
+          ? parsePostHogSecrets(provider.secrets)
+          : Object.freeze(provider.secrets as Record<string, `env:${string}`>);
     providers[providerId] = Object.freeze({
       config,
       policy: Object.freeze(provider.policy),
@@ -268,6 +279,30 @@ function parseDataForSeoSecrets(
     throw new ProfileError(
       "invalid_profile",
       "DataForSEO secrets must contain only login and password env: references.",
+    );
+  }
+  return Object.freeze(parsed.output as Record<string, `env:${string}`>);
+}
+
+function parsePostHogConfig(config: Record<string, unknown>): Readonly<Record<string, unknown>> {
+  const parsed = safeParse(postHogConfigSchema, config);
+  if (!parsed.success) {
+    throw new ProfileError(
+      "invalid_profile",
+      "PostHog config requires a fixed US or EU host and a numeric projectId.",
+    );
+  }
+  return Object.freeze(parsed.output);
+}
+
+function parsePostHogSecrets(
+  secrets: Record<string, string>,
+): Readonly<Record<string, `env:${string}`>> {
+  const parsed = safeParse(postHogSecretsSchema, secrets);
+  if (!parsed.success) {
+    throw new ProfileError(
+      "invalid_profile",
+      "PostHog secrets must contain only an apiToken env: reference.",
     );
   }
   return Object.freeze(parsed.output as Record<string, `env:${string}`>);

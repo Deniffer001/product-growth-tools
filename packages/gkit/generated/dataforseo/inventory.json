@@ -1,0 +1,5556 @@
+{
+  "version": 1,
+  "provider": "dataforseo",
+  "revision": "2026-07-14.slice2.1",
+  "source": {
+    "url": "https://github.com/dataforseo/OpenApiDocumentation/blob/2d905ad34863444e2f1eb4272f8c9569032e4628/openapi_specification.yaml",
+    "revision": "2d905ad34863444e2f1eb4272f8c9569032e4628",
+    "checksum": "sha256:c73904b057e143acf571bf681a53131e429218169d9bf2c79a2ca026e0678235"
+  },
+  "operations": [
+    {
+      "path": "/v3/ai_optimization/ai_keyword_data/available_filters",
+      "method": "get",
+      "operationId": "AiKeywordDataAvailableFilters",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/ai_keyword_data/keywords_search_volume/live",
+      "method": "post",
+      "operationId": "AiKeywordDataKeywordsSearchVolumeLive",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/ai_keyword_data/locations_and_languages",
+      "method": "get",
+      "operationId": "AiKeywordDataLocationsAndLanguages",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/chat_gpt/llm_responses/live",
+      "method": "post",
+      "operationId": "ChatGptLlmResponsesLive",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/chat_gpt/llm_responses/models",
+      "method": "get",
+      "operationId": "ChatGptLlmResponsesModels",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/chat_gpt/llm_responses/task_get/{id}",
+      "method": "get",
+      "operationId": "ChatGptLlmResponsesTaskGet",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/chat_gpt/llm_responses/task_post",
+      "method": "post",
+      "operationId": "ChatGptLlmResponsesTaskPost",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/chat_gpt/llm_responses/tasks_ready",
+      "method": "get",
+      "operationId": "ChatGptLlmResponsesTasksReady",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/chat_gpt/llm_scraper/languages",
+      "method": "get",
+      "operationId": "ChatGptLlmScraperLanguages",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/chat_gpt/llm_scraper/live/advanced",
+      "method": "post",
+      "operationId": "ChatGptLlmScraperLiveAdvanced",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/chat_gpt/llm_scraper/live/html",
+      "method": "post",
+      "operationId": "ChatGptLlmScraperLiveHtml",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/chat_gpt/llm_scraper/locations",
+      "method": "get",
+      "operationId": "ChatGptLlmScraperLocations",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/chat_gpt/llm_scraper/locations/{country}",
+      "method": "get",
+      "operationId": "ChatGptLlmScraperLocationsCountry",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/chat_gpt/llm_scraper/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "ChatGptLlmScraperTaskGetAdvanced",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/chat_gpt/llm_scraper/task_get/html/{id}",
+      "method": "get",
+      "operationId": "ChatGptLlmScraperTaskGetHtml",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/chat_gpt/llm_scraper/task_post",
+      "method": "post",
+      "operationId": "ChatGptLlmScraperTaskPost",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/chat_gpt/llm_scraper/tasks_ready",
+      "method": "get",
+      "operationId": "ChatGptLlmScraperTasksReady",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/claude/llm_responses/live",
+      "method": "post",
+      "operationId": "ClaudeLlmResponsesLive",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/claude/llm_responses/models",
+      "method": "get",
+      "operationId": "ClaudeLlmResponsesModels",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/claude/llm_responses/task_get/{id}",
+      "method": "get",
+      "operationId": "ClaudeLlmResponsesTaskGet",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/claude/llm_responses/task_post",
+      "method": "post",
+      "operationId": "ClaudeLlmResponsesTaskPost",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/claude/llm_responses/tasks_ready",
+      "method": "get",
+      "operationId": "ClaudeLlmResponsesTasksReady",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/gemini/llm_responses/live",
+      "method": "post",
+      "operationId": "GeminiLlmResponsesLive",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/gemini/llm_responses/models",
+      "method": "get",
+      "operationId": "GeminiLlmResponsesModels",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/gemini/llm_responses/task_get/{id}",
+      "method": "get",
+      "operationId": "GeminiLlmResponsesTaskGet",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/gemini/llm_responses/task_post",
+      "method": "post",
+      "operationId": "GeminiLlmResponsesTaskPost",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/gemini/llm_responses/tasks_ready",
+      "method": "get",
+      "operationId": "GeminiLlmResponsesTasksReady",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/gemini/llm_scraper/languages",
+      "method": "get",
+      "operationId": "GeminiLlmScraperLanguages",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/gemini/llm_scraper/live/advanced",
+      "method": "post",
+      "operationId": "GeminiLlmScraperLiveAdvanced",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/gemini/llm_scraper/live/html",
+      "method": "post",
+      "operationId": "GeminiLlmScraperLiveHtml",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/gemini/llm_scraper/locations",
+      "method": "get",
+      "operationId": "GeminiLlmScraperLocations",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/gemini/llm_scraper/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GeminiLlmScraperTaskGetAdvanced",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/gemini/llm_scraper/task_get/html/{id}",
+      "method": "get",
+      "operationId": "GeminiLlmScraperTaskGetHtml",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/gemini/llm_scraper/task_post",
+      "method": "post",
+      "operationId": "GeminiLlmScraperTaskPost",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/gemini/llm_scraper/tasks_ready",
+      "method": "get",
+      "operationId": "GeminiLlmScraperTasksReady",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/llm_mentions/aggregated_metrics/live",
+      "method": "post",
+      "operationId": "LlmMentionsAggregatedMetricsLive",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/llm_mentions/available_filters",
+      "method": "get",
+      "operationId": "LlmMentionsAvailableFilters",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/llm_mentions/cross_aggregated_metrics/live",
+      "method": "post",
+      "operationId": "LlmMentionsCrossAggregatedMetricsLive",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/llm_mentions/locations_and_languages",
+      "method": "get",
+      "operationId": "LlmMentionsLocationsAndLanguages",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/llm_mentions/search/live",
+      "method": "post",
+      "operationId": "LlmMentionsSearchLive",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "The reviewed minimum request price is USD 0.10, above the current profile hard cap of USD 0.03 per call."
+    },
+    {
+      "path": "/v3/ai_optimization/llm_mentions/top_domains/live",
+      "method": "post",
+      "operationId": "LlmMentionsTopDomainsLive",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/llm_mentions/top_pages/live",
+      "method": "post",
+      "operationId": "LlmMentionsTopPagesLive",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/perplexity/llm_responses/live",
+      "method": "post",
+      "operationId": "PerplexityLlmResponsesLive",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/ai_optimization/perplexity/llm_responses/models",
+      "method": "get",
+      "operationId": "PerplexityLlmResponsesModels",
+      "tags": [
+        "AiOptimization"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/apple/app_info/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "AppleAppInfoTaskGetAdvanced",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/apple/app_info/task_post",
+      "method": "post",
+      "operationId": "AppleAppInfoTaskPost",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/apple/app_info/tasks_ready",
+      "method": "get",
+      "operationId": "AppleAppInfoTasksReady",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/apple/app_list/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "AppleAppListTaskGetAdvanced",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/apple/app_list/task_post",
+      "method": "post",
+      "operationId": "AppleAppListTaskPost",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/apple/app_list/tasks_ready",
+      "method": "get",
+      "operationId": "AppleAppListTasksReady",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/apple/app_listings/categories",
+      "method": "get",
+      "operationId": "AppleAppListingsCategories",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/apple/app_listings/search/live",
+      "method": "post",
+      "operationId": "AppleAppListingsSearchLive",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/apple/app_reviews/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "AppleAppReviewsTaskGetAdvanced",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/apple/app_reviews/task_post",
+      "method": "post",
+      "operationId": "AppleAppReviewsTaskPost",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/apple/app_reviews/tasks_ready",
+      "method": "get",
+      "operationId": "AppleAppReviewsTasksReady",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/apple/app_searches/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "AppleAppSearchesTaskGetAdvanced",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/apple/app_searches/task_post",
+      "method": "post",
+      "operationId": "AppleAppSearchesTaskPost",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/apple/app_searches/tasks_ready",
+      "method": "get",
+      "operationId": "AppleAppSearchesTasksReady",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/apple/categories",
+      "method": "get",
+      "operationId": "AppleCategories",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/apple/languages",
+      "method": "get",
+      "operationId": "AppleLanguages",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/apple/locations",
+      "method": "get",
+      "operationId": "AppleLocations",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/errors",
+      "method": "post",
+      "operationId": "AppDataErrors",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/app_info/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleAppInfoTaskGetAdvanced",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/app_info/task_get/html/{id}",
+      "method": "get",
+      "operationId": "GoogleAppInfoTaskGetHtml",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/app_info/task_post",
+      "method": "post",
+      "operationId": "GoogleAppInfoTaskPost",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/app_info/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleAppInfoTasksReady",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/app_list/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleAppListTaskGetAdvanced",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/app_list/task_get/html/{id}",
+      "method": "get",
+      "operationId": "GoogleAppListTaskGetHtml",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/app_list/task_post",
+      "method": "post",
+      "operationId": "GoogleAppListTaskPost",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/app_list/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleAppListTasksReady",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/app_listings/categories",
+      "method": "get",
+      "operationId": "GoogleAppListingsCategories",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/app_listings/search/live",
+      "method": "post",
+      "operationId": "GoogleAppListingsSearchLive",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/app_reviews/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleAppReviewsTaskGetAdvanced",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/app_reviews/task_get/html/{id}",
+      "method": "get",
+      "operationId": "GoogleAppReviewsTaskGetHtml",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/app_reviews/task_post",
+      "method": "post",
+      "operationId": "GoogleAppReviewsTaskPost",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/app_reviews/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleAppReviewsTasksReady",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/app_searches/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleAppSearchesTaskGetAdvanced",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/app_searches/task_get/html/{id}",
+      "method": "get",
+      "operationId": "GoogleAppSearchesTaskGetHtml",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/app_searches/task_post",
+      "method": "post",
+      "operationId": "GoogleAppSearchesTaskPost",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/app_searches/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleAppSearchesTasksReady",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/categories",
+      "method": "get",
+      "operationId": "GoogleCategories",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/languages",
+      "method": "get",
+      "operationId": "AppDataGoogleLanguages",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/locations",
+      "method": "get",
+      "operationId": "AppDataGoogleLocations",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/google/locations/{country}",
+      "method": "get",
+      "operationId": "AppDataGoogleLocationsCountry",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/id_list",
+      "method": "post",
+      "operationId": "AppDataIdList",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/app_data/tasks_ready",
+      "method": "get",
+      "operationId": "AppDataTasksReady",
+      "tags": [
+        "AppData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/appendix/errors",
+      "method": "get",
+      "operationId": "Errors",
+      "tags": [
+        "Appendix"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/appendix/status",
+      "method": "get",
+      "operationId": "AppendixStatus",
+      "tags": [
+        "Appendix"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/appendix/user_data",
+      "method": "get",
+      "operationId": "UserData",
+      "tags": [
+        "Appendix"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/appendix/webhook_resend",
+      "method": "post",
+      "operationId": "WebhookResend",
+      "tags": [
+        "Appendix"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/backlinks/anchors/live",
+      "method": "post",
+      "operationId": "AnchorsLive",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/backlinks/available_filters",
+      "method": "get",
+      "operationId": "BacklinksAvailableFilters",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/backlinks/backlinks/live",
+      "method": "post",
+      "operationId": "BacklinksLive",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/backlinks/bulk_backlinks/live",
+      "method": "post",
+      "operationId": "BulkBacklinksLive",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/backlinks/bulk_new_lost_backlinks/live",
+      "method": "post",
+      "operationId": "BulkNewLostBacklinksLive",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/backlinks/bulk_new_lost_referring_domains/live",
+      "method": "post",
+      "operationId": "BulkNewLostReferringDomainsLive",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/backlinks/bulk_pages_summary/live",
+      "method": "post",
+      "operationId": "BulkPagesSummaryLive",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/backlinks/bulk_ranks/live",
+      "method": "post",
+      "operationId": "BulkRanksLive",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "executable",
+      "reason": "Reviewed adapter, input, effect, and cost contracts are committed.",
+      "capabilityId": "dataforseo.backlinks.bulk_ranks.live"
+    },
+    {
+      "path": "/v3/backlinks/bulk_referring_domains/live",
+      "method": "post",
+      "operationId": "BulkReferringDomainsLive",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/backlinks/bulk_spam_score/live",
+      "method": "post",
+      "operationId": "BulkSpamScoreLive",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/backlinks/competitors/live",
+      "method": "post",
+      "operationId": "CompetitorsLive",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/backlinks/domain_intersection/live",
+      "method": "post",
+      "operationId": "DomainIntersectionLive",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/backlinks/domain_pages_summary/live",
+      "method": "post",
+      "operationId": "DomainPagesSummaryLive",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/backlinks/domain_pages/live",
+      "method": "post",
+      "operationId": "DomainPagesLive",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/backlinks/errors",
+      "method": "post",
+      "operationId": "BacklinksErrors",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/backlinks/history/live",
+      "method": "post",
+      "operationId": "HistoryLive",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/backlinks/id_list",
+      "method": "post",
+      "operationId": "BacklinksIdList",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/backlinks/index",
+      "method": "get",
+      "operationId": "Index",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/backlinks/page_intersection/live",
+      "method": "post",
+      "operationId": "PageIntersectionLive",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/backlinks/referring_domains/live",
+      "method": "post",
+      "operationId": "ReferringDomainsLive",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "executable",
+      "reason": "Reviewed adapter, input, effect, and cost contracts are committed.",
+      "capabilityId": "dataforseo.backlinks.referring_domains.live"
+    },
+    {
+      "path": "/v3/backlinks/referring_networks/live",
+      "method": "post",
+      "operationId": "ReferringNetworksLive",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/backlinks/summary/live",
+      "method": "post",
+      "operationId": "SummaryLive",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "executable",
+      "reason": "Reviewed adapter, input, effect, and cost contracts are committed.",
+      "capabilityId": "dataforseo.backlinks.summary.live"
+    },
+    {
+      "path": "/v3/backlinks/timeseries_new_lost_summary/live",
+      "method": "post",
+      "operationId": "TimeseriesNewLostSummaryLive",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/backlinks/timeseries_summary/live",
+      "method": "post",
+      "operationId": "TimeseriesSummaryLive",
+      "tags": [
+        "Backlinks"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/business_listings/available_filters",
+      "method": "get",
+      "operationId": "BusinessListingsAvailableFilters",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/business_listings/categories",
+      "method": "get",
+      "operationId": "BusinessListingsCategories",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/business_listings/categories_aggregation/live",
+      "method": "post",
+      "operationId": "BusinessListingsCategoriesAggregationLive",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/business_listings/locations",
+      "method": "get",
+      "operationId": "BusinessListingsLocations",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/business_listings/search/live",
+      "method": "post",
+      "operationId": "BusinessListingsSearchLive",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/errors",
+      "method": "post",
+      "operationId": "BusinessDataErrors",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/extended_reviews/task_get/{id}",
+      "method": "get",
+      "operationId": "GoogleExtendedReviewsTaskGet",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/extended_reviews/task_post",
+      "method": "post",
+      "operationId": "GoogleExtendedReviewsTaskPost",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/extended_reviews/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleExtendedReviewsTasksReady",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/hotel_info/live/advanced",
+      "method": "post",
+      "operationId": "GoogleHotelInfoLiveAdvanced",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/hotel_info/live/html",
+      "method": "post",
+      "operationId": "GoogleHotelInfoLiveHtml",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/hotel_info/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleHotelInfoTaskGetAdvanced",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/hotel_info/task_get/html/{id}",
+      "method": "get",
+      "operationId": "GoogleHotelInfoTaskGetHtml",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/hotel_info/task_post",
+      "method": "post",
+      "operationId": "GoogleHotelInfoTaskPost",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/hotel_info/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleHotelInfoTasksReady",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/hotel_searches/live",
+      "method": "post",
+      "operationId": "GoogleHotelSearchesLive",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/hotel_searches/task_get/{id}",
+      "method": "get",
+      "operationId": "GoogleHotelSearchesTaskGet",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/hotel_searches/task_post",
+      "method": "post",
+      "operationId": "GoogleHotelSearchesTaskPost",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/hotel_searches/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleHotelSearchesTasksReady",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/languages",
+      "method": "get",
+      "operationId": "BusinessDataGoogleLanguages",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/locations",
+      "method": "get",
+      "operationId": "BusinessDataGoogleLocations",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/locations/{country}",
+      "method": "get",
+      "operationId": "BusinessDataGoogleLocationsCountry",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/my_business_info/live",
+      "method": "post",
+      "operationId": "GoogleMyBusinessInfoLive",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/my_business_info/task_get/{id}",
+      "method": "get",
+      "operationId": "GoogleMyBusinessInfoTaskGet",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/my_business_info/task_post",
+      "method": "post",
+      "operationId": "GoogleMyBusinessInfoTaskPost",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/my_business_info/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleMyBusinessInfoTasksReady",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/my_business_updates/task_get/{id}",
+      "method": "get",
+      "operationId": "GoogleMyBusinessUpdatesTaskGet",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/my_business_updates/task_post",
+      "method": "post",
+      "operationId": "GoogleMyBusinessUpdatesTaskPost",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/my_business_updates/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleMyBusinessUpdatesTasksReady",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/questions_and_answers/live",
+      "method": "post",
+      "operationId": "GoogleQuestionsAndAnswersLive",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/questions_and_answers/task_get/{id}",
+      "method": "get",
+      "operationId": "GoogleQuestionsAndAnswersTaskGet",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/questions_and_answers/task_post",
+      "method": "post",
+      "operationId": "GoogleQuestionsAndAnswersTaskPost",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/questions_and_answers/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleQuestionsAndAnswersTasksReady",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/reviews/task_get/{id}",
+      "method": "get",
+      "operationId": "GoogleReviewsTaskGet",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/reviews/task_post",
+      "method": "post",
+      "operationId": "GoogleReviewsTaskPost",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/google/reviews/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleReviewsTasksReady",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/id_list",
+      "method": "post",
+      "operationId": "BusinessDataIdList",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/social_media/pinterest/live",
+      "method": "post",
+      "operationId": "SocialMediaPinterestLive",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/social_media/reddit/live",
+      "method": "post",
+      "operationId": "SocialMediaRedditLive",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/tasks_ready",
+      "method": "get",
+      "operationId": "BusinessDataTasksReady",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/tripadvisor/languages",
+      "method": "get",
+      "operationId": "TripadvisorLanguages",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/tripadvisor/locations",
+      "method": "get",
+      "operationId": "TripadvisorLocations",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/tripadvisor/locations/{country}",
+      "method": "get",
+      "operationId": "TripadvisorLocationsCountry",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/tripadvisor/reviews/task_get/{id}",
+      "method": "get",
+      "operationId": "TripadvisorReviewsTaskGet",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/tripadvisor/reviews/task_post",
+      "method": "post",
+      "operationId": "TripadvisorReviewsTaskPost",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/tripadvisor/reviews/tasks_ready",
+      "method": "get",
+      "operationId": "TripadvisorReviewsTasksReady",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/tripadvisor/search/task_get/{id}",
+      "method": "get",
+      "operationId": "TripadvisorSearchTaskGet",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/tripadvisor/search/task_post",
+      "method": "post",
+      "operationId": "TripadvisorSearchTaskPost",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/tripadvisor/search/tasks_ready",
+      "method": "get",
+      "operationId": "TripadvisorSearchTasksReady",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/trustpilot/reviews/task_get/{id}",
+      "method": "get",
+      "operationId": "TrustpilotReviewsTaskGet",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/trustpilot/reviews/task_post",
+      "method": "post",
+      "operationId": "TrustpilotReviewsTaskPost",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/trustpilot/reviews/tasks_ready",
+      "method": "get",
+      "operationId": "TrustpilotReviewsTasksReady",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/trustpilot/search/task_get/{id}",
+      "method": "get",
+      "operationId": "TrustpilotSearchTaskGet",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/trustpilot/search/task_post",
+      "method": "post",
+      "operationId": "TrustpilotSearchTaskPost",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/business_data/trustpilot/search/tasks_ready",
+      "method": "get",
+      "operationId": "TrustpilotSearchTasksReady",
+      "tags": [
+        "BusinessData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/content_analysis/available_filters",
+      "method": "get",
+      "operationId": "ContentAnalysisAvailableFilters",
+      "tags": [
+        "ContentAnalysis"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/content_analysis/categories",
+      "method": "get",
+      "operationId": "ContentAnalysisCategories",
+      "tags": [
+        "ContentAnalysis"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/content_analysis/category_trends/live",
+      "method": "post",
+      "operationId": "CategoryTrendsLive",
+      "tags": [
+        "ContentAnalysis"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/content_analysis/id_list",
+      "method": "post",
+      "operationId": "ContentAnalysisIdList",
+      "tags": [
+        "ContentAnalysis"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/content_analysis/languages",
+      "method": "get",
+      "operationId": "Languages",
+      "tags": [
+        "ContentAnalysis"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/content_analysis/locations",
+      "method": "get",
+      "operationId": "Locations",
+      "tags": [
+        "ContentAnalysis"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/content_analysis/phrase_trends/live",
+      "method": "post",
+      "operationId": "PhraseTrendsLive",
+      "tags": [
+        "ContentAnalysis"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/content_analysis/rating_distribution/live",
+      "method": "post",
+      "operationId": "RatingDistributionLive",
+      "tags": [
+        "ContentAnalysis"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/content_analysis/search/live",
+      "method": "post",
+      "operationId": "SearchLive",
+      "tags": [
+        "ContentAnalysis"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/content_analysis/sentiment_analysis/live",
+      "method": "post",
+      "operationId": "SentimentAnalysisLive",
+      "tags": [
+        "ContentAnalysis"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/content_analysis/summary/live",
+      "method": "post",
+      "operationId": "ContentAnalysisSummaryLive",
+      "tags": [
+        "ContentAnalysis"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/amazon/bulk_search_volume/live",
+      "method": "post",
+      "operationId": "AmazonBulkSearchVolumeLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/amazon/product_competitors/live",
+      "method": "post",
+      "operationId": "AmazonProductCompetitorsLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/amazon/product_keyword_intersections/live",
+      "method": "post",
+      "operationId": "AmazonProductKeywordIntersectionsLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/amazon/product_rank_overview/live",
+      "method": "post",
+      "operationId": "AmazonProductRankOverviewLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/amazon/ranked_keywords/live",
+      "method": "post",
+      "operationId": "AmazonRankedKeywordsLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/amazon/related_keywords/live",
+      "method": "post",
+      "operationId": "AmazonRelatedKeywordsLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/apple/app_competitors/live",
+      "method": "post",
+      "operationId": "AppleAppCompetitorsLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/apple/app_intersection/live",
+      "method": "post",
+      "operationId": "AppleAppIntersectionLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/apple/bulk_app_metrics/live",
+      "method": "post",
+      "operationId": "AppleBulkAppMetricsLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/apple/keywords_for_app/live",
+      "method": "post",
+      "operationId": "AppleKeywordsForAppLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/available_filters",
+      "method": "get",
+      "operationId": "AvailableFilters",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/categories",
+      "method": "get",
+      "operationId": "Categories",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/errors",
+      "method": "post",
+      "operationId": "DataforseoLabsErrors",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/app_competitors/live",
+      "method": "post",
+      "operationId": "GoogleAppCompetitorsLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/app_intersection/live",
+      "method": "post",
+      "operationId": "GoogleAppIntersectionLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/available_history",
+      "method": "get",
+      "operationId": "GoogleAvailableHistory",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/bulk_app_metrics/live",
+      "method": "post",
+      "operationId": "GoogleBulkAppMetricsLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/bulk_keyword_difficulty/live",
+      "method": "post",
+      "operationId": "GoogleBulkKeywordDifficultyLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/bulk_traffic_estimation/live",
+      "method": "post",
+      "operationId": "GoogleBulkTrafficEstimationLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/categories_for_domain/live",
+      "method": "post",
+      "operationId": "GoogleCategoriesForDomainLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/categories_for_keywords/languages",
+      "method": "get",
+      "operationId": "GoogleCategoriesForKeywordsLanguages",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/categories_for_keywords/live",
+      "method": "post",
+      "operationId": "GoogleCategoriesForKeywordsLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/competitors_domain/live",
+      "method": "post",
+      "operationId": "GoogleCompetitorsDomainLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/domain_intersection/live",
+      "method": "post",
+      "operationId": "GoogleDomainIntersectionLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/domain_metrics_by_categories/live",
+      "method": "post",
+      "operationId": "GoogleDomainMetricsByCategoriesLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/domain_rank_overview/live",
+      "method": "post",
+      "operationId": "GoogleDomainRankOverviewLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/historical_bulk_traffic_estimation/live",
+      "method": "post",
+      "operationId": "GoogleHistoricalBulkTrafficEstimationLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/historical_keyword_data/live",
+      "method": "post",
+      "operationId": "GoogleHistoricalKeywordDataLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/historical_rank_overview/live",
+      "method": "post",
+      "operationId": "GoogleHistoricalRankOverviewLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/historical_serps/live",
+      "method": "post",
+      "operationId": "GoogleHistoricalSerpsLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/keyword_ideas/live",
+      "method": "post",
+      "operationId": "GoogleKeywordIdeasLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/keyword_overview/live",
+      "method": "post",
+      "operationId": "GoogleKeywordOverviewLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/keyword_suggestions/live",
+      "method": "post",
+      "operationId": "GoogleKeywordSuggestionsLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/keywords_for_app/live",
+      "method": "post",
+      "operationId": "GoogleKeywordsForAppLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/keywords_for_categories/live",
+      "method": "post",
+      "operationId": "GoogleKeywordsForCategoriesLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/keywords_for_site/live",
+      "method": "post",
+      "operationId": "GoogleKeywordsForSiteLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/page_intersection/live",
+      "method": "post",
+      "operationId": "GooglePageIntersectionLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/ranked_keywords/live",
+      "method": "post",
+      "operationId": "GoogleRankedKeywordsLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/related_keywords/live",
+      "method": "post",
+      "operationId": "GoogleRelatedKeywordsLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/relevant_pages/live",
+      "method": "post",
+      "operationId": "GoogleRelevantPagesLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/search_intent/live",
+      "method": "post",
+      "operationId": "GoogleSearchIntentLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/serp_competitors/live",
+      "method": "post",
+      "operationId": "GoogleSerpCompetitorsLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/subdomains/live",
+      "method": "post",
+      "operationId": "GoogleSubdomainsLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/google/top_searches/live",
+      "method": "post",
+      "operationId": "GoogleTopSearchesLive",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/id_list",
+      "method": "post",
+      "operationId": "DataforseoLabsIdList",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/locations_and_languages",
+      "method": "get",
+      "operationId": "LocationsAndLanguages",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/dataforseo_labs/status",
+      "method": "get",
+      "operationId": "Status",
+      "tags": [
+        "DataforseoLabs"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/domain_analytics/errors",
+      "method": "post",
+      "operationId": "DomainAnalyticsErrors",
+      "tags": [
+        "DomainAnalytics"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/domain_analytics/id_list",
+      "method": "post",
+      "operationId": "DomainAnalyticsIdList",
+      "tags": [
+        "DomainAnalytics"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/domain_analytics/technologies/aggregation_technologies/live",
+      "method": "post",
+      "operationId": "TechnologiesAggregationTechnologiesLive",
+      "tags": [
+        "DomainAnalytics"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/domain_analytics/technologies/available_filters",
+      "method": "get",
+      "operationId": "TechnologiesAvailableFilters",
+      "tags": [
+        "DomainAnalytics"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/domain_analytics/technologies/domain_technologies/live",
+      "method": "post",
+      "operationId": "TechnologiesDomainTechnologiesLive",
+      "tags": [
+        "DomainAnalytics"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/domain_analytics/technologies/domains_by_html_terms/live",
+      "method": "post",
+      "operationId": "TechnologiesDomainsByHtmlTermsLive",
+      "tags": [
+        "DomainAnalytics"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/domain_analytics/technologies/domains_by_technology/live",
+      "method": "post",
+      "operationId": "TechnologiesDomainsByTechnologyLive",
+      "tags": [
+        "DomainAnalytics"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/domain_analytics/technologies/languages",
+      "method": "get",
+      "operationId": "TechnologiesLanguages",
+      "tags": [
+        "DomainAnalytics"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/domain_analytics/technologies/locations",
+      "method": "get",
+      "operationId": "TechnologiesLocations",
+      "tags": [
+        "DomainAnalytics"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/domain_analytics/technologies/technologies",
+      "method": "get",
+      "operationId": "TechnologiesTechnologies",
+      "tags": [
+        "DomainAnalytics"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/domain_analytics/technologies/technologies_summary/live",
+      "method": "post",
+      "operationId": "TechnologiesTechnologiesSummaryLive",
+      "tags": [
+        "DomainAnalytics"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/domain_analytics/technologies/technology_stats/live",
+      "method": "post",
+      "operationId": "TechnologiesTechnologyStatsLive",
+      "tags": [
+        "DomainAnalytics"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/domain_analytics/whois/available_filters",
+      "method": "get",
+      "operationId": "WhoisAvailableFilters",
+      "tags": [
+        "DomainAnalytics"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/domain_analytics/whois/overview/live",
+      "method": "post",
+      "operationId": "WhoisOverviewLive",
+      "tags": [
+        "DomainAnalytics"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/audience_estimation/industries",
+      "method": "get",
+      "operationId": "BingAudienceEstimationIndustries",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/audience_estimation/job_functions",
+      "method": "get",
+      "operationId": "BingAudienceEstimationJobFunctions",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/audience_estimation/live",
+      "method": "post",
+      "operationId": "BingAudienceEstimationLive",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/audience_estimation/task_get/{id}",
+      "method": "get",
+      "operationId": "BingAudienceEstimationTaskGet",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/audience_estimation/task_post",
+      "method": "post",
+      "operationId": "BingAudienceEstimationTaskPost",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/audience_estimation/tasks_ready",
+      "method": "get",
+      "operationId": "BingAudienceEstimationTasksReady",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/keyword_performance/live",
+      "method": "post",
+      "operationId": "BingKeywordPerformanceLive",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/keyword_performance/locations_and_languages",
+      "method": "get",
+      "operationId": "BingKeywordPerformanceLocationsAndLanguages",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/keyword_performance/task_get/{id}",
+      "method": "get",
+      "operationId": "BingKeywordPerformanceTaskGet",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/keyword_performance/task_post",
+      "method": "post",
+      "operationId": "BingKeywordPerformanceTaskPost",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/keyword_performance/tasks_ready",
+      "method": "get",
+      "operationId": "BingKeywordPerformanceTasksReady",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/keywords_for_keywords/live",
+      "method": "post",
+      "operationId": "BingKeywordsForKeywordsLive",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/keywords_for_keywords/task_get/{id}",
+      "method": "get",
+      "operationId": "BingKeywordsForKeywordsTaskGet",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/keywords_for_keywords/task_post",
+      "method": "post",
+      "operationId": "BingKeywordsForKeywordsTaskPost",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/keywords_for_keywords/tasks_ready",
+      "method": "get",
+      "operationId": "BingKeywordsForKeywordsTasksReady",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/keywords_for_site/live",
+      "method": "post",
+      "operationId": "BingKeywordsForSiteLive",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/keywords_for_site/task_get/{id}",
+      "method": "get",
+      "operationId": "BingKeywordsForSiteTaskGet",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/keywords_for_site/task_post",
+      "method": "post",
+      "operationId": "BingKeywordsForSiteTaskPost",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/keywords_for_site/tasks_ready",
+      "method": "get",
+      "operationId": "BingKeywordsForSiteTasksReady",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/languages",
+      "method": "get",
+      "operationId": "KeywordsDataBingLanguages",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/locations",
+      "method": "get",
+      "operationId": "KeywordsDataBingLocations",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/search_volume_history/live",
+      "method": "post",
+      "operationId": "BingSearchVolumeHistoryLive",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/search_volume_history/locations_and_languages",
+      "method": "get",
+      "operationId": "BingSearchVolumeHistoryLocationsAndLanguages",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/search_volume_history/task_get/{id}",
+      "method": "get",
+      "operationId": "BingSearchVolumeHistoryTaskGet",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/search_volume_history/task_post",
+      "method": "post",
+      "operationId": "BingSearchVolumeHistoryTaskPost",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/search_volume_history/tasks_ready",
+      "method": "get",
+      "operationId": "BingSearchVolumeHistoryTasksReady",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/search_volume/live",
+      "method": "post",
+      "operationId": "BingSearchVolumeLive",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/search_volume/task_get/{id}",
+      "method": "get",
+      "operationId": "BingSearchVolumeTaskGet",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/search_volume/task_post",
+      "method": "post",
+      "operationId": "BingSearchVolumeTaskPost",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/bing/search_volume/tasks_ready",
+      "method": "get",
+      "operationId": "BingSearchVolumeTasksReady",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/clickstream_data/bulk_search_volume/live",
+      "method": "post",
+      "operationId": "ClickstreamDataBulkSearchVolumeLive",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/clickstream_data/dataforseo_search_volume/live",
+      "method": "post",
+      "operationId": "ClickstreamDataDataforseoSearchVolumeLive",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/clickstream_data/global_search_volume/live",
+      "method": "post",
+      "operationId": "ClickstreamDataGlobalSearchVolumeLive",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/clickstream_data/locations_and_languages",
+      "method": "get",
+      "operationId": "ClickstreamDataLocationsAndLanguages",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/dataforseo_trends/demography/live",
+      "method": "post",
+      "operationId": "DataforseoTrendsDemographyLive",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/dataforseo_trends/explore/live",
+      "method": "post",
+      "operationId": "DataforseoTrendsExploreLive",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/dataforseo_trends/locations",
+      "method": "get",
+      "operationId": "DataforseoTrendsLocations",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/dataforseo_trends/locations/{country}",
+      "method": "get",
+      "operationId": "DataforseoTrendsLocationsCountry",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/dataforseo_trends/merged_data/live",
+      "method": "post",
+      "operationId": "DataforseoTrendsMergedDataLive",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/dataforseo_trends/subregion_interests/live",
+      "method": "post",
+      "operationId": "DataforseoTrendsSubregionInterestsLive",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/errors",
+      "method": "post",
+      "operationId": "KeywordsDataErrors",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_ads/ad_traffic_by_keywords/live",
+      "method": "post",
+      "operationId": "GoogleAdsAdTrafficByKeywordsLive",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_ads/ad_traffic_by_keywords/task_get/{id}",
+      "method": "get",
+      "operationId": "GoogleAdsAdTrafficByKeywordsTaskGet",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_ads/ad_traffic_by_keywords/task_post",
+      "method": "post",
+      "operationId": "GoogleAdsAdTrafficByKeywordsTaskPost",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_ads/ad_traffic_by_keywords/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleAdsAdTrafficByKeywordsTasksReady",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_ads/keywords_for_keywords/live",
+      "method": "post",
+      "operationId": "GoogleAdsKeywordsForKeywordsLive",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_ads/keywords_for_keywords/task_get/{id}",
+      "method": "get",
+      "operationId": "GoogleAdsKeywordsForKeywordsTaskGet",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_ads/keywords_for_keywords/task_post",
+      "method": "post",
+      "operationId": "GoogleAdsKeywordsForKeywordsTaskPost",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_ads/keywords_for_keywords/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleAdsKeywordsForKeywordsTasksReady",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_ads/keywords_for_site/live",
+      "method": "post",
+      "operationId": "GoogleAdsKeywordsForSiteLive",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_ads/keywords_for_site/task_get/{id}",
+      "method": "get",
+      "operationId": "GoogleAdsKeywordsForSiteTaskGet",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_ads/keywords_for_site/task_post",
+      "method": "post",
+      "operationId": "GoogleAdsKeywordsForSiteTaskPost",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_ads/keywords_for_site/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleAdsKeywordsForSiteTasksReady",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_ads/languages",
+      "method": "get",
+      "operationId": "GoogleAdsLanguages",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_ads/locations",
+      "method": "get",
+      "operationId": "GoogleAdsLocations",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_ads/locations/{country}",
+      "method": "get",
+      "operationId": "GoogleAdsLocationsCountry",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_ads/search_volume/live",
+      "method": "post",
+      "operationId": "GoogleAdsSearchVolumeLive",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_ads/search_volume/task_get/{id}",
+      "method": "get",
+      "operationId": "GoogleAdsSearchVolumeTaskGet",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_ads/search_volume/task_post",
+      "method": "post",
+      "operationId": "GoogleAdsSearchVolumeTaskPost",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_ads/search_volume/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleAdsSearchVolumeTasksReady",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_ads/status",
+      "method": "get",
+      "operationId": "GoogleAdsStatus",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_trends/categories",
+      "method": "get",
+      "operationId": "GoogleTrendsCategories",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_trends/explore/live",
+      "method": "post",
+      "operationId": "GoogleTrendsExploreLive",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_trends/explore/task_get/{id}",
+      "method": "get",
+      "operationId": "GoogleTrendsExploreTaskGet",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_trends/explore/task_post",
+      "method": "post",
+      "operationId": "GoogleTrendsExploreTaskPost",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_trends/explore/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleTrendsExploreTasksReady",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_trends/languages",
+      "method": "get",
+      "operationId": "GoogleTrendsLanguages",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_trends/locations",
+      "method": "get",
+      "operationId": "GoogleTrendsLocations",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/google_trends/locations/{country}",
+      "method": "get",
+      "operationId": "GoogleTrendsLocationsCountry",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/keywords_data/id_list",
+      "method": "post",
+      "operationId": "KeywordsDataIdList",
+      "tags": [
+        "KeywordsData"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/amazon/asin/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "AmazonAsinTaskGetAdvanced",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/amazon/asin/task_get/html/{id}",
+      "method": "get",
+      "operationId": "AmazonAsinTaskGetHtml",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/amazon/asin/task_post",
+      "method": "post",
+      "operationId": "AmazonAsinTaskPost",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/amazon/asin/tasks_ready",
+      "method": "get",
+      "operationId": "AmazonAsinTasksReady",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/amazon/languages",
+      "method": "get",
+      "operationId": "AmazonLanguages",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/amazon/locations",
+      "method": "get",
+      "operationId": "AmazonLocations",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/amazon/locations/{country}",
+      "method": "get",
+      "operationId": "AmazonLocationsCountry",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/amazon/products/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "AmazonProductsTaskGetAdvanced",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/amazon/products/task_get/html/{id}",
+      "method": "get",
+      "operationId": "AmazonProductsTaskGetHtml",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/amazon/products/task_post",
+      "method": "post",
+      "operationId": "AmazonProductsTaskPost",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/amazon/products/tasks_ready",
+      "method": "get",
+      "operationId": "AmazonProductsTasksReady",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/amazon/sellers/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "AmazonSellersTaskGetAdvanced",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/amazon/sellers/task_get/html/{id}",
+      "method": "get",
+      "operationId": "AmazonSellersTaskGetHtml",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/amazon/sellers/task_post",
+      "method": "post",
+      "operationId": "AmazonSellersTaskPost",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/amazon/sellers/tasks_ready",
+      "method": "get",
+      "operationId": "AmazonSellersTasksReady",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/errors",
+      "method": "post",
+      "operationId": "MerchantErrors",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/google/languages",
+      "method": "get",
+      "operationId": "MerchantGoogleLanguages",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/google/locations",
+      "method": "get",
+      "operationId": "MerchantGoogleLocations",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/google/locations/{country}",
+      "method": "get",
+      "operationId": "MerchantGoogleLocationsCountry",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/google/product_info/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleProductInfoTaskGetAdvanced",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/google/product_info/task_post",
+      "method": "post",
+      "operationId": "GoogleProductInfoTaskPost",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/google/product_info/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleProductInfoTasksReady",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/google/products/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleProductsTaskGetAdvanced",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/google/products/task_get/html/{id}",
+      "method": "get",
+      "operationId": "GoogleProductsTaskGetHtml",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/google/products/task_post",
+      "method": "post",
+      "operationId": "GoogleProductsTaskPost",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/google/products/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleProductsTasksReady",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/google/sellers/ad_url/{shop_ad_aclk}",
+      "method": "get",
+      "operationId": "GoogleSellersAdUrl",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/google/sellers/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleSellersTaskGetAdvanced",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/google/sellers/task_post",
+      "method": "post",
+      "operationId": "GoogleSellersTaskPost",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/google/sellers/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleSellersTasksReady",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/id_list",
+      "method": "post",
+      "operationId": "MerchantIdList",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/merchant/tasks_ready",
+      "method": "get",
+      "operationId": "MerchantTasksReady",
+      "tags": [
+        "Merchant"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/available_filters",
+      "method": "get",
+      "operationId": "OnPageAvailableFilters",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/content_parsing",
+      "method": "post",
+      "operationId": "ContentParsing",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/content_parsing/live",
+      "method": "post",
+      "operationId": "ContentParsingLive",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/duplicate_content",
+      "method": "post",
+      "operationId": "DuplicateContent",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/duplicate_tags",
+      "method": "post",
+      "operationId": "DuplicateTags",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/errors",
+      "method": "post",
+      "operationId": "OnPageErrors",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/force_stop",
+      "method": "post",
+      "operationId": "ForceStop",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/id_list",
+      "method": "post",
+      "operationId": "OnPageIdList",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/instant_pages",
+      "method": "post",
+      "operationId": "InstantPages",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/keyword_density",
+      "method": "post",
+      "operationId": "KeywordDensity",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/lighthouse/audits",
+      "method": "get",
+      "operationId": "LighthouseAudits",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/lighthouse/languages",
+      "method": "get",
+      "operationId": "LighthouseLanguages",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/lighthouse/live/json",
+      "method": "post",
+      "operationId": "LighthouseLiveJson",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/lighthouse/task_get/json/{id}",
+      "method": "get",
+      "operationId": "LighthouseTaskGetJson",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/lighthouse/task_post",
+      "method": "post",
+      "operationId": "LighthouseTaskPost",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/lighthouse/tasks_ready",
+      "method": "get",
+      "operationId": "LighthouseTasksReady",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/lighthouse/versions",
+      "method": "get",
+      "operationId": "LighthouseVersions",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/links",
+      "method": "post",
+      "operationId": "Links",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/microdata",
+      "method": "post",
+      "operationId": "Microdata",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/non_indexable",
+      "method": "post",
+      "operationId": "NonIndexable",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/page_screenshot",
+      "method": "post",
+      "operationId": "PageScreenshot",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/pages",
+      "method": "post",
+      "operationId": "Pages",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/pages_by_resource",
+      "method": "post",
+      "operationId": "PagesByResource",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/raw_html",
+      "method": "post",
+      "operationId": "RawHtml",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/redirect_chains",
+      "method": "post",
+      "operationId": "RedirectChains",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/resources",
+      "method": "post",
+      "operationId": "Resources",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/summary/{id}",
+      "method": "get",
+      "operationId": "Summary",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/task_post",
+      "method": "post",
+      "operationId": "TaskPost",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/tasks_ready",
+      "method": "get",
+      "operationId": "OnPageTasksReady",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/on_page/waterfall",
+      "method": "post",
+      "operationId": "Waterfall",
+      "tags": [
+        "OnPage"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/ai_summary",
+      "method": "post",
+      "operationId": "AiSummary",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/baidu/languages",
+      "method": "get",
+      "operationId": "BaiduLanguages",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/baidu/locations",
+      "method": "get",
+      "operationId": "BaiduLocations",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/baidu/locations/{country}",
+      "method": "get",
+      "operationId": "BaiduLocationsCountry",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/baidu/organic/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "BaiduOrganicTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/baidu/organic/task_get/html/{id}",
+      "method": "get",
+      "operationId": "BaiduOrganicTaskGetHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/baidu/organic/task_get/regular/{id}",
+      "method": "get",
+      "operationId": "BaiduOrganicTaskGetRegular",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/baidu/organic/task_post",
+      "method": "post",
+      "operationId": "BaiduOrganicTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/baidu/organic/tasks_fixed",
+      "method": "get",
+      "operationId": "BaiduOrganicTasksFixed",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/baidu/organic/tasks_ready",
+      "method": "get",
+      "operationId": "BaiduOrganicTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/bing/languages",
+      "method": "get",
+      "operationId": "BingLanguages",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/bing/locations",
+      "method": "get",
+      "operationId": "BingLocations",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/bing/locations/{country}",
+      "method": "get",
+      "operationId": "BingLocationsCountry",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/bing/organic/live/advanced",
+      "method": "post",
+      "operationId": "BingOrganicLiveAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/bing/organic/live/html",
+      "method": "post",
+      "operationId": "BingOrganicLiveHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/bing/organic/live/regular",
+      "method": "post",
+      "operationId": "BingOrganicLiveRegular",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/bing/organic/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "BingOrganicTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/bing/organic/task_get/html/{id}",
+      "method": "get",
+      "operationId": "BingOrganicTaskGetHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/bing/organic/task_get/regular/{id}",
+      "method": "get",
+      "operationId": "BingOrganicTaskGetRegular",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/bing/organic/task_post",
+      "method": "post",
+      "operationId": "BingOrganicTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/bing/organic/tasks_fixed",
+      "method": "get",
+      "operationId": "BingOrganicTasksFixed",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/bing/organic/tasks_ready",
+      "method": "get",
+      "operationId": "BingOrganicTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/errors",
+      "method": "post",
+      "operationId": "Errors",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/ads_advertisers/locations",
+      "method": "get",
+      "operationId": "GoogleAdsAdvertisersLocations",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/ads_advertisers/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleAdsAdvertisersTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/ads_advertisers/task_post",
+      "method": "post",
+      "operationId": "GoogleAdsAdvertisersTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/ads_advertisers/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleAdsAdvertisersTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/ads_search/locations",
+      "method": "get",
+      "operationId": "GoogleAdsSearchLocations",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/ads_search/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleAdsSearchTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/ads_search/task_post",
+      "method": "post",
+      "operationId": "GoogleAdsSearchTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/ads_search/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleAdsSearchTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/ai_mode/languages",
+      "method": "get",
+      "operationId": "GoogleAiModeLanguages",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/ai_mode/live/advanced",
+      "method": "post",
+      "operationId": "GoogleAiModeLiveAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/ai_mode/live/html",
+      "method": "post",
+      "operationId": "GoogleAiModeLiveHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/ai_mode/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleAiModeTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/ai_mode/task_get/html/{id}",
+      "method": "get",
+      "operationId": "GoogleAiModeTaskGetHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/ai_mode/task_post",
+      "method": "post",
+      "operationId": "GoogleAiModeTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/ai_mode/tasks_fixed",
+      "method": "get",
+      "operationId": "GoogleAiModeTasksFixed",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/ai_mode/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleAiModeTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/autocomplete/live/advanced",
+      "method": "post",
+      "operationId": "GoogleAutocompleteLiveAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/autocomplete/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleAutocompleteTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/autocomplete/task_post",
+      "method": "post",
+      "operationId": "GoogleAutocompleteTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/autocomplete/tasks_fixed",
+      "method": "get",
+      "operationId": "GoogleAutocompleteTasksFixed",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/autocomplete/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleAutocompleteTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/dataset_info/live/advanced",
+      "method": "post",
+      "operationId": "GoogleDatasetInfoLiveAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/dataset_info/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleDatasetInfoTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/dataset_info/task_post",
+      "method": "post",
+      "operationId": "GoogleDatasetInfoTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/dataset_info/tasks_fixed",
+      "method": "get",
+      "operationId": "GoogleDatasetInfoTasksFixed",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/dataset_info/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleDatasetInfoTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/dataset_search/live/advanced",
+      "method": "post",
+      "operationId": "GoogleDatasetSearchLiveAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/dataset_search/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleDatasetSearchTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/dataset_search/task_post",
+      "method": "post",
+      "operationId": "GoogleDatasetSearchTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/dataset_search/tasks_fixed",
+      "method": "get",
+      "operationId": "GoogleDatasetSearchTasksFixed",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/dataset_search/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleDatasetSearchTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/events/live/advanced",
+      "method": "post",
+      "operationId": "GoogleEventsLiveAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/events/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleEventsTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/events/task_post",
+      "method": "post",
+      "operationId": "GoogleEventsTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/events/tasks_fixed",
+      "method": "get",
+      "operationId": "GoogleEventsTasksFixed",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/events/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleEventsTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_explore/live/advanced",
+      "method": "post",
+      "operationId": "GoogleFinanceExploreLiveAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_explore/live/html",
+      "method": "post",
+      "operationId": "GoogleFinanceExploreLiveHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_explore/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleFinanceExploreTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_explore/task_get/html/{id}",
+      "method": "get",
+      "operationId": "GoogleFinanceExploreTaskGetHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_explore/task_post",
+      "method": "post",
+      "operationId": "GoogleFinanceExploreTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_explore/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleFinanceExploreTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_markets/live/advanced",
+      "method": "post",
+      "operationId": "GoogleFinanceMarketsLiveAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_markets/live/html",
+      "method": "post",
+      "operationId": "GoogleFinanceMarketsLiveHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_markets/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleFinanceMarketsTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_markets/task_get/html/{id}",
+      "method": "get",
+      "operationId": "GoogleFinanceMarketsTaskGetHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_markets/task_post",
+      "method": "post",
+      "operationId": "GoogleFinanceMarketsTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_markets/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleFinanceMarketsTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_quote/live/advanced",
+      "method": "post",
+      "operationId": "GoogleFinanceQuoteLiveAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_quote/live/html",
+      "method": "post",
+      "operationId": "GoogleFinanceQuoteLiveHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_quote/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleFinanceQuoteTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_quote/task_get/html/{id}",
+      "method": "get",
+      "operationId": "GoogleFinanceQuoteTaskGetHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_quote/task_post",
+      "method": "post",
+      "operationId": "GoogleFinanceQuoteTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_quote/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleFinanceQuoteTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_ticker_search/live/advanced",
+      "method": "post",
+      "operationId": "GoogleFinanceTickerSearchLiveAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_ticker_search/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleFinanceTickerSearchTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_ticker_search/task_post",
+      "method": "post",
+      "operationId": "GoogleFinanceTickerSearchTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/finance_ticker_search/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleFinanceTickerSearchTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/images/live/advanced",
+      "method": "post",
+      "operationId": "GoogleImagesLiveAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/images/live/html",
+      "method": "post",
+      "operationId": "GoogleImagesLiveHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/images/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleImagesTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/images/task_get/html/{id}",
+      "method": "get",
+      "operationId": "GoogleImagesTaskGetHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/images/task_post",
+      "method": "post",
+      "operationId": "GoogleImagesTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/images/tasks_fixed",
+      "method": "get",
+      "operationId": "GoogleImagesTasksFixed",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/images/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleImagesTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/jobs/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleJobsTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/jobs/task_get/html/{id}",
+      "method": "get",
+      "operationId": "GoogleJobsTaskGetHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/jobs/task_post",
+      "method": "post",
+      "operationId": "GoogleJobsTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/jobs/tasks_fixed",
+      "method": "get",
+      "operationId": "GoogleJobsTasksFixed",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/jobs/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleJobsTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/languages",
+      "method": "get",
+      "operationId": "GoogleLanguages",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/local_finder/live/advanced",
+      "method": "post",
+      "operationId": "GoogleLocalFinderLiveAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/local_finder/live/html",
+      "method": "post",
+      "operationId": "GoogleLocalFinderLiveHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/local_finder/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleLocalFinderTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/local_finder/task_get/html/{id}",
+      "method": "get",
+      "operationId": "GoogleLocalFinderTaskGetHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/local_finder/task_post",
+      "method": "post",
+      "operationId": "GoogleLocalFinderTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/local_finder/tasks_fixed",
+      "method": "get",
+      "operationId": "GoogleLocalFinderTasksFixed",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/local_finder/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleLocalFinderTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/locations",
+      "method": "get",
+      "operationId": "GoogleLocations",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/locations/{country}",
+      "method": "get",
+      "operationId": "GoogleLocationsCountry",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/maps/live/advanced",
+      "method": "post",
+      "operationId": "GoogleMapsLiveAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/maps/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleMapsTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/maps/task_post",
+      "method": "post",
+      "operationId": "GoogleMapsTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/maps/tasks_fixed",
+      "method": "get",
+      "operationId": "GoogleMapsTasksFixed",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/maps/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleMapsTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/news/live/advanced",
+      "method": "post",
+      "operationId": "GoogleNewsLiveAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/news/live/html",
+      "method": "post",
+      "operationId": "GoogleNewsLiveHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/news/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleNewsTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/news/task_get/html/{id}",
+      "method": "get",
+      "operationId": "GoogleNewsTaskGetHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/news/task_post",
+      "method": "post",
+      "operationId": "GoogleNewsTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/news/tasks_fixed",
+      "method": "get",
+      "operationId": "GoogleNewsTasksFixed",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/news/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleNewsTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/organic/live/advanced",
+      "method": "post",
+      "operationId": "GoogleOrganicLiveAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "executable",
+      "reason": "Reviewed adapter, input, effect, and cost contracts are committed.",
+      "capabilityId": "dataforseo.serp.google.organic.live.advanced"
+    },
+    {
+      "path": "/v3/serp/google/organic/live/html",
+      "method": "post",
+      "operationId": "GoogleOrganicLiveHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/organic/live/regular",
+      "method": "post",
+      "operationId": "GoogleOrganicLiveRegular",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/organic/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleOrganicTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/organic/task_get/html/{id}",
+      "method": "get",
+      "operationId": "GoogleOrganicTaskGetHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/organic/task_get/regular/{id}",
+      "method": "get",
+      "operationId": "GoogleOrganicTaskGetRegular",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/organic/task_post",
+      "method": "post",
+      "operationId": "GoogleOrganicTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/organic/tasks_fixed",
+      "method": "get",
+      "operationId": "GoogleOrganicTasksFixed",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/organic/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleOrganicTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/search_by_image/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "GoogleSearchByImageTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/search_by_image/task_post",
+      "method": "post",
+      "operationId": "GoogleSearchByImageTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/search_by_image/tasks_fixed",
+      "method": "get",
+      "operationId": "GoogleSearchByImageTasksFixed",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/google/search_by_image/tasks_ready",
+      "method": "get",
+      "operationId": "GoogleSearchByImageTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/id_list",
+      "method": "post",
+      "operationId": "IdList",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/naver/organic/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "NaverOrganicTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/naver/organic/task_get/html/{id}",
+      "method": "get",
+      "operationId": "NaverOrganicTaskGetHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/naver/organic/task_get/regular/{id}",
+      "method": "get",
+      "operationId": "NaverOrganicTaskGetRegular",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/naver/organic/task_post",
+      "method": "post",
+      "operationId": "NaverOrganicTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/naver/organic/tasks_fixed",
+      "method": "get",
+      "operationId": "NaverOrganicTasksFixed",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/naver/organic/tasks_ready",
+      "method": "get",
+      "operationId": "NaverOrganicTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/screenshot",
+      "method": "post",
+      "operationId": "Screenshot",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/seznam/languages",
+      "method": "get",
+      "operationId": "SeznamLanguages",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/seznam/locations",
+      "method": "get",
+      "operationId": "SeznamLocations",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/seznam/locations/{country}",
+      "method": "get",
+      "operationId": "SeznamLocationsCountry",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/seznam/organic/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "SeznamOrganicTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/seznam/organic/task_get/html/{id}",
+      "method": "get",
+      "operationId": "SeznamOrganicTaskGetHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/seznam/organic/task_get/regular/{id}",
+      "method": "get",
+      "operationId": "SeznamOrganicTaskGetRegular",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/seznam/organic/task_post",
+      "method": "post",
+      "operationId": "SeznamOrganicTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/seznam/organic/tasks_fixed",
+      "method": "get",
+      "operationId": "SeznamOrganicTasksFixed",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/seznam/organic/tasks_ready",
+      "method": "get",
+      "operationId": "SeznamOrganicTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/tasks_ready",
+      "method": "get",
+      "operationId": "TasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/yahoo/languages",
+      "method": "get",
+      "operationId": "YahooLanguages",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/yahoo/locations",
+      "method": "get",
+      "operationId": "YahooLocations",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/yahoo/locations/{country}",
+      "method": "get",
+      "operationId": "YahooLocationsCountry",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/yahoo/organic/live/advanced",
+      "method": "post",
+      "operationId": "YahooOrganicLiveAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/yahoo/organic/live/html",
+      "method": "post",
+      "operationId": "YahooOrganicLiveHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/yahoo/organic/live/regular",
+      "method": "post",
+      "operationId": "YahooOrganicLiveRegular",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/yahoo/organic/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "YahooOrganicTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/yahoo/organic/task_get/html/{id}",
+      "method": "get",
+      "operationId": "YahooOrganicTaskGetHtml",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/yahoo/organic/task_get/regular/{id}",
+      "method": "get",
+      "operationId": "YahooOrganicTaskGetRegular",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/yahoo/organic/task_post",
+      "method": "post",
+      "operationId": "YahooOrganicTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/yahoo/organic/tasks_fixed",
+      "method": "get",
+      "operationId": "YahooOrganicTasksFixed",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/yahoo/organic/tasks_ready",
+      "method": "get",
+      "operationId": "YahooOrganicTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/languages",
+      "method": "get",
+      "operationId": "YoutubeLanguages",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/locations",
+      "method": "get",
+      "operationId": "YoutubeLocations",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/locations/{country}",
+      "method": "get",
+      "operationId": "YoutubeLocationsCountry",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/organic/live/advanced",
+      "method": "post",
+      "operationId": "YoutubeOrganicLiveAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/organic/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "YoutubeOrganicTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/organic/task_post",
+      "method": "post",
+      "operationId": "YoutubeOrganicTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/organic/tasks_fixed",
+      "method": "get",
+      "operationId": "YoutubeOrganicTasksFixed",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/organic/tasks_ready",
+      "method": "get",
+      "operationId": "YoutubeOrganicTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/video_comments/live/advanced",
+      "method": "post",
+      "operationId": "YoutubeVideoCommentsLiveAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/video_comments/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "YoutubeVideoCommentsTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/video_comments/task_post",
+      "method": "post",
+      "operationId": "YoutubeVideoCommentsTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/video_comments/tasks_fixed",
+      "method": "get",
+      "operationId": "YoutubeVideoCommentsTasksFixed",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/video_comments/tasks_ready",
+      "method": "get",
+      "operationId": "YoutubeVideoCommentsTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/video_info/live/advanced",
+      "method": "post",
+      "operationId": "YoutubeVideoInfoLiveAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/video_info/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "YoutubeVideoInfoTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/video_info/task_post",
+      "method": "post",
+      "operationId": "YoutubeVideoInfoTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/video_info/tasks_fixed",
+      "method": "get",
+      "operationId": "YoutubeVideoInfoTasksFixed",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/video_info/tasks_ready",
+      "method": "get",
+      "operationId": "YoutubeVideoInfoTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/video_subtitles/live/advanced",
+      "method": "post",
+      "operationId": "YoutubeVideoSubtitlesLiveAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/video_subtitles/task_get/advanced/{id}",
+      "method": "get",
+      "operationId": "YoutubeVideoSubtitlesTaskGetAdvanced",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/video_subtitles/task_post",
+      "method": "post",
+      "operationId": "YoutubeVideoSubtitlesTaskPost",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/video_subtitles/tasks_fixed",
+      "method": "get",
+      "operationId": "YoutubeVideoSubtitlesTasksFixed",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "/v3/serp/youtube/video_subtitles/tasks_ready",
+      "method": "get",
+      "operationId": "YoutubeVideoSubtitlesTasksReady",
+      "tags": [
+        "Serp"
+      ],
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    }
+  ]
+}

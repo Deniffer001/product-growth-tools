@@ -43,7 +43,7 @@ import {
   selectProfileName,
 } from "./profile";
 import type {
-  DataForSeoBulkRanksInput,
+  DataForSeoAdapterKey,
   DataForSeoDispatchResult,
   DataForSeoFetch,
 } from "./providers/dataforseo";
@@ -65,8 +65,9 @@ export type ExecuteDependencies = {
   appendSettled: typeof appendSettled;
   reserveArtifactDestination: typeof reserveArtifactDestination;
   loadDataForSeoAdapter: () => Promise<{
-    dispatchDataForSeoBulkRanks: (options: {
-      input: DataForSeoBulkRanksInput;
+    dispatchDataForSeo: (options: {
+      adapterKey: DataForSeoAdapterKey;
+      input: unknown;
       credentials: Readonly<{ login: string; password: string }>;
       environment: "production" | "sandbox";
       signal: AbortSignal;
@@ -89,7 +90,12 @@ const defaultDependencies: ExecuteDependencies = {
   randomAttemptId: randomUUID,
 };
 
-const bulkRanksAdapterKey = "backlinks.bulk_ranks.live" as const;
+const dataForSeoAdapterKeys = new Set<DataForSeoAdapterKey>([
+  "backlinks.bulk_ranks.live",
+  "backlinks.referring_domains.live",
+  "backlinks.summary.live",
+  "serp.google.organic.live.advanced",
+]);
 
 type ExecutionContext = {
   profile: string | null;
@@ -221,7 +227,8 @@ export async function executeDataForSeoCall(options: {
     if (!options.command.out) {
       throw new GkitFailure({
         code: "INVALID_INPUT",
-        message: "DataForSEO execution requires --out so raw provider facts are not written to stdout.",
+        message:
+          "DataForSEO execution requires --out so raw provider facts are not written to stdout.",
       });
     }
 
@@ -245,11 +252,7 @@ export async function executeDataForSeoCall(options: {
       throw new SpendBlockedError(ledgerPath, blockers);
     }
 
-    const resolvedSecrets = dependencies.resolveProviderSecrets(
-      profile,
-      "dataforseo",
-      env,
-    );
+    const resolvedSecrets = dependencies.resolveProviderSecrets(profile, "dataforseo", env);
     const login = resolvedSecrets.login;
     const password = resolvedSecrets.password;
     if (!login || !password) {
@@ -323,8 +326,9 @@ export async function executeDataForSeoCall(options: {
         });
       }
       dispatched = true;
-      providerResult = await adapter.dispatchDataForSeoBulkRanks({
-        input: input as DataForSeoBulkRanksInput,
+      providerResult = await adapter.dispatchDataForSeo({
+        adapterKey,
+        input,
         credentials: Object.freeze({ login, password }),
         environment,
         signal: options.signal,
@@ -363,13 +367,9 @@ export async function executeDataForSeoCall(options: {
       };
     }
 
-    const providerRequestId = safeDataForSeoRequestId(
-      providerResult.providerRequestId,
-      secrets,
-    );
+    const providerRequestId = safeDataForSeoRequestId(providerResult.providerRequestId, secrets);
     context.providerRequestId = providerRequestId;
-    const reportedCostMicros =
-      environment === "sandbox" ? 0 : providerResult.costMicros;
+    const reportedCostMicros = environment === "sandbox" ? 0 : providerResult.costMicros;
     context.actualCostMicros = reportedCostMicros;
     context.spendOutcome = settlementOutcome(
       providerResult,
@@ -446,13 +446,10 @@ export async function executeDataForSeoCall(options: {
         hint: "Reconcile this attempt with provider evidence before considering another call.",
         retryable: false,
         outcome: "unknown",
-        details: appendExecutionDetails(
-          providerResult.details,
-          {
-            artifactFailure,
-            policyBreach: settlement.policyBreach,
-          },
-        ),
+        details: appendExecutionDetails(providerResult.details, {
+          artifactFailure,
+          policyBreach: settlement.policyBreach,
+        }),
         meta: contextMeta(context),
       });
     }
@@ -467,9 +464,7 @@ export async function executeDataForSeoCall(options: {
             : "Review the provider evidence and publish a new cost-policy revision before another call.",
         retryable: false,
         outcome: "confirmed",
-        details: artifactFailure
-          ? { artifactPublication: "failed" }
-          : null,
+        details: artifactFailure ? { artifactPublication: "failed" } : null,
         meta: contextMeta(context),
       });
     }
@@ -477,7 +472,8 @@ export async function executeDataForSeoCall(options: {
     if (artifactFailure) {
       throw new GkitFailure({
         code: "LOCAL_IO_ERROR",
-        message: "The provider request completed, but its raw artifact could not be published safely.",
+        message:
+          "The provider request completed, but its raw artifact could not be published safely.",
         hint: "Do not rerun a charged or unknown spend attempt; inspect the ledger and artifact path.",
         retryable: false,
         outcome: providerResult.ok ? "confirmed" : providerResult.outcome,
@@ -549,7 +545,8 @@ export async function executeDataForSeoCall(options: {
       error = localStateIsUncertain
         ? new GkitFailure({
             code: "LOCAL_IO_ERROR",
-            message: "The invocation was not dispatched, but its local authorization or cleanup state is unresolved.",
+            message:
+              "The invocation was not dispatched, but its local authorization or cleanup state is unresolved.",
             hint: "Inspect gkit ledger and local locks before considering another call.",
             outcome: "not_dispatched",
             meta: contextMeta(context),
@@ -570,10 +567,7 @@ export async function executeDataForSeoCall(options: {
   }
 }
 
-async function readRequestInput(
-  reference: string,
-  read: typeof readFile,
-): Promise<unknown> {
+async function readRequestInput(reference: string, read: typeof readFile): Promise<unknown> {
   let source: string;
   if (reference.startsWith("@")) {
     const path = reference.slice(1);
@@ -657,8 +651,8 @@ function requiredPolicyRevision(decision: AllowedEffectDecision): string {
 
 function assertSupportedDataForSeoAdapterKey(
   adapterKey: string,
-): asserts adapterKey is typeof bulkRanksAdapterKey {
-  if (adapterKey !== bulkRanksAdapterKey) {
+): asserts adapterKey is DataForSeoAdapterKey {
+  if (!dataForSeoAdapterKeys.has(adapterKey as DataForSeoAdapterKey)) {
     throw new GkitFailure({
       code: "INTERNAL_ERROR",
       message: "The executable manifest references an unavailable reviewed adapter key.",
@@ -718,15 +712,10 @@ function appendExecutionDetails(
   };
 }
 
-function safeDataForSeoRequestId(
-  value: string | null,
-  secrets: SecretRegistry,
-): string | null {
+function safeDataForSeoRequestId(value: string | null, secrets: SecretRegistry): string | null {
   if (
     value === null ||
-    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-      value,
-    ) ||
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value) ||
     secrets.contains(Buffer.from(value, "utf8"))
   ) {
     return null;
@@ -743,10 +732,7 @@ function throwIfCancelledBeforeAuthorization(signal: AbortSignal): void {
   });
 }
 
-function applySettlement(
-  context: ExecutionContext,
-  settlement: SettledSpendEvent,
-): void {
+function applySettlement(context: ExecutionContext, settlement: SettledSpendEvent): void {
   context.spendOutcome = settlement.outcome;
   context.actualCostMicros = settlement.costMicros;
   context.providerRequestId = settlement.providerRequestId;
@@ -755,16 +741,10 @@ function applySettlement(
 function normalizeArtifactError(error: unknown): ArtifactError {
   return error instanceof ArtifactError
     ? error
-    : new ArtifactError(
-        "ARTIFACT_IO_ERROR",
-        "The artifact could not be written safely.",
-      );
+    : new ArtifactError("ARTIFACT_IO_ERROR", "The artifact could not be written safely.");
 }
 
-function normalizeExecutionError(
-  error: unknown,
-  context: ExecutionContext,
-): GkitFailure {
+function normalizeExecutionError(error: unknown, context: ExecutionContext): GkitFailure {
   if (error instanceof GkitFailure) {
     if (error.meta) return error;
     return new GkitFailure({
@@ -787,10 +767,7 @@ function normalizeExecutionError(
   }
   if (error instanceof ManifestError) {
     return new GkitFailure({
-      code:
-        error.kind === "CAPABILITY_NOT_FOUND"
-          ? "CAPABILITY_NOT_FOUND"
-          : "INTERNAL_ERROR",
+      code: error.kind === "CAPABILITY_NOT_FOUND" ? "CAPABILITY_NOT_FOUND" : "INTERNAL_ERROR",
       message:
         error.kind === "CAPABILITY_NOT_FOUND"
           ? "The requested capability is not exposed by the executable manifest."
