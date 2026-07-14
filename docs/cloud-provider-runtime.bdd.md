@@ -16,16 +16,16 @@
 **不包含：**
 - secret manager 的具体供应商实现
 - provider 业务指标解释、报告、归因判断
-- provider CLI 的具体查询字段设计
+- gkit provider capability 的具体查询字段设计
 - 把本地 `.env.live` 同步到云端
 - 在仓库中保存任何真实凭证
 
 ## 前提假设
 
 - 业务 profile 是云端任务的业务归属标识，例如 `openclaw-web`。
-- 云端 secret 以业务命名保存，例如 `OPENCLAW_*`，运行时再映射成各 CLI 认识的标准输入。
+- 云端 secret 以业务命名保存，例如 `OPENCLAW_*`，运行时再映射成 gkit profile 引用的标准输入。
 - 本地和云端都以业务 profile 为默认配置边界；repo-local `.env.live` 只用于临时兼容验证。
-- 每个 provider CLI 都保留 provider-native truth，不在 CLI 层生成业务洞察。
+- gkit 的每个 provider adapter 都保留 provider-native truth，不在 CLI 层生成业务洞察。
 
 ---
 
@@ -64,7 +64,7 @@ Then Agent 返回“该业务未配置目标 provider”的诊断
 **场景 2.1：通过环境变量注入 service account JSON**
 Given 平台 secret 中保存了目标 provider 的 service account JSON
   And 云端任务声明了正确业务 profile
-When 运行时启动 provider CLI
+When 运行时启动 gkit provider command
 Then CLI 可以从运行时环境读取该 provider 的凭证
   And 仓库中不会出现真实凭证文件
   And 输出日志不会打印 secret 明文
@@ -72,7 +72,7 @@ Then CLI 可以从运行时环境读取该 provider 的凭证
 **场景 2.2：必须使用临时文件时只写入短生命周期目录**
 Given 某个 provider 只能通过文件路径读取凭证
   And 平台 secret 中保存了 service account JSON
-When 运行时准备 provider CLI 输入
+When 运行时准备 gkit provider 输入
 Then 运行时把凭证写入任务级临时目录
   And CLI 只接收该临时文件路径
   And 任务结束后该临时文件随运行环境销毁
@@ -88,15 +88,15 @@ Then 云端不读取 `.env.live`
 **场景 2.4：本地开发也按业务 profile 读取凭证**
 Given 开发机已经创建业务 profile 目录
   And profile 目录中保存了本地只读 provider 凭证
-When Agent 在本地执行 provider CLI
+When Agent 在本地执行 gkit provider command
 Then CLI 按业务 profile 读取 provider 配置
-  And 不要求每个 CLI 维护自己的凭证目录
+  And 不要求每个 provider 维护自己的凭证目录
   And repo-local `.env.live` 不是默认配置来源
 
 **场景 2.5：repo 只声明 profile id，不声明 provider 凭证**
 Given 开发机已经创建业务 profile 目录
   And 当前 repo 的 ignored `.env.local` 只声明了业务 profile id
-When Agent 执行 provider CLI
+When Agent 执行 gkit provider command
 Then CLI 先读取 repo 中的 profile id
   And 再读取该 profile 目录下的 provider 配置
   And profile 中的 provider 配置不会被 repo fallback 配置覆盖
@@ -184,7 +184,7 @@ Then Agent 必须使用任务声明的环境
 
 **场景 5.3：只读 provider 读取不产生业务侧副作用**
 Given Agent 使用业务 profile 读取 provider truth
-When Agent 执行只读 provider CLI
+When Agent 执行只读 gkit provider command
 Then provider 侧不会产生写入、变更、投放调整或账务动作
   And 本次任务只产出可审计的事实输出或诊断
 

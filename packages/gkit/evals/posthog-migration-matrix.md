@@ -4,13 +4,17 @@ title: PostHog legacy CLI migration matrix
 description: >
   Command-level replace, keep, and drop decisions after the gkit Slice 3 live
   gate, used to prevent premature retirement of the legacy PostHog package.
-status: active
+status: superseded
 version: 1.0
 timestamp: 2026-07-14T11:16:00+08:00
 resource: ../../../docs/plans/2026-07-13-gkit-vertical-slice-plan.md
 ---
 
 # PostHog legacy CLI migration matrix
+
+> Historical Slice 3 evidence. The final hard-cut decision in
+> [`slice5-final-migration-matrix.md`](./slice5-final-migration-matrix.md)
+> converts every `keep` row to `drop`; the package has been deleted.
 
 ## Decision rule
 

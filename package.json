@@ -4,7 +4,7 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/gkit"
     ],
     "catalog": {
       "@types/bun": "^1.3.10",
@@ -24,18 +24,10 @@
   },
   "type": "module",
   "scripts": {
-    "check-types": "bun run --filter '*' check-types",
-    "test": "bun run --filter '*' test:once",
-    "sync:runtime": "bun run ./scripts/sync-product-growth-runtime.ts",
-    "ai-optimization": "bun run --filter @deniffer/ai-optimization-cli cli",
-    "backlink": "bun run --filter @deniffer/backlink-cli cli",
-    "bing-webmaster": "bun run --filter @deniffer/bing-webmaster-cli cli",
-    "gsc": "bun run --filter @deniffer/gsc-cli cli",
-    "google-ads": "bun run --filter @deniffer/google-ads-cli cli",
-    "page-extract": "bun run --filter @deniffer/page-extract-cli cli",
-    "posthog": "bun run --filter @deniffer/posthog-cli cli",
-    "serp-snapshot": "bun run --filter @deniffer/serp-snapshot-cli cli",
-    "sitemap-watch": "bun run --filter @deniffer/sitemap-watch-cli cli"
+    "cli": "bun run --filter gkit cli",
+    "eval": "bun run --filter gkit eval:slice5",
+    "check-types": "bun run --filter gkit check-types",
+    "test": "bun run --filter gkit test:once"
   },
   "devDependencies": {
     "@types/bun": "catalog:",

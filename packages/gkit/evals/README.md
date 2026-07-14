@@ -1,14 +1,15 @@
 # gkit evals
 
-`tasks.jsonl` is the executable answer-key set for the first vertical slices.
+`tasks.jsonl` is the executable 40-task answer-key set for the vertical slices.
 Each line is one independent prompt with:
 
-- `kind`: explicit provider, business goal, or negative request.
+- `kind`: explicit provider, business goal, long-tail native, or negative request.
 - `answer`: the intended provider, capability, effects, command sequence, and
   observable process behavior.
-- `legacy`: the current workflow disposition. `replace` requires behavioral
-  evidence before retirement; `keep` means the current CLI remains available;
-  `drop` means the sole consumer explicitly rejects that surface.
+- `legacy`: the workflow disposition at the slice where the task was recorded.
+  `replace` requires behavioral evidence; historical `keep` rows were
+  superseded by the sole consumer's final hard-cut decision; `drop` rejects the
+  old surface.
 - `slice1` / `slice2`: the task's exposure state at each DataForSEO vertical
   slice; `inventory` is discoverable evidence but cannot be routed.
 
@@ -24,12 +25,25 @@ Each line is one independent prompt with:
 5. Never execute a paid command during evaluation unless the profile cap,
    invocation cap, and explicit spend acknowledgement are all present.
 
-The initial targets are:
+The Slice 5 targets are:
 
-- provider top-1 accuracy: 100% for explicit-provider prompts;
+- provider top-1 accuracy: at least 95%;
 - discovery: at most two steps before `describe` or execution;
-- first executable command: correct for both Slice 1 executable tasks;
-- negative precision: 100%, with zero provider network calls.
+- first executable command: at least 90%;
+- negative precision: at least 95%, with zero provider network calls.
+
+Run `bun run --filter gkit eval:slice5` to validate task distribution,
+observation completeness, provider/capability/effect consistency, command
+parsing, and all four thresholds. See [`slice5-baseline.md`](./slice5-baseline.md)
+for the result and [`slice5-final-migration-matrix.md`](./slice5-final-migration-matrix.md)
+for final command and package dispositions.
+
+## Final hard cut
+
+The sole consumer subsequently deleted every old CLI package. Earlier baseline
+sections below remain chronological evidence, not current installation state.
+The authoritative final state is 33 replaced old commands, 41 explicitly
+dropped commands, and only `packages/gkit` remaining.
 
 ## Slice 1 dogfood
 

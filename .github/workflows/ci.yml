@@ -31,14 +31,8 @@ jobs:
       - name: Test
         run: bun run test
 
-      - name: Verify publishable packages
-        shell: bash
-        run: |
-          set -euo pipefail
+      - name: Evaluate agent contract
+        run: bun run eval
 
-          for manifest in packages/*/package.json; do
-            package_dir="$(dirname "$manifest")"
-            echo "::group::npm pack --dry-run ${package_dir}"
-            (cd "$package_dir" && npm pack --dry-run --json)
-            echo "::endgroup::"
-          done
+      - name: Verify private package artifact
+        run: npm pack --dry-run --json ./packages/gkit

@@ -32,6 +32,7 @@
     "generate:gsc:check": "bun run ./scripts/generate-gsc.ts --check",
     "generate:posthog": "bun run ./scripts/generate-posthog.ts",
     "generate:posthog:check": "bun run ./scripts/generate-posthog.ts --check",
+    "eval:slice5": "bun run ./src/eval.ts",
     "test": "vitest",
     "test:once": "vitest run"
   },

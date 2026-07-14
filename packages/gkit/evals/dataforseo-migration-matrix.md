@@ -4,13 +4,17 @@ title: DataForSEO legacy CLI migration matrix
 description: >
   Command-level replace, keep, and drop decisions after the gkit Slice 2 live
   gates, used to prevent package-level retirement without behavior evidence.
-status: active
+status: superseded
 version: 1.0
 timestamp: 2026-07-14T13:56:00+08:00
 resource: ../../../docs/plans/2026-07-13-gkit-vertical-slice-plan.md
 ---
 
 # DataForSEO legacy CLI migration matrix
+
+> Historical Slice 2 evidence. The final hard-cut decision in
+> [`slice5-final-migration-matrix.md`](./slice5-final-migration-matrix.md)
+> converts every `keep` row to `drop`; all three packages have been deleted.
 
 ## Decision rule
 

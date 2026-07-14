@@ -4,13 +4,17 @@ title: Google Search Console legacy CLI migration matrix
 description: >
   Command-level replace, keep, and drop decisions after the Slice 4 GSC real
   profile and legacy-comparison gate.
-status: active
+status: superseded
 version: 1.0
 timestamp: 2026-07-14T13:45:00+08:00
 resource: ../../../docs/plans/2026-07-13-gkit-vertical-slice-plan.md
 ---
 
 # Google Search Console legacy CLI migration matrix
+
+> Historical Slice 4 evidence. The final hard-cut decision in
+> [`slice5-final-migration-matrix.md`](./slice5-final-migration-matrix.md)
+> converts every `keep` row to `drop`; the package has been deleted.
 
 ## `@deniffer/gsc-cli`
 

@@ -669,6 +669,23 @@ git commit -m "feat: evaluated curated commands and final cleanup"
 
 上述 `rg` 只允许命中 migration matrix 中已显式决定保留的包。
 
+**2026-07-14 Slice 5 implementation result:**
+
+- `tasks.jsonl` 已扩充为 40 个任务:10 explicit provider、15 business goal、10 long-tail native、5 negative。`bun run --filter gkit eval:slice5` 强制检查分布、observation 完整性、manifest/provider/effect 一致性、首条 API command 可解析性与四项阈值。
+- 本轮 implementation-agent contract dogfood 得到 provider top-1 35/35、两步内发现 35/35、首条可执行命令 33/33、negative precision 5/5;两个 DataForSEO LLM Mention task 因 cost floor 高于 profile cap 保持 inventory-only,不进入 executable denominator。该 baseline 是当前实现 agent 的逐条 contract review,不是 40 次 blinded cross-model run;未来模型比较应追加独立 observation set,不能覆盖本结果。
+- Slice 5 不重复发起付费或真实 provider 请求;所有 `replace` command 的 request/effect/output/error/exit/artifact golden 继续由 Slice 1–4 same-input live baseline 与 provider tests 提供。最终索引为 33 `replace`、33 `keep`、4 `drop`;没有任何 provider legacy package 满足整包删除条件。
+- curated promotion 为 0:eval 中构造的重复 prompt 不计为独立真实需求;现有 PostHog、Bing、GSC 与 DataForSEO 候选也没有同时满足“同一 typed workflow 真实出现三次”和“显著减少失败/context/调用次数”。
+- `page-extract-cli` 与 `sitemap-watch-cli` 均选择**独立保留**。前者拥有 ctx 多调用后的稳定 SEO/GEO normalization contract;后者拥有本地 registry、递归 sitemap、dedupe 与确定性分类语义。两者都不是 provider adapter,不并入 gkit。
+- `packages/gkit` 不提升到仓库根:七个 provider legacy packages 仍各自有 `keep` command,此时改变 workspace layout 只有外观收益。根 README 已改为 gkit-first,发布 workflow 明确跳过 private gkit,旧 package repository metadata 已指向改名后的 gkit repo。
+- 证据见 [`packages/gkit/evals/slice5-baseline.md`](../../packages/gkit/evals/slice5-baseline.md) 与 [`packages/gkit/evals/slice5-final-migration-matrix.md`](../../packages/gkit/evals/slice5-final-migration-matrix.md)。
+
+**2026-07-14 sole-consumer hard-cut override:**
+
+- 唯一 CLI 消费者随后明确要求删除全部旧工具。该决定将此前 33 个 `keep` command 全部转为显式 `drop`;原有 33 个 behaviorally verified `replace` 保持指向 gkit,原有 4 个 `drop` 不变。
+- 已删除七个 provider legacy packages、`page-extract-cli`、`sitemap-watch-cli`、共享 legacy profile runtime、runtime sync script、旧 live-validation 文档与 npm publish workflow。最终旧命令归宿为 **33 replace / 41 drop**。
+- 仓库现在只保留 `packages/gkit`;根 workspace scripts、CI、README 与 lockfile 以单 package 为准。不提供 alias、deprecation binary 或 legacy fallback。
+- Slice 2–4 migration matrices 保留为历史 behavior evidence,但状态为 `superseded`;当前结论只以 [`slice5-final-migration-matrix.md`](../../packages/gkit/evals/slice5-final-migration-matrix.md) 为准。
+
 ## 7. 扩张门槛(触发条件成立前不做)
 
 | 延后项                              | 触发条件                                                                                          |

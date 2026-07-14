@@ -4,13 +4,17 @@ title: Bing Webmaster legacy CLI migration matrix
 description: >
   Command-level replace, keep, and drop decisions for the Slice 4 Bing
   Webmaster provider slice after the real-profile and legacy-comparison gate.
-status: active
+status: superseded
 version: 1.0
 timestamp: 2026-07-14T13:53:13+08:00
 resource: ../../../docs/plans/2026-07-13-gkit-vertical-slice-plan.md
 ---
 
 # Bing Webmaster legacy CLI migration matrix
+
+> Historical Slice 4 evidence. The final hard-cut decision in
+> [`slice5-final-migration-matrix.md`](./slice5-final-migration-matrix.md)
+> converts every `keep` row to `drop`; the package has been deleted.
 
 ## Decision rule
 
