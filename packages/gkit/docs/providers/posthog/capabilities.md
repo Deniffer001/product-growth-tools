@@ -10,7 +10,7 @@ manifestRevision: 2026-07-14.slice3.1
 
 # PostHog reviewed executable capabilities
 
-This file is byte-stably rendered from `generated/dataforseo/manifest.json`.
+This file is byte-stably rendered from `generated/posthog/manifest.json`.
 The committed manifest remains the only runtime, validation, effect, cost, and discovery source.
 
 ## posthog.query.run

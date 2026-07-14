@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "provider": "gsc",
+  "revision": "2026-07-14.slice4.gsc.1",
+  "source": {
+    "url": "https://searchconsole.googleapis.com/$discovery/rest?version=v1",
+    "revision": "2026-07-14-reviewed-contract",
+    "checksum": "sha256:5b434b16085508148e7fb862070aa24bc6036fae3858f5970376f5e572cc95e0"
+  },
+  "operations": [
+    {
+      "path": "/v1/urlInspection/index:inspect",
+      "method": "post",
+      "operationId": "urlInspection.index.inspect",
+      "exposure": "executable",
+      "capabilityId": "gsc.url-inspection.inspect",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/webmasters/v3/sites",
+      "method": "get",
+      "operationId": "sites.list",
+      "exposure": "executable",
+      "capabilityId": "gsc.properties.list",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/webmasters/v3/sites/{siteUrl}",
+      "method": "delete",
+      "operationId": "sites.delete",
+      "exposure": "inventory",
+      "reason": "Destructive operation is outside Slice 4."
+    },
+    {
+      "path": "/webmasters/v3/sites/{siteUrl}",
+      "method": "get",
+      "operationId": "sites.get",
+      "exposure": "inventory",
+      "reason": "The legacy CLI does not expose a distinct property-get workflow; properties.list carries the reviewed inventory use case."
+    },
+    {
+      "path": "/webmasters/v3/sites/{siteUrl}",
+      "method": "put",
+      "operationId": "sites.add",
+      "exposure": "inventory",
+      "reason": "Write operation is outside Slice 4."
+    },
+    {
+      "path": "/webmasters/v3/sites/{siteUrl}/searchAnalytics/query",
+      "method": "post",
+      "operationId": "searchanalytics.query",
+      "exposure": "executable",
+      "capabilityId": "gsc.search-analytics.query",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/webmasters/v3/sites/{siteUrl}/sitemaps",
+      "method": "get",
+      "operationId": "sitemaps.list",
+      "exposure": "executable",
+      "capabilityId": "gsc.sitemaps.list",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/webmasters/v3/sites/{siteUrl}/sitemaps/{feedpath}",
+      "method": "delete",
+      "operationId": "sitemaps.delete",
+      "exposure": "inventory",
+      "reason": "Destructive operation is outside Slice 4."
+    },
+    {
+      "path": "/webmasters/v3/sites/{siteUrl}/sitemaps/{feedpath}",
+      "method": "get",
+      "operationId": "sitemaps.get",
+      "exposure": "executable",
+      "capabilityId": "gsc.sitemaps.get",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/webmasters/v3/sites/{siteUrl}/sitemaps/{feedpath}",
+      "method": "put",
+      "operationId": "sitemaps.submit",
+      "exposure": "inventory",
+      "reason": "Write operation is outside Slice 4."
+    }
+  ]
+}

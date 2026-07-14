@@ -1,0 +1,148 @@
+{
+  "version": 1,
+  "provider": "bing",
+  "revision": "2026-07-14.slice4.bing.1",
+  "source": {
+    "url": "https://learn.microsoft.com/en-us/bingwebmaster/api-protocols",
+    "revision": "2022-10-13+legacy-contract-2026-07-14",
+    "checksum": "sha256:eb54e000e233c31bf17879588eeb82d74b1e3df86f3fcbbfa67de58e0cc559c7"
+  },
+  "operations": [
+    {
+      "path": "/GetCrawlIssues",
+      "method": "get",
+      "operationId": "GetCrawlIssues",
+      "exposure": "executable",
+      "capabilityId": "bing.crawl.issues",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/GetCrawlSettings",
+      "method": "get",
+      "operationId": "GetCrawlSettings",
+      "exposure": "executable",
+      "capabilityId": "bing.crawl.settings",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/GetCrawlStats",
+      "method": "get",
+      "operationId": "GetCrawlStats",
+      "exposure": "executable",
+      "capabilityId": "bing.crawl.stats",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/GetFeedDetails",
+      "method": "get",
+      "operationId": "GetFeedDetails",
+      "exposure": "executable",
+      "capabilityId": "bing.sitemaps.get",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/GetFeeds",
+      "method": "get",
+      "operationId": "GetFeeds",
+      "exposure": "executable",
+      "capabilityId": "bing.sitemaps.list",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/GetLinkCounts",
+      "method": "get",
+      "operationId": "GetLinkCounts",
+      "exposure": "executable",
+      "capabilityId": "bing.links.pages",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/GetPageQueryStats",
+      "method": "get",
+      "operationId": "GetPageQueryStats",
+      "exposure": "executable",
+      "capabilityId": "bing.traffic.page-queries",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/GetPageStats",
+      "method": "get",
+      "operationId": "GetPageStats",
+      "exposure": "executable",
+      "capabilityId": "bing.traffic.pages",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/GetQueryPageDetailStats",
+      "method": "get",
+      "operationId": "GetQueryPageDetailStats",
+      "exposure": "executable",
+      "capabilityId": "bing.traffic.query-page",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/GetQueryPageStats",
+      "method": "get",
+      "operationId": "GetQueryPageStats",
+      "exposure": "executable",
+      "capabilityId": "bing.traffic.query-pages",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/GetQueryStats",
+      "method": "get",
+      "operationId": "GetQueryStats",
+      "exposure": "executable",
+      "capabilityId": "bing.traffic.queries",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/GetQueryTrafficStats",
+      "method": "get",
+      "operationId": "GetQueryTrafficStats",
+      "exposure": "executable",
+      "capabilityId": "bing.traffic.query",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/GetRankAndTrafficStats",
+      "method": "get",
+      "operationId": "GetRankAndTrafficStats",
+      "exposure": "executable",
+      "capabilityId": "bing.traffic.rank",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/GetUrlInfo",
+      "method": "get",
+      "operationId": "GetUrlInfo",
+      "exposure": "executable",
+      "capabilityId": "bing.urls.info",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/GetUrlLinks",
+      "method": "get",
+      "operationId": "GetUrlLinks",
+      "exposure": "executable",
+      "capabilityId": "bing.links.url",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/GetUrlTrafficInfo",
+      "method": "get",
+      "operationId": "GetUrlTrafficInfo",
+      "exposure": "executable",
+      "capabilityId": "bing.urls.traffic",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/GetUserSites",
+      "method": "get",
+      "operationId": "GetUserSites",
+      "exposure": "executable",
+      "capabilityId": "bing.sites.list",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    }
+  ]
+}

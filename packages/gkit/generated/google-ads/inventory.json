@@ -1,0 +1,1260 @@
+{
+  "version": 1,
+  "provider": "google-ads",
+  "revision": "2026-07-14.slice4.google-ads.1",
+  "source": {
+    "url": "https://googleads.googleapis.com/$discovery/rest?version=v24",
+    "revision": "20260624",
+    "checksum": "sha256:202028d3abcb9e4681d35f3c28d06e6ced1eaac2ec57c56357c8ab5d522841d7"
+  },
+  "operations": [
+    {
+      "path": "v24:generateConversionRates",
+      "method": "post",
+      "operationId": "googleads.generateConversionRates",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24:listBenchmarksAvailableDates",
+      "method": "post",
+      "operationId": "googleads.listBenchmarksAvailableDates",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24:listBenchmarksLocations",
+      "method": "post",
+      "operationId": "googleads.listBenchmarksLocations",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24:listBenchmarksProducts",
+      "method": "post",
+      "operationId": "googleads.listBenchmarksProducts",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24:listBenchmarksSources",
+      "method": "post",
+      "operationId": "googleads.listBenchmarksSources",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24:listPlannableLocations",
+      "method": "post",
+      "operationId": "googleads.listPlannableLocations",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24:listPlannableProducts",
+      "method": "post",
+      "operationId": "googleads.listPlannableProducts",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24:listPlannableUserInterests",
+      "method": "post",
+      "operationId": "googleads.listPlannableUserInterests",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24:listPlannableUserLists",
+      "method": "post",
+      "operationId": "googleads.listPlannableUserLists",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+adGroupAd}:removeAutomaticallyCreatedAssets",
+      "method": "post",
+      "operationId": "googleads.customers.adGroupAds.removeAutomaticallyCreatedAssets",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+campaignDraft}:promote",
+      "method": "post",
+      "operationId": "googleads.customers.campaignDrafts.promote",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+experiment}:endExperiment",
+      "method": "post",
+      "operationId": "googleads.customers.experiments.endExperiment",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+experiment}:graduateExperiment",
+      "method": "post",
+      "operationId": "googleads.customers.experiments.graduateExperiment",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+name}",
+      "method": "delete",
+      "operationId": "googleads.customers.operations.delete",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+name}",
+      "method": "get",
+      "operationId": "googleads.customers.operations.get",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+name}",
+      "method": "get",
+      "operationId": "googleads.customers.operations.list",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+name}:cancel",
+      "method": "post",
+      "operationId": "googleads.customers.operations.cancel",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+name}:wait",
+      "method": "post",
+      "operationId": "googleads.customers.operations.wait",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+resourceName}",
+      "method": "get",
+      "operationId": "googleads.googleAdsFields.get",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+resourceName}:addOperations",
+      "method": "post",
+      "operationId": "googleads.customers.offlineUserDataJobs.addOperations",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+resourceName}:addOperations",
+      "method": "post",
+      "operationId": "googleads.customers.batchJobs.addOperations",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+resourceName}:getSmartCampaignStatus",
+      "method": "get",
+      "operationId": "googleads.customers.smartCampaignSettings.getSmartCampaignStatus",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+resourceName}:listAsyncErrors",
+      "method": "get",
+      "operationId": "googleads.customers.campaignDrafts.listAsyncErrors",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+resourceName}:listExperimentAsyncErrors",
+      "method": "get",
+      "operationId": "googleads.customers.experiments.listExperimentAsyncErrors",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+resourceName}:listResults",
+      "method": "get",
+      "operationId": "googleads.customers.batchJobs.listResults",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+resourceName}:promoteExperiment",
+      "method": "post",
+      "operationId": "googleads.customers.experiments.promoteExperiment",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+resourceName}:provideLeadFeedback",
+      "method": "post",
+      "operationId": "googleads.customers.localServicesLeads.provideLeadFeedback",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+resourceName}:regenerateShareableLinkId",
+      "method": "post",
+      "operationId": "googleads.customers.thirdPartyAppAnalyticsLinks.regenerateShareableLinkId",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+resourceName}:run",
+      "method": "post",
+      "operationId": "googleads.customers.offlineUserDataJobs.run",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+resourceName}:run",
+      "method": "post",
+      "operationId": "googleads.customers.batchJobs.run",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/{+resourceName}:scheduleExperiment",
+      "method": "post",
+      "operationId": "googleads.customers.experiments.scheduleExperiment",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/audienceInsights:listInsightsEligibleDates",
+      "method": "post",
+      "operationId": "googleads.audienceInsights.listInsightsEligibleDates",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers:listAccessibleCustomers",
+      "method": "get",
+      "operationId": "googleads.customers.listAccessibleCustomers",
+      "exposure": "executable",
+      "reason": "Reviewed adapter, input, read effect, pagination, and response contracts are committed.",
+      "capabilityIds": [
+        "google-ads.customers.list-accessible"
+      ]
+    },
+    {
+      "path": "v24/customers/{+customerId}:createCustomerClient",
+      "method": "post",
+      "operationId": "googleads.customers.createCustomerClient",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:generateAdGroupThemes",
+      "method": "post",
+      "operationId": "googleads.customers.generateAdGroupThemes",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:generateAudienceCompositionInsights",
+      "method": "post",
+      "operationId": "googleads.customers.generateAudienceCompositionInsights",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:generateAudienceDefinition",
+      "method": "post",
+      "operationId": "googleads.customers.generateAudienceDefinition",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:generateAudienceOverlapInsights",
+      "method": "post",
+      "operationId": "googleads.customers.generateAudienceOverlapInsights",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:generateBenchmarksMetrics",
+      "method": "post",
+      "operationId": "googleads.customers.generateBenchmarksMetrics",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:generateCreatorInsights",
+      "method": "post",
+      "operationId": "googleads.customers.generateCreatorInsights",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:generateInsightsFinderReport",
+      "method": "post",
+      "operationId": "googleads.customers.generateInsightsFinderReport",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:generateKeywordForecastMetrics",
+      "method": "post",
+      "operationId": "googleads.customers.generateKeywordForecastMetrics",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:generateKeywordHistoricalMetrics",
+      "method": "post",
+      "operationId": "googleads.customers.generateKeywordHistoricalMetrics",
+      "exposure": "executable",
+      "reason": "Reviewed adapter, input, read effect, pagination, and response contracts are committed.",
+      "capabilityIds": [
+        "google-ads.keyword-plan.generate-historical-metrics"
+      ]
+    },
+    {
+      "path": "v24/customers/{+customerId}:generateKeywordIdeas",
+      "method": "post",
+      "operationId": "googleads.customers.generateKeywordIdeas",
+      "exposure": "executable",
+      "reason": "Reviewed adapter, input, read effect, pagination, and response contracts are committed.",
+      "capabilityIds": [
+        "google-ads.keyword-plan.generate-ideas"
+      ]
+    },
+    {
+      "path": "v24/customers/{+customerId}:generateReachForecast",
+      "method": "post",
+      "operationId": "googleads.customers.generateReachForecast",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:generateShareablePreviews",
+      "method": "post",
+      "operationId": "googleads.customers.generateShareablePreviews",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:generateSuggestedTargetingInsights",
+      "method": "post",
+      "operationId": "googleads.customers.generateSuggestedTargetingInsights",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:generateTargetingSuggestionMetrics",
+      "method": "post",
+      "operationId": "googleads.customers.generateTargetingSuggestionMetrics",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:generateTrendingInsights",
+      "method": "post",
+      "operationId": "googleads.customers.generateTrendingInsights",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:removeCampaignAutomaticallyCreatedAsset",
+      "method": "post",
+      "operationId": "googleads.customers.removeCampaignAutomaticallyCreatedAsset",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:searchAudienceInsightsAttributes",
+      "method": "post",
+      "operationId": "googleads.customers.searchAudienceInsightsAttributes",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:startIdentityVerification",
+      "method": "post",
+      "operationId": "googleads.customers.startIdentityVerification",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:suggestBrands",
+      "method": "post",
+      "operationId": "googleads.customers.suggestBrands",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:suggestKeywordThemes",
+      "method": "post",
+      "operationId": "googleads.customers.suggestKeywordThemes",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:suggestSmartCampaignAd",
+      "method": "post",
+      "operationId": "googleads.customers.suggestSmartCampaignAd",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:suggestSmartCampaignBudgetOptions",
+      "method": "post",
+      "operationId": "googleads.customers.suggestSmartCampaignBudgetOptions",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:suggestTravelAssets",
+      "method": "post",
+      "operationId": "googleads.customers.suggestTravelAssets",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:uploadCallConversions",
+      "method": "post",
+      "operationId": "googleads.customers.uploadCallConversions",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:uploadClickConversions",
+      "method": "post",
+      "operationId": "googleads.customers.uploadClickConversions",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:uploadConversionAdjustments",
+      "method": "post",
+      "operationId": "googleads.customers.uploadConversionAdjustments",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}:uploadUserData",
+      "method": "post",
+      "operationId": "googleads.customers.uploadUserData",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/accountBudgetProposals:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.accountBudgetProposals.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/accountLinks:create",
+      "method": "post",
+      "operationId": "googleads.customers.accountLinks.create",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/accountLinks:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.accountLinks.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/adGroupAdLabels:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.adGroupAdLabels.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/adGroupAds:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.adGroupAds.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/adGroupAssets:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.adGroupAssets.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/adGroupAssetSets:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.adGroupAssetSets.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/adGroupBidModifiers:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.adGroupBidModifiers.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/adGroupCriteria:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.adGroupCriteria.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/AdGroupCriterionCustomizers:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.AdGroupCriterionCustomizers.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/adGroupCriterionLabels:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.adGroupCriterionLabels.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/adGroupCustomizers:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.adGroupCustomizers.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/adGroupLabels:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.adGroupLabels.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/adGroups:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.adGroups.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/adParameters:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.adParameters.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/ads:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.ads.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/assetGenerations:generateImages",
+      "method": "post",
+      "operationId": "googleads.customers.assetGenerations.generateImages",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/assetGenerations:generateText",
+      "method": "post",
+      "operationId": "googleads.customers.assetGenerations.generateText",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/assetGroupAssets:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.assetGroupAssets.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/assetGroupListingGroupFilters:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.assetGroupListingGroupFilters.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/assetGroups:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.assetGroups.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/assetGroupSignals:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.assetGroupSignals.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/assets:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.assets.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/assetSetAssets:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.assetSetAssets.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/assetSets:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.assetSets.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/audiences:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.audiences.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/batchJobs:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.batchJobs.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/biddingDataExclusions:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.biddingDataExclusions.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/biddingSeasonalityAdjustments:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.biddingSeasonalityAdjustments.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/biddingStrategies:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.biddingStrategies.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/billingSetups:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.billingSetups.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/campaignAssets:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.campaignAssets.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/campaignAssetSets:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.campaignAssetSets.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/campaignBidModifiers:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.campaignBidModifiers.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/campaignBudgets:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.campaignBudgets.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/campaignConversionGoals:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.campaignConversionGoals.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/campaignCriteria:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.campaignCriteria.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/campaignCustomizers:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.campaignCustomizers.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/campaignDrafts:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.campaignDrafts.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/CampaignGoalConfigs:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.CampaignGoalConfigs.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/campaignGroups:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.campaignGroups.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/campaignLabels:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.campaignLabels.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/campaignLifecycleGoal:configureCampaignLifecycleGoals",
+      "method": "post",
+      "operationId": "googleads.customers.campaignLifecycleGoal.configureCampaignLifecycleGoals",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/campaigns:enablePMaxBrandGuidelines",
+      "method": "post",
+      "operationId": "googleads.customers.campaigns.enablePMaxBrandGuidelines",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/campaigns:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.campaigns.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/campaignSharedSets:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.campaignSharedSets.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/conversionActions:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.conversionActions.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/conversionCustomVariables:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.conversionCustomVariables.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/conversionGoalCampaignConfigs:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.conversionGoalCampaignConfigs.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/conversionValueRules:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.conversionValueRules.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/conversionValueRuleSets:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.conversionValueRuleSets.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/customAudiences:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.customAudiences.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/customConversionGoals:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.customConversionGoals.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/customerAssets:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.customerAssets.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/customerAssetSets:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.customerAssetSets.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/customerClientLinks:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.customerClientLinks.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/customerConversionGoals:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.customerConversionGoals.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/CustomerCustomizers:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.CustomerCustomizers.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/customerLabels:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.customerLabels.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/customerLifecycleGoal:configureCustomerLifecycleGoals",
+      "method": "post",
+      "operationId": "googleads.customers.customerLifecycleGoal.configureCustomerLifecycleGoals",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/customerManagerLinks:moveManagerLink",
+      "method": "post",
+      "operationId": "googleads.customers.customerManagerLinks.moveManagerLink",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/customerManagerLinks:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.customerManagerLinks.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/customerNegativeCriteria:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.customerNegativeCriteria.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/customerSkAdNetworkConversionValueSchemas:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.customerSkAdNetworkConversionValueSchemas.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/customerUserAccesses:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.customerUserAccesses.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/customerUserAccessInvitations:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.customerUserAccessInvitations.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/customInterests:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.customInterests.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/customizerAttributes:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.customizerAttributes.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/dataLinks:create",
+      "method": "post",
+      "operationId": "googleads.customers.dataLinks.create",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/dataLinks:remove",
+      "method": "post",
+      "operationId": "googleads.customers.dataLinks.remove",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/dataLinks:update",
+      "method": "post",
+      "operationId": "googleads.customers.dataLinks.update",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/experimentArms:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.experimentArms.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/experiments:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.experiments.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/getIdentityVerification",
+      "method": "get",
+      "operationId": "googleads.customers.getIdentityVerification",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/Goals:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.Goals.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/googleAds:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.googleAds.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/googleAds:search",
+      "method": "post",
+      "operationId": "googleads.customers.googleAds.search",
+      "exposure": "executable",
+      "reason": "Reviewed adapter, input, read effect, pagination, and response contracts are committed.",
+      "capabilityIds": [
+        "google-ads.query.gaql"
+      ]
+    },
+    {
+      "path": "v24/customers/{+customerId}/googleAds:searchStream",
+      "method": "post",
+      "operationId": "googleads.customers.googleAds.searchStream",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/incentives/{+selectedIncentiveId}:applyIncentive",
+      "method": "post",
+      "operationId": "googleads.customers.incentives.applyIncentive",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/invoices",
+      "method": "get",
+      "operationId": "googleads.customers.invoices.list",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/keywordPlanAdGroupKeywords:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.keywordPlanAdGroupKeywords.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/keywordPlanAdGroups:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.keywordPlanAdGroups.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/keywordPlanCampaignKeywords:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.keywordPlanCampaignKeywords.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/keywordPlanCampaigns:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.keywordPlanCampaigns.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/keywordPlans:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.keywordPlans.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/labels:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.labels.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/localServices:appendLeadConversation",
+      "method": "post",
+      "operationId": "googleads.customers.localServices.appendLeadConversation",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/multiPartyAuthReview:resolve",
+      "method": "post",
+      "operationId": "googleads.customers.multiPartyAuthReview.resolve",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/offlineUserDataJobs:create",
+      "method": "post",
+      "operationId": "googleads.customers.offlineUserDataJobs.create",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/paymentsAccounts",
+      "method": "get",
+      "operationId": "googleads.customers.paymentsAccounts.list",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/productLinkInvitations:create",
+      "method": "post",
+      "operationId": "googleads.customers.productLinkInvitations.create",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/productLinkInvitations:remove",
+      "method": "post",
+      "operationId": "googleads.customers.productLinkInvitations.remove",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/productLinkInvitations:update",
+      "method": "post",
+      "operationId": "googleads.customers.productLinkInvitations.update",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/productLinks:create",
+      "method": "post",
+      "operationId": "googleads.customers.productLinks.create",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/productLinks:remove",
+      "method": "post",
+      "operationId": "googleads.customers.productLinks.remove",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/recommendations:apply",
+      "method": "post",
+      "operationId": "googleads.customers.recommendations.apply",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/recommendations:dismiss",
+      "method": "post",
+      "operationId": "googleads.customers.recommendations.dismiss",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/recommendations:generate",
+      "method": "post",
+      "operationId": "googleads.customers.recommendations.generate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/recommendationSubscriptions:mutateRecommendationSubscription",
+      "method": "post",
+      "operationId": "googleads.customers.recommendationSubscriptions.mutateRecommendationSubscription",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/remarketingActions:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.remarketingActions.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/reservations:bookCampaigns",
+      "method": "post",
+      "operationId": "googleads.customers.reservations.bookCampaigns",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/reservations:quoteCampaigns",
+      "method": "post",
+      "operationId": "googleads.customers.reservations.quoteCampaigns",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/sharedCriteria:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.sharedCriteria.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/sharedSets:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.sharedSets.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/smartCampaignSettings:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.smartCampaignSettings.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/userListCustomerTypes:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.userListCustomerTypes.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/userLists:mutate",
+      "method": "post",
+      "operationId": "googleads.customers.userLists.mutate",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/youTubeVideoUploads:create",
+      "method": "post",
+      "operationId": "googleads.media.upload",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/youTubeVideoUploads:remove",
+      "method": "post",
+      "operationId": "googleads.customers.youTubeVideoUploads.remove",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/customers/{+customerId}/youTubeVideoUploads:update",
+      "method": "post",
+      "operationId": "googleads.customers.youTubeVideoUploads.update",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/geoTargetConstants:suggest",
+      "method": "post",
+      "operationId": "googleads.geoTargetConstants.suggest",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/googleAdsFields:search",
+      "method": "post",
+      "operationId": "googleads.googleAdsFields.search",
+      "exposure": "executable",
+      "reason": "Reviewed adapter, input, read effect, pagination, and response contracts are committed.",
+      "capabilityIds": [
+        "google-ads.fields.describe",
+        "google-ads.fields.search"
+      ]
+    },
+    {
+      "path": "v24/incentives:fetchIncentive",
+      "method": "get",
+      "operationId": "googleads.incentives.fetchIncentive",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    },
+    {
+      "path": "v24/keywordThemeConstants:suggest",
+      "method": "post",
+      "operationId": "googleads.keywordThemeConstants.suggest",
+      "exposure": "inventory",
+      "reason": "Not reviewed for executable gkit exposure."
+    }
+  ]
+}

@@ -5,12 +5,18 @@ import { renderProviderDocs } from "./docs";
 import { loadExecutableManifest } from "./manifest";
 
 describe("provider docs", () => {
-  it("are a byte-stable projection of the executable manifest", async () => {
+  it.each([
+    ["bing", "capabilities.md"],
+    ["dataforseo", "backlinks.md"],
+    ["google-ads", "capabilities.md"],
+    ["gsc", "capabilities.md"],
+    ["posthog", "capabilities.md"],
+  ])("keeps %s docs as a byte-stable manifest projection", async (provider, file) => {
     const manifest = await loadExecutableManifest(
-      new URL("../generated/dataforseo/manifest.json", import.meta.url).pathname,
+      new URL(`../generated/${provider}/manifest.json`, import.meta.url).pathname,
     );
     const committed = await readFile(
-      new URL("../docs/providers/dataforseo/backlinks.md", import.meta.url),
+      new URL(`../docs/providers/${provider}/${file}`, import.meta.url),
       "utf8",
     );
 

@@ -113,3 +113,70 @@ and [`posthog-migration-matrix.md`](./posthog-migration-matrix.md) for the
 command-level retirement decisions. The legacy PostHog package remains because
 twelve command behaviors are still `keep`; no provider runtime interface was
 extracted because the second adapter did not reveal a branch-removing seam.
+
+## Google Ads REST spike evidence
+
+The Slice 1.5 spike pinned Google Ads REST `v24` and used the real
+`openclaw-web` profile. Service-account OAuth, accessible customers, field
+metadata, paginated GAQL, Keyword Ideas, historical metrics, provider errors,
+request IDs, atomic artifacts, and secret scanning all passed. REST and the
+legacy Python client matched on the compared row counts and provider behavior.
+
+The profile has no directly accessible manager account, so manager-to-child
+`login-customer-id` behavior remains a separate live gate. This does not block
+the current sole consumer's single-account Slice 4 surface, but gkit must not
+claim manager support until that gate passes. See
+[`google-ads-rest-spike.md`](./google-ads-rest-spike.md) for the redacted
+evidence and
+[`google-ads-migration-matrix.md`](./google-ads-migration-matrix.md) for the
+command-level decisions. The legacy Google Ads package remains installed.
+
+## Slice 4 Google Ads evidence
+
+The Google Ads sub-slice now productizes the scoped Slice 1.5 result. A pinned
+`v24` Discovery snapshot generates a 176-method inventory and six reviewed
+single-account read capabilities. The real profile passed doctor, same-input
+dry-run, all six live reads, a real two-page field query, and one expected
+provider error.
+
+Seven local artifacts totaled 27,009 bytes, all parsed as streamed raw-page
+bundles with mode `0600`, and secret scanning found no credential material.
+Google Ads remained isolated from the spend ledger. See
+[`slice4-google-ads-baseline.md`](./slice4-google-ads-baseline.md) for the
+redacted productization evidence. Manager routing, legacy doctor network
+semantics, and four curated performance commands remain outside the replaced
+surface, so the legacy package is not deleted.
+
+## Slice 4 Bing evidence
+
+The Bing sub-slice exposes all 17 existing JSON read methods through a pinned,
+checksum-bound contract. Request planning preserves provider-required JSON
+string query encoding and `apikey` authentication while emitting only a
+key-free `diagnosticUrl`. Plain and URL-encoded key variants are absent from
+all tested result and failure paths. The real `openclaw-web` profile then
+passed all 17 reads against `openclawai.io` and all 17 same-input legacy calls.
+Fifteen result payloads matched exactly; the two query-list payloads contained
+the same rows in provider-varying order.
+
+Seventeen gkit artifacts totaled 26,855 bytes, all JSON and mode `0600`;
+combined gkit and legacy evidence contained no API-key value. Bing remained
+isolated from the spend ledger. All provider-data commands are now `replace`,
+while the legacy network-aware doctor remains `keep`, so the old package is not
+deleted in this slice.
+See [`slice4-bing-baseline.md`](./slice4-bing-baseline.md) and
+[`bing-migration-matrix.md`](./bing-migration-matrix.md).
+
+## Slice 4 GSC evidence
+
+The GSC sub-slice inventories ten official methods and exposes five read-only
+capabilities using service-account OAuth with the `webmasters.readonly` scope.
+The real `openclaw-web` profile completed properties, Search Analytics,
+sitemap list/get, URL Inspection, and an inaccessible-property negative.
+Same-input legacy calls matched the two-property, 25-row, one-sitemap, selected
+sitemap, and indexed-URL outcomes.
+
+Six raw JSON artifacts totaled 6,776 bytes, all mode `0600`; secret scanning
+found no persisted credential material and the spend ledger remained unchanged.
+See [`slice4-gsc-baseline.md`](./slice4-gsc-baseline.md) and
+[`gsc-migration-matrix.md`](./gsc-migration-matrix.md). The provider data
+surface is replaced, but the legacy network-aware doctor remains `keep`.

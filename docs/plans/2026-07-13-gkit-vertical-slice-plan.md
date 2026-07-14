@@ -5,8 +5,8 @@ description: >
   gkit 的另一版 0→1 方案:锁死六条不变量(profile/effect/envelope/落盘/无全局 run/spend outcome),
   纯 Bun/TypeScript 单进程,纵切生长、逐包退役,内建 search 与 polyglot runtime 延后。
 status: active
-version: 0.6
-timestamp: 2026-07-14T10:43:02+08:00
+version: 0.8
+timestamp: 2026-07-14T13:53:13+08:00
 resource: ./2026-07-13-gkit-provider-native-agent-surface.md
 ---
 
@@ -79,14 +79,11 @@ Profile 文件:`$XDG_CONFIG_HOME/gkit/profiles/<name>.json`(未设置时 `~/.con
     },
     "google-ads": {
       "config": {
-        "customerId": "1234567890",
-        "loginCustomerId": "0987654321",
-        "oauthClientId": "xxx.apps.googleusercontent.com"
+        "customerId": "1234567890"
       },
       "secrets": {
         "developerToken": "env:APP_A_GOOGLE_ADS_DEVELOPER_TOKEN",
-        "oauthClientSecret": "env:APP_A_GOOGLE_ADS_OAUTH_CLIENT_SECRET",
-        "refreshToken": "env:APP_A_GOOGLE_ADS_REFRESH_TOKEN"
+        "serviceAccountFile": "env:APP_A_GOOGLE_ADS_SERVICE_ACCOUNT_FILE"
       }
     }
   }
@@ -249,10 +246,10 @@ gkit docs [--provider <p>]             # 打印文档目录路径,agent 自行 r
 | DataForSEO     | 官方 OpenAPI(pinned)                                                                                            | `api call --operation-id <id> --input @req.json`                                        | basic auth(login/password)                                                               |
 | GSC            | Google Discovery                                                                                                | `search-analytics query` 等 resource/method                                             | service account JSON                                                                     |
 | PostHog        | Query API + OpenAPI reads                                                                                       | `query hogql --input @query.json`                                                       | personal API token                                                                       |
-| Google Ads     | 官方 REST reference(`googleAds:search`、`googleAdsFields:search`、Keyword Plan services),固定 API major version | `query gaql`(默认显式分页)、`fields search/describe`、经保留决策的 Keyword Planner read | OAuth2 refresh token + developer token;access token 作为派生 secret                      |
+| Google Ads     | 官方 REST reference(`googleAds:search`、`googleAdsFields:search`、Keyword Plan services),固定 API major version | `query gaql`(默认显式分页)、`fields search/describe`、经保留决策的 Keyword Planner read | service-account JSON(当前 profile)或 OAuth2 refresh token + developer token;access token 作为派生 secret |
 | Bing Webmaster | 现有 JSON REST API contract,WSDL 仅在 REST 不覆盖时考虑                                                         | provider method + native input                                                          | 现有 API key 走 `apikey` query parameter(完整 URL 永不打印);未来采用 OAuth 时才用 Bearer |
 
-关于 Google Ads 的暂定决策:v1 的 bounded read surface 先走 REST;默认使用可控的 `googleAds:search` 分页,不以 `searchStream` 一次吞入任意大结果。此决定必须通过 Slice 1.5 的真实账号 spike,并覆盖 OAuth refresh、manager account header、field metadata、request ID/error projection、分页和当前 Keyword Planner 用法。若 spike 失败,在实现前修改本方案;不预留没有第二实现的 `ProviderRuntime` seam。未来若开放 mutate、REST 无法覆盖必需能力或引入不可信依赖,再设计 polyglot/isolated runtime。
+关于 Google Ads 的决策:v1 的 bounded read surface 走 REST;默认使用可控的 `googleAds:search` 分页,不以 `searchStream` 一次吞入任意大结果。Slice 1.5 已用真实账号覆盖 service-account OAuth、field metadata、request ID/error projection、分页和当前 Keyword Planner 用法;真实 profile 没有 MCC,因此 manager account header 仍是暴露该能力前的独立 live gate。当前唯一消费者的单账户 surface 不被这个缺口阻断。未来若开放 mutate、REST 无法覆盖必需能力或引入不可信依赖,再设计 polyglot/isolated runtime。
 
 ## 5. Spend ledger
 
@@ -478,7 +475,7 @@ git commit -m "feat: gkit vertical slice with dataforseo"
 
 这是一个 1–2 天、不可顺手抽象的 spike。只记录事实与决策,不删除旧包:
 
-- 用真实 profile 完成 refresh token → access token;access token 立即注册为派生 secret。
+- 用真实 profile 完成其实际认证模式 → access token;当前 profile 是 service-account JSON,access token 立即注册为派生 secret。只有出现真实 user OAuth profile 时才增加 refresh-token mode。
 - 调用 `customers:listAccessibleCustomers`、`googleAdsFields:search` 和一个小结果 GAQL;GAQL 默认走 `googleAds:search` 并显式翻页到终止,验证 `login-customer-id` manager 场景。
 - 固定一个明确 API major version(禁止 `latest`/隐式默认),记录升级步骤:手工 bump → refresh snapshot → review manifest/docs diff → contract/live smoke。
 - 捕获并安全投影 HTTP status、Google Ads error code、request ID;确认日志、错误、URL 与 fixture 均不含 developer/access/refresh token。
@@ -486,6 +483,16 @@ git commit -m "feat: gkit vertical slice with dataforseo"
 - 对大结果记录分页内存曲线与 artifact 行为;只有真实 bulk 用例证明需要时才增加 `searchStream`。
 
 **Gate:** spike 结论必须是以下二选一并写入本文档修订版:(a) bounded read surface 可由 REST 完整承载,继续 Slice 4;(b) 有具体必需能力/可靠性缺口,先修改 runtime 决策。不能以“官方有 REST endpoint”代替真实验证。
+
+**2026-07-14 implementation result — scoped (a), conditional pass:**
+
+- 固定 Google Ads REST `v24`,Discovery revision `20260624`,snapshot SHA-256 `202028d3abcb9e4681d35f3c28d06e6ced1eaac2ec57c56357c8ab5d522841d7`;升级固定为手工 bump major → refresh snapshot → review source/manifest/docs diff → contract/live smoke。
+- 真实 `openclaw-web` profile 使用 service-account OAuth,不是 refresh token。派生 access token 在请求前注册为 secret;developer token、access token 与 private key 均未出现在 summary 或 10 个 raw artifacts 中。
+- `customers:listAccessibleCustomers`、两页 `googleAdsFields:search`、12-row GAQL、850-row 较大 GAQL、两页 Keyword Ideas、Historical Metrics 与一个预期失败 GAQL 全部真实执行。9 个 success + 1 个预期 HTTP 400;错误安全保留 `INVALID_ARGUMENT`、`queryError:UNRECOGNIZED_FIELD` 与 request ID。
+- Keyword Ideas 与 Historical Metrics 的 REST 结果分别为 4 和 1 rows,与 legacy Python CLI 相同;campaign GAQL 也同为 12 rows。REST 保留 provider-native camelCase,不复制 Python protobuf converter 的 snake_case 偏好。
+- 10 个 artifact 共 279,092 bytes;最大页 265,558 bytes,观测 peak heap delta 1,266,192 bytes。显式 `pageToken` + per-page artifact 足够,不引入 `searchStream`。
+- 当前 profile 只有一个直接可访问的非 manager account,没有合法 manager→child 组合。因此不能声称 `login-customer-id` live gate 已通过。考虑当前 CLI 唯一消费者只需要这个单账户 profile,Slice 4 可以继续实现单账户 surface;manager behavior 必须保持不暴露/未验证,直到真实 MCC profile 完成 live smoke。
+- 完整脱敏证据见 [`packages/gkit/evals/google-ads-rest-spike.md`](../../packages/gkit/evals/google-ads-rest-spike.md),逐命令 `replace | keep | drop` 见 [`packages/gkit/evals/google-ads-migration-matrix.md`](../../packages/gkit/evals/google-ads-migration-matrix.md)。旧包不删除。
 
 ### Slice 2: DataForSEO reviewed manifest + inventory/docs/describe → 按行为退役旧包
 
@@ -578,7 +585,7 @@ git commit -m "refactor: retire <old package>"
 
 ### Slice 4: Productize 已验证的 Google Ads REST + Bing + 剩余 provider
 
-- Google Ads:只有 Slice 1.5 gate 通过才实施。提供 `fields search/describe`、显式分页的 `query gaql`(`googleAds:search`)以及在盘点中标为 `replace` 的 Keyword Planner read;OAuth2 refresh-token flow 在 provider 内实现;不开放 mutate。`searchStream` 继续留在扩张门槛后。
+- Google Ads:Slice 1.5 的单账户 gate 已 conditional pass。提供 `fields search/describe`、显式分页的 `query gaql`(`googleAds:search`)以及在盘点中标为 `replace` 的 Keyword Planner read;先实现真实 profile 所需的 service-account OAuth。只有真实 profile 需要时再加入 refresh-token mode;manager account behavior 在 MCC live gate 前不暴露。不开放 mutate,`searchStream` 继续留在扩张门槛后。
 - Bing:复用现有 `bing-webmaster-cli` 已验证的 JSON REST contract。API key 按 provider 要求放在 `apikey` query parameter,但 request builder 必须同时产生不含 key 的 `diagnosticUrl`;日志、错误、telemetry 只能使用后者。若未来显式切 OAuth,才改为 Bearer。
 - PostHog/GSC 中未在 Slice 3 接入的那个。
 - Delete: `packages/google-ads-cli`、`packages/bing-webmaster-cli`、`packages/gsc-cli`、`packages/posthog-cli`(各自完成命令盘点、behavior golden、真实 smoke 后逐个退役;Google Ads 的两条 Keyword Planner workflow 必须有显式结论)。
@@ -586,13 +593,25 @@ git commit -m "refactor: retire <old package>"
 **Required tests(Google Ads):**
 
 ```ts
-it("refreshes the OAuth token without logging its value", ...);
-it("uses the pinned API major version and manager login header", ...);
+it("derives an access token from service-account credentials without logging its value", ...);
+it("uses the pinned API major version", ...);
+it("rejects manager profile fields and argv until the real MCC gate passes", ...);
 it("maps a Google Ads REST error to an allowlisted, redacted details projection", ...);
 it("paginates googleAds:search to completion without buffering past the artifact policy", ...);
-it("preserves request ID while redacting developer, refresh and access tokens", ...);
+it("preserves request ID while redacting developer, private-key and access-token variants", ...);
 it("covers every Google Ads workflow marked replace, including retained Keyword Planner reads", ...);
 ```
+
+**2026-07-14 Google Ads sub-slice implementation result:**
+
+- 提交 `v24` Discovery snapshot(revision `20260624`,SHA-256 `202028d3abcb9e4681d35f3c28d06e6ced1eaac2ec57c56357c8ab5d522841d7`)与 checksum-bound reviewed policy。生成 176-method inventory,其中 5 个 upstream methods 映射为 6 个 executable capabilities:accessible customers、field search/describe、GAQL、Keyword Ideas、Historical Metrics。
+- 新 provider 使用真实 profile 所需的 service-account OAuth;dry-run 在 secret resolution、OAuth、adapter load 与 artifact reservation 前停止。live 时派生 access token 立即进入 `SecretRegistry`;developer/access/private-key variants 同时进入 streaming artifact scanner。
+- `googleAds:search`、field search 与 Keyword Ideas 都使用显式 `pageToken` loop,最多 1,000 页 fail-closed。artifact 以 JSON array 流式组合每个 exact raw REST page,不把全量 rows 缓存在内存。
+- `openclaw-web.json` 只保存 customer scope 和两个 `env:` refs,mode `0600`;不接受 `loginCustomerId`,argv 也没有 manager flag。MCC gate 前 manager routing 保持不可表达。
+- 真实 dogfood 6/6 success:accessible customers `1/1 page/row`,field describe `1/1`,field search `2/2`,GAQL `1/12`,Keyword Ideas `1/12`,Historical Metrics `1/1`。负例 GAQL 正确返回 HTTP 400 / `INVALID_ARGUMENT` / `queryError:UNRECOGNIZED_FIELD` + safe request ID。
+- 7 个 artifacts 共 27,009 bytes,全部 mode `0600` 且可解析为 raw-page bundle;runtime access-token scan 与持久 developer-token/private-key scan 均为 0 findings。所有 envelope 均为 `read`,`cost:null`,`attemptId:null`;ledger 仍为 8 attempts / 0 unresolved / 0 breaches。
+- Google Ads package tests:17 files / 115 tests / 424 expectations;workspace:10 package typechecks、61 files / 255 tests / 853 expectations;三个 generator `--check` 与 frozen install 均通过。证据见 [`packages/gkit/evals/slice4-google-ads-baseline.md`](../../packages/gkit/evals/slice4-google-ads-baseline.md)。
+- 此处记录的是 Google Ads checkpoint;legacy Google Ads package 继续保留,因为 doctor 的 network/MCC 语义与 4 个 curated performance commands 仍为 `keep`。Bing 与 GSC 的后续结果见下方各自 checkpoint。
 
 **Required tests(Bing):**
 
@@ -600,6 +619,38 @@ it("covers every Google Ads workflow marked replace, including retained Keyword 
 it("sends apikey as a query parameter but exposes only a key-free diagnosticUrl", ...);
 it("redacts the encoded and decoded API key from every failure path", ...);
 ```
+
+**2026-07-14 Bing sub-slice implementation result:**
+
+- 提交 checksum-bound JSON contract、17-method inventory 与 17 个 read-only executable capabilities,完整映射旧 `bing-webmaster-cli` 的 sites、traffic、crawl、links、feeds 与 URL reads。
+- request builder 同时产生含 `apikey` 的真实 request URL 与不含 key 的 `diagnosticUrl`;dry-run、成功 metadata、failure details 只允许后者。明文与 URL-encoded key 的成功/失败路径测试均通过。
+- 一次性 invalid-key 实网负例到达 `GetUserSites`,返回 HTTP 400 + provider code `3`;dogfood 据此把该组合从普通 provider error 修正为 `AUTH_FAILED`,envelope 只包含 key-free diagnostic URL。
+- `siteUrl` 可由 profile 默认或 request 显式覆盖;query/page/link/feed/url 参数继续按旧 contract 做 JSON-string encoding。origin 固定,不接受 transport override。
+- 真实 `openclaw-web` profile 对 `https://openclawai.io/` 完成 17/17 gkit reads 与 17/17 same-input legacy calls。15 个 provider payload 完全一致;两个 query-list payload 行集合一致、仅 Bing 在分次请求中返回顺序不同。invalid-key 实网负例仍正确映射为 `AUTH_FAILED`。
+- 17 个 gkit exact-response artifacts 共 26,855 bytes,全部 JSON、mode `0600`;与 legacy 合计 34 个 evidence files / 66,632 bytes,API-key scan 为 0。所有 gkit envelope 均为 `read`,`cost:null`,`attemptId:null`;ledger 保持 8 attempts / 0 unresolved / 0 breaches,且无 Bing entries。
+- Bing 的 17 个旧 provider-data commands 全部改为 `replace`;network-aware doctor 仍为 `keep`,所以 legacy package 暂不删除。证据见 [`packages/gkit/evals/slice4-bing-baseline.md`](../../packages/gkit/evals/slice4-bing-baseline.md)。
+
+**Required tests(GSC):**
+
+```ts
+it("derives only a webmasters.readonly service-account token", ...);
+it("keeps Search Analytics POST classified as a read", ...);
+it("encodes URL-prefix and sc-domain properties without accepting origin overrides", ...);
+it("maps Google errors to an allowlisted projection", ...);
+it("covers properties, analytics, sitemap list/get, and indexed URL inspection", ...);
+```
+
+**2026-07-14 GSC sub-slice implementation result:**
+
+- 提交 checksum-bound 10-method reviewed contract:5 个 executable reads(properties list、Search Analytics、sitemap list/get、URL Inspection),5 个 write/destructive 或未使用 reads 保持 inventory-only。
+- service-account OAuth scope 固定为 `webmasters.readonly`;profile 只保存可选 property scope 与 `serviceAccountFile` 的 `env:` ref。两个官方 origin 均固定,无 base URL override。
+- `openclaw-web` 真实 dogfood 5/5 success:properties 2 rows、Search Analytics 25 rows、sitemap list/get 各 1 row、URL Inspection 1 row。相同输入的 legacy CLI comparison 得到相同 row/object outcomes。
+- inaccessible property 负例返回 HTTP 403 / `AUTH_FAILED` / confirmed outcome 与 474-byte raw error artifact;provider-controlled message 未进入 envelope。
+- 6 个 artifacts 共 6,776 bytes,全部 JSON、mode `0600`;runtime 扫描 access token/private key,持久 pattern scan 为 0。所有 envelope 均为 `read`,`cost:null`,`attemptId:null`;ledger 保持 8 attempts / 0 unresolved / 0 breaches。
+- GSC provider-data commands 均为 `replace`;legacy network-aware doctor 为 `keep`,skill path/print/install 为 `drop`,因此本 slice 不删除旧 package。证据见 [`packages/gkit/evals/slice4-gsc-baseline.md`](../../packages/gkit/evals/slice4-gsc-baseline.md)。
+- Bing 与 GSC 的重复仅提炼为 `execute-read-provider.ts` 的 profile/dry-run/artifact/envelope orchestration;request planning、auth、response validation 与 error allowlist 仍由各 provider 拥有,没有创建统一 transport 或 `src/core/provider.ts`。
+
+**Slice 4 current verdict:** Google Ads single-account、GSC 与 Bing provider-data sub-slices 全部 PASS,可以进入 Slice 5 的全量 eval 与 curated 晋升。三个 legacy packages 中尚为 `keep` 的 doctor/manager/curated behavior 继续保留,不因 provider-data gate 通过而提前删除。
 
 ### Slice 5: 全量 eval + curated 晋升 + 清理
 

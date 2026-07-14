@@ -2,8 +2,9 @@ import type { LoadedExecutableManifest, ManifestRecord } from "./manifest";
 
 export function renderProviderDocs(manifest: LoadedExecutableManifest): string {
   const providerLabel =
-    { dataforseo: "DataForSEO", posthog: "PostHog" }[manifest.document.provider] ??
-    manifest.document.provider;
+    { dataforseo: "DataForSEO", "google-ads": "Google Ads", posthog: "PostHog" }[
+      manifest.document.provider
+    ] ?? manifest.document.provider;
   const lines = [
     "---",
     "type: Reference",
@@ -17,7 +18,7 @@ export function renderProviderDocs(manifest: LoadedExecutableManifest): string {
     "",
     `# ${providerLabel} reviewed executable capabilities`,
     "",
-    "This file is byte-stably rendered from `generated/dataforseo/manifest.json`.",
+    `This file is byte-stably rendered from \`generated/${manifest.document.provider}/manifest.json\`.`,
     "The committed manifest remains the only runtime, validation, effect, cost, and discovery source.",
     "",
   ];

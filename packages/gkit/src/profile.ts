@@ -70,6 +70,31 @@ const postHogSecretsSchema = strictObject({
   apiToken: pipe(string(), regex(ENV_REFERENCE_PATTERN)),
 });
 
+const googleAdsConfigSchema = strictObject({
+  customerId: pipe(string(), regex(/^[1-9]\d{9}$/)),
+});
+
+const googleAdsSecretsSchema = strictObject({
+  developerToken: pipe(string(), regex(ENV_REFERENCE_PATTERN)),
+  serviceAccountFile: pipe(string(), regex(ENV_REFERENCE_PATTERN)),
+});
+
+const bingConfigSchema = strictObject({
+  siteUrl: optional(pipe(string(), regex(/^https?:\/\/.+/))),
+});
+
+const bingSecretsSchema = strictObject({
+  apiKey: pipe(string(), regex(ENV_REFERENCE_PATTERN)),
+});
+
+const gscConfigSchema = strictObject({
+  siteUrl: optional(pipe(string(), regex(/^(?:https?:\/\/.+|sc-domain:[A-Za-z0-9.-]+)$/))),
+});
+
+const gscSecretsSchema = strictObject({
+  serviceAccountFile: pipe(string(), regex(ENV_REFERENCE_PATTERN)),
+});
+
 export type ProviderEnvironment = "production" | "sandbox";
 
 export type ProviderPolicy = {
@@ -182,15 +207,27 @@ export async function loadProfile(
     const config =
       providerId === "dataforseo"
         ? parseDataForSeoConfig(provider.config)
-        : providerId === "posthog"
-          ? parsePostHogConfig(provider.config)
-          : freezeRecord(provider.config);
+        : providerId === "bing"
+          ? parseBingConfig(provider.config)
+          : providerId === "gsc"
+            ? parseGscConfig(provider.config)
+            : providerId === "posthog"
+              ? parsePostHogConfig(provider.config)
+              : providerId === "google-ads"
+                ? parseGoogleAdsConfig(provider.config)
+                : freezeRecord(provider.config);
     const secrets =
       providerId === "dataforseo"
         ? parseDataForSeoSecrets(provider.secrets)
-        : providerId === "posthog"
-          ? parsePostHogSecrets(provider.secrets)
-          : Object.freeze(provider.secrets as Record<string, `env:${string}`>);
+        : providerId === "bing"
+          ? parseBingSecrets(provider.secrets)
+          : providerId === "gsc"
+            ? parseGscSecrets(provider.secrets)
+            : providerId === "posthog"
+              ? parsePostHogSecrets(provider.secrets)
+              : providerId === "google-ads"
+                ? parseGoogleAdsSecrets(provider.secrets)
+                : Object.freeze(provider.secrets as Record<string, `env:${string}`>);
     providers[providerId] = Object.freeze({
       config,
       policy: Object.freeze(provider.policy),
@@ -303,6 +340,78 @@ function parsePostHogSecrets(
     throw new ProfileError(
       "invalid_profile",
       "PostHog secrets must contain only an apiToken env: reference.",
+    );
+  }
+  return Object.freeze(parsed.output as Record<string, `env:${string}`>);
+}
+
+function parseGoogleAdsConfig(config: Record<string, unknown>): Readonly<Record<string, unknown>> {
+  const parsed = safeParse(googleAdsConfigSchema, config);
+  if (!parsed.success) {
+    throw new ProfileError(
+      "invalid_profile",
+      "Google Ads config requires one ten-digit customerId and does not expose manager routing.",
+    );
+  }
+  return Object.freeze(parsed.output);
+}
+
+function parseGoogleAdsSecrets(
+  secrets: Record<string, string>,
+): Readonly<Record<string, `env:${string}`>> {
+  const parsed = safeParse(googleAdsSecretsSchema, secrets);
+  if (!parsed.success) {
+    throw new ProfileError(
+      "invalid_profile",
+      "Google Ads secrets must contain only developerToken and serviceAccountFile env: references.",
+    );
+  }
+  return Object.freeze(parsed.output as Record<string, `env:${string}`>);
+}
+
+function parseBingConfig(config: Record<string, unknown>): Readonly<Record<string, unknown>> {
+  const parsed = safeParse(bingConfigSchema, config);
+  if (!parsed.success) {
+    throw new ProfileError(
+      "invalid_profile",
+      "Bing config accepts only an optional absolute HTTP siteUrl.",
+    );
+  }
+  return Object.freeze(parsed.output);
+}
+
+function parseBingSecrets(
+  secrets: Record<string, string>,
+): Readonly<Record<string, `env:${string}`>> {
+  const parsed = safeParse(bingSecretsSchema, secrets);
+  if (!parsed.success) {
+    throw new ProfileError(
+      "invalid_profile",
+      "Bing secrets must contain only an apiKey env: reference.",
+    );
+  }
+  return Object.freeze(parsed.output as Record<string, `env:${string}`>);
+}
+
+function parseGscConfig(config: Record<string, unknown>): Readonly<Record<string, unknown>> {
+  const parsed = safeParse(gscConfigSchema, config);
+  if (!parsed.success) {
+    throw new ProfileError(
+      "invalid_profile",
+      "GSC config accepts only an optional URL-prefix or sc-domain siteUrl.",
+    );
+  }
+  return Object.freeze(parsed.output);
+}
+
+function parseGscSecrets(
+  secrets: Record<string, string>,
+): Readonly<Record<string, `env:${string}`>> {
+  const parsed = safeParse(gscSecretsSchema, secrets);
+  if (!parsed.success) {
+    throw new ProfileError(
+      "invalid_profile",
+      "GSC secrets must contain only a serviceAccountFile env: reference.",
     );
   }
   return Object.freeze(parsed.output as Record<string, `env:${string}`>);

@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "provider": "gsc",
+  "operations": [
+    { "path": "/webmasters/v3/sites", "method": "get", "operationId": "sites.list" },
+    { "path": "/webmasters/v3/sites/{siteUrl}", "method": "get", "operationId": "sites.get" },
+    { "path": "/webmasters/v3/sites/{siteUrl}", "method": "put", "operationId": "sites.add" },
+    { "path": "/webmasters/v3/sites/{siteUrl}", "method": "delete", "operationId": "sites.delete" },
+    {
+      "path": "/webmasters/v3/sites/{siteUrl}/searchAnalytics/query",
+      "method": "post",
+      "operationId": "searchanalytics.query"
+    },
+    {
+      "path": "/webmasters/v3/sites/{siteUrl}/sitemaps",
+      "method": "get",
+      "operationId": "sitemaps.list"
+    },
+    {
+      "path": "/webmasters/v3/sites/{siteUrl}/sitemaps/{feedpath}",
+      "method": "get",
+      "operationId": "sitemaps.get"
+    },
+    {
+      "path": "/webmasters/v3/sites/{siteUrl}/sitemaps/{feedpath}",
+      "method": "put",
+      "operationId": "sitemaps.submit"
+    },
+    {
+      "path": "/webmasters/v3/sites/{siteUrl}/sitemaps/{feedpath}",
+      "method": "delete",
+      "operationId": "sitemaps.delete"
+    },
+    {
+      "path": "/v1/urlInspection/index:inspect",
+      "method": "post",
+      "operationId": "urlInspection.index.inspect"
+    }
+  ]
+}

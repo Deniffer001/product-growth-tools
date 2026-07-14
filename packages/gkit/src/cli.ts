@@ -2,7 +2,13 @@ import { fileURLToPath } from "node:url";
 
 import { parseArgs, renderHelp } from "./args";
 import { describeCapability } from "./describe";
-import { runDataForSeoDoctor, runPostHogDoctor } from "./doctor";
+import {
+  runBingDoctor,
+  runDataForSeoDoctor,
+  runGoogleAdsDoctor,
+  runGscDoctor,
+  runPostHogDoctor,
+} from "./doctor";
 import {
   type Envelope,
   type EnvelopeMeta,
@@ -13,6 +19,9 @@ import {
   toFailureEnvelope,
 } from "./envelope";
 import { executeDataForSeoCall } from "./execute";
+import { executeBingCall } from "./execute-bing";
+import { executeGoogleAdsCall } from "./execute-google-ads";
+import { executeGscCall } from "./execute-gsc";
 import { executePostHogCall } from "./execute-posthog";
 import {
   appendSettled,
@@ -27,6 +36,10 @@ import { renderGkitSchema } from "./schema";
 export const dataForSeoManifestPath = fileURLToPath(
   new URL("../generated/dataforseo/manifest.json", import.meta.url),
 );
+export const bingManifestPath = fileURLToPath(
+  new URL("../generated/bing/manifest.json", import.meta.url),
+);
+export const bingDocsDirectory = fileURLToPath(new URL("../docs/providers/bing", import.meta.url));
 export const dataForSeoDocsDirectory = fileURLToPath(
   new URL("../docs/providers/dataforseo", import.meta.url),
 );
@@ -36,6 +49,16 @@ export const postHogManifestPath = fileURLToPath(
 export const postHogDocsDirectory = fileURLToPath(
   new URL("../docs/providers/posthog", import.meta.url),
 );
+export const googleAdsManifestPath = fileURLToPath(
+  new URL("../generated/google-ads/manifest.json", import.meta.url),
+);
+export const googleAdsDocsDirectory = fileURLToPath(
+  new URL("../docs/providers/google-ads", import.meta.url),
+);
+export const gscManifestPath = fileURLToPath(
+  new URL("../generated/gsc/manifest.json", import.meta.url),
+);
+export const gscDocsDirectory = fileURLToPath(new URL("../docs/providers/gsc", import.meta.url));
 export const providerDocsDirectory = fileURLToPath(new URL("../docs/providers", import.meta.url));
 
 type TerminalEmitter = {
@@ -69,7 +92,13 @@ function createTerminalEmitter(): TerminalEmitter {
 
 export async function main(
   argv: string[] = process.argv.slice(2),
-  options: { manifestPath?: string; postHogManifestPath?: string } = {},
+  options: {
+    bingManifestPath?: string;
+    manifestPath?: string;
+    googleAdsManifestPath?: string;
+    gscManifestPath?: string;
+    postHogManifestPath?: string;
+  } = {},
 ): Promise<void> {
   const emitter = createTerminalEmitter();
   const abortController = new AbortController();
@@ -93,18 +122,31 @@ export async function main(
     }
 
     if (command.kind === "docs") {
-      if (command.provider && command.provider !== "dataforseo" && command.provider !== "posthog") {
+      if (
+        command.provider &&
+        command.provider !== "dataforseo" &&
+        command.provider !== "bing" &&
+        command.provider !== "google-ads" &&
+        command.provider !== "gsc" &&
+        command.provider !== "posthog"
+      ) {
         throw new GkitFailure({
           code: "CAPABILITY_NOT_FOUND",
           message: "Provider documentation is not available for that provider.",
         });
       }
       const directory =
-        command.provider === "dataforseo"
-          ? dataForSeoDocsDirectory
-          : command.provider === "posthog"
-            ? postHogDocsDirectory
-            : providerDocsDirectory;
+        command.provider === "bing"
+          ? bingDocsDirectory
+          : command.provider === "dataforseo"
+            ? dataForSeoDocsDirectory
+            : command.provider === "google-ads"
+              ? googleAdsDocsDirectory
+              : command.provider === "gsc"
+                ? gscDocsDirectory
+                : command.provider === "posthog"
+                  ? postHogDocsDirectory
+                  : providerDocsDirectory;
       await emitter.writeText(`${directory}\n`);
       process.exitCode = abortController.signal.aborted ? 130 : 0;
       return;
@@ -189,8 +231,26 @@ export async function main(
       process.exitCode = abortController.signal.aborted ? 130 : result.envelope.ok ? 0 : 1;
       return;
     }
+    if (command.kind === "bing-doctor") {
+      const result = await runBingDoctor({ profileFlag: command.profileFlag });
+      await emitter.writeEnvelope(result.envelope, result.secrets);
+      process.exitCode = abortController.signal.aborted ? 130 : result.envelope.ok ? 0 : 1;
+      return;
+    }
     if (command.kind === "posthog-doctor") {
       const result = await runPostHogDoctor({ profileFlag: command.profileFlag });
+      await emitter.writeEnvelope(result.envelope, result.secrets);
+      process.exitCode = abortController.signal.aborted ? 130 : result.envelope.ok ? 0 : 1;
+      return;
+    }
+    if (command.kind === "google-ads-doctor") {
+      const result = await runGoogleAdsDoctor({ profileFlag: command.profileFlag });
+      await emitter.writeEnvelope(result.envelope, result.secrets);
+      process.exitCode = abortController.signal.aborted ? 130 : result.envelope.ok ? 0 : 1;
+      return;
+    }
+    if (command.kind === "gsc-doctor") {
+      const result = await runGscDoctor({ profileFlag: command.profileFlag });
       await emitter.writeEnvelope(result.envelope, result.secrets);
       process.exitCode = abortController.signal.aborted ? 130 : result.envelope.ok ? 0 : 1;
       return;
@@ -215,13 +275,35 @@ export async function main(
             manifest: await loadExecutableManifest(options.manifestPath ?? dataForSeoManifestPath),
             signal: abortController.signal,
           })
-        : await executePostHogCall({
-            command,
-            manifest: await loadExecutableManifest(
-              options.postHogManifestPath ?? postHogManifestPath,
-            ),
-            signal: abortController.signal,
-          });
+        : command.kind === "bing-call"
+          ? await executeBingCall({
+              command,
+              manifest: await loadExecutableManifest(options.bingManifestPath ?? bingManifestPath),
+              signal: abortController.signal,
+            })
+          : command.kind === "google-ads-call"
+            ? await executeGoogleAdsCall({
+                command,
+                manifest: await loadExecutableManifest(
+                  options.googleAdsManifestPath ?? googleAdsManifestPath,
+                ),
+                signal: abortController.signal,
+              })
+            : command.kind === "gsc-call"
+              ? await executeGscCall({
+                  command,
+                  manifest: await loadExecutableManifest(
+                    options.gscManifestPath ?? gscManifestPath,
+                  ),
+                  signal: abortController.signal,
+                })
+              : await executePostHogCall({
+                  command,
+                  manifest: await loadExecutableManifest(
+                    options.postHogManifestPath ?? postHogManifestPath,
+                  ),
+                  signal: abortController.signal,
+                });
     await emitter.writeEnvelope(result.envelope, result.secrets);
     process.exitCode = abortController.signal.aborted ? 130 : result.exitCode;
   } catch (error) {
@@ -235,11 +317,17 @@ export async function main(
 }
 
 async function loadDiscoveryManifests(options: {
+  bingManifestPath?: string;
   manifestPath?: string;
+  googleAdsManifestPath?: string;
+  gscManifestPath?: string;
   postHogManifestPath?: string;
 }) {
   return await Promise.all([
+    loadExecutableManifest(options.bingManifestPath ?? bingManifestPath),
     loadExecutableManifest(options.manifestPath ?? dataForSeoManifestPath),
+    loadExecutableManifest(options.googleAdsManifestPath ?? googleAdsManifestPath),
+    loadExecutableManifest(options.gscManifestPath ?? gscManifestPath),
     loadExecutableManifest(options.postHogManifestPath ?? postHogManifestPath),
   ]);
 }

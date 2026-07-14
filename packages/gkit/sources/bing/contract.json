@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "provider": "bing",
+  "operations": [
+    { "path": "/GetUserSites", "method": "get", "operationId": "GetUserSites" },
+    { "path": "/GetRankAndTrafficStats", "method": "get", "operationId": "GetRankAndTrafficStats" },
+    { "path": "/GetQueryStats", "method": "get", "operationId": "GetQueryStats" },
+    { "path": "/GetPageStats", "method": "get", "operationId": "GetPageStats" },
+    { "path": "/GetQueryTrafficStats", "method": "get", "operationId": "GetQueryTrafficStats" },
+    { "path": "/GetPageQueryStats", "method": "get", "operationId": "GetPageQueryStats" },
+    { "path": "/GetQueryPageStats", "method": "get", "operationId": "GetQueryPageStats" },
+    {
+      "path": "/GetQueryPageDetailStats",
+      "method": "get",
+      "operationId": "GetQueryPageDetailStats"
+    },
+    { "path": "/GetCrawlStats", "method": "get", "operationId": "GetCrawlStats" },
+    { "path": "/GetCrawlIssues", "method": "get", "operationId": "GetCrawlIssues" },
+    { "path": "/GetCrawlSettings", "method": "get", "operationId": "GetCrawlSettings" },
+    { "path": "/GetLinkCounts", "method": "get", "operationId": "GetLinkCounts" },
+    { "path": "/GetUrlLinks", "method": "get", "operationId": "GetUrlLinks" },
+    { "path": "/GetFeeds", "method": "get", "operationId": "GetFeeds" },
+    { "path": "/GetFeedDetails", "method": "get", "operationId": "GetFeedDetails" },
+    { "path": "/GetUrlInfo", "method": "get", "operationId": "GetUrlInfo" },
+    { "path": "/GetUrlTrafficInfo", "method": "get", "operationId": "GetUrlTrafficInfo" }
+  ]
+}

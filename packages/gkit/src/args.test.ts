@@ -86,6 +86,79 @@ describe("gkit argv parser", () => {
     ).toThrow("Unknown flag");
   });
 
+  it("accepts the reviewed Google Ads call without spend or manager flags", () => {
+    expect(
+      parseArgs([
+        "--profile",
+        "openclaw-web",
+        "google-ads",
+        "api",
+        "call",
+        "--operation-id",
+        "google-ads.query.gaql",
+        "--input",
+        "@gaql.json",
+        "--out",
+        "pages.json",
+        "--dry-run",
+      ]),
+    ).toEqual({
+      kind: "google-ads-call",
+      profileFlag: "openclaw-web",
+      operationId: "google-ads.query.gaql",
+      input: "@gaql.json",
+      out: "pages.json",
+      force: false,
+      dryRun: true,
+    });
+    expect(() =>
+      parseArgs([
+        "google-ads",
+        "api",
+        "call",
+        "--operation-id",
+        "google-ads.query.gaql",
+        "--input",
+        "{}",
+        "--login-customer-id",
+        "0987654321",
+      ]),
+    ).toThrow("Unknown flag");
+  });
+
+  it.each([
+    ["bing", "bing.sites.list", "bing-call"],
+    ["gsc", "gsc.properties.list", "gsc-call"],
+  ] as const)(
+    "accepts the read-only %s call without spend flags",
+    (provider, operationId, kind) => {
+      expect(
+        parseArgs([
+          "--profile",
+          "app-a",
+          provider,
+          "api",
+          "call",
+          "--operation-id",
+          operationId,
+          "--input",
+          "{}",
+          "--out",
+          "result.json",
+          "--dry-run",
+        ]),
+      ).toEqual({
+        kind,
+        profileFlag: "app-a",
+        operationId,
+        input: "{}",
+        out: "result.json",
+        force: false,
+        dryRun: true,
+      });
+    },
+  );
+
   it("rejects unknown or duplicate flags before execution", () => {
     expect(() =>
       parseArgs([

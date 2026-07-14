@@ -15,6 +15,9 @@ export type ParsedCommand =
       providerRequestId: string | null;
     }
   | { kind: "dataforseo-doctor"; profileFlag: string | null }
+  | { kind: "bing-doctor"; profileFlag: string | null }
+  | { kind: "google-ads-doctor"; profileFlag: string | null }
+  | { kind: "gsc-doctor"; profileFlag: string | null }
   | { kind: "posthog-doctor"; profileFlag: string | null }
   | {
       kind: "dataforseo-call";
@@ -23,6 +26,33 @@ export type ParsedCommand =
       input: string;
       allowSpend: boolean;
       maxSpendUsd: string | null;
+      out: string | null;
+      force: boolean;
+      dryRun: boolean;
+    }
+  | {
+      kind: "bing-call";
+      profileFlag: string | null;
+      operationId: string;
+      input: string;
+      out: string | null;
+      force: boolean;
+      dryRun: boolean;
+    }
+  | {
+      kind: "google-ads-call";
+      profileFlag: string | null;
+      operationId: string;
+      input: string;
+      out: string | null;
+      force: boolean;
+      dryRun: boolean;
+    }
+  | {
+      kind: "gsc-call";
+      profileFlag: string | null;
+      operationId: string;
+      input: string;
       out: string | null;
       force: boolean;
       dryRun: boolean;
@@ -179,13 +209,28 @@ export function parseArgs(argv: string[]): ParsedCommand {
     };
   }
 
-  if (rest[0] !== "dataforseo" && rest[0] !== "posthog") {
+  if (
+    rest[0] !== "bing" &&
+    rest[0] !== "dataforseo" &&
+    rest[0] !== "google-ads" &&
+    rest[0] !== "gsc" &&
+    rest[0] !== "posthog"
+  ) {
     invalid(`Unknown command: ${rest[0]}`);
   }
   const provider = rest[0];
   if (rest[1] === "doctor" && rest.length === 2) {
     return {
-      kind: provider === "dataforseo" ? "dataforseo-doctor" : "posthog-doctor",
+      kind:
+        provider === "dataforseo"
+          ? "dataforseo-doctor"
+          : provider === "bing"
+            ? "bing-doctor"
+            : provider === "google-ads"
+              ? "google-ads-doctor"
+              : provider === "gsc"
+                ? "gsc-doctor"
+                : "posthog-doctor",
       profileFlag,
     };
   }
@@ -195,10 +240,17 @@ export function parseArgs(argv: string[]): ParsedCommand {
 
   const booleanNames = new Set(["--allow-spend", "--force", "--dry-run"]);
   const flags = parseFlags(rest.slice(3), booleanNames);
-  if (provider === "posthog") {
+  if (provider !== "dataforseo") {
     requireOnly(flags, ["--operation-id", "--input", "--out", "--force", "--dry-run"]);
     return {
-      kind: "posthog-call",
+      kind:
+        provider === "posthog"
+          ? "posthog-call"
+          : provider === "google-ads"
+            ? "google-ads-call"
+            : provider === "gsc"
+              ? "gsc-call"
+              : "bing-call",
       profileFlag,
       operationId: requiredString(flags, "--operation-id"),
       input: requiredString(flags, "--input"),
@@ -244,10 +296,25 @@ export function renderHelp(): string {
     "  gkit --profile <app> dataforseo api call --operation-id <id> --input @request.json --allow-spend --max-spend-usd <decimal> --out <path>",
     "  Default artifact behavior is no-replace; add --force only after reviewing the destination.",
     "",
+    "Bing Webmaster:",
+    "  gkit --profile <app> bing doctor",
+    "  gkit --profile <app> bing api call --operation-id <id> --input @request.json --out <path> --dry-run",
+    "  gkit --profile <app> bing api call --operation-id <id> --input @request.json --out <path>",
+    "",
     "PostHog:",
     "  gkit --profile <app> posthog doctor",
     "  gkit --profile <app> posthog api call --operation-id posthog.query.run --input @request.json --out <path> --dry-run",
     "  gkit --profile <app> posthog api call --operation-id posthog.query.run --input @request.json --out <path>",
+    "",
+    "Google Ads:",
+    "  gkit --profile <app> google-ads doctor",
+    "  gkit --profile <app> google-ads api call --operation-id <id> --input @request.json --out <path> --dry-run",
+    "  gkit --profile <app> google-ads api call --operation-id <id> --input @request.json --out <path>",
+    "",
+    "Google Search Console:",
+    "  gkit --profile <app> gsc doctor",
+    "  gkit --profile <app> gsc api call --operation-id <id> --input @request.json --out <path> --dry-run",
+    "  gkit --profile <app> gsc api call --operation-id <id> --input @request.json --out <path>",
     "",
     "Spend ledger:",
     "  gkit ledger",

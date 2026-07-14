@@ -205,6 +205,96 @@ describe("profile loading and secret resolution", () => {
     }
   });
 
+  test("accepts only single-account Google Ads config and service-account env references", async () => {
+    const input = profileDocument();
+    input.providers = {
+      ...input.providers,
+      "google-ads": {
+        config: { customerId: "1234567890" },
+        policy: {},
+        secrets: {
+          developerToken: "env:APP_A_GOOGLE_ADS_DEVELOPER_TOKEN",
+          serviceAccountFile: "env:APP_A_GOOGLE_ADS_SERVICE_ACCOUNT_FILE",
+        },
+      },
+    } as typeof input.providers;
+
+    const profile = await loadDocument(input);
+    expect(profile.providers["google-ads"]?.config).toEqual({ customerId: "1234567890" });
+    expect(
+      resolveProviderSecrets(profile, "google-ads", {
+        APP_A_GOOGLE_ADS_DEVELOPER_TOKEN: "developer-token",
+        APP_A_GOOGLE_ADS_SERVICE_ACCOUNT_FILE: "credentials/google-ads.json",
+      }),
+    ).toEqual({
+      developerToken: "developer-token",
+      serviceAccountFile: "credentials/google-ads.json",
+    });
+
+    for (const config of [
+      { customerId: "bad" },
+      { customerId: "1234567890", loginCustomerId: "0987654321" },
+    ]) {
+      const invalid = profileDocument();
+      invalid.providers = {
+        ...invalid.providers,
+        "google-ads": {
+          config,
+          policy: {},
+          secrets: {
+            developerToken: "env:APP_A_GOOGLE_ADS_DEVELOPER_TOKEN",
+            serviceAccountFile: "env:APP_A_GOOGLE_ADS_SERVICE_ACCOUNT_FILE",
+          },
+        },
+      } as typeof invalid.providers;
+      await expect(loadDocument(invalid)).rejects.toMatchObject({ reason: "invalid_profile" });
+    }
+  });
+
+  test("accepts only strict Bing and GSC profile boundaries", async () => {
+    const input = profileDocument();
+    input.providers = {
+      ...input.providers,
+      bing: {
+        config: { siteUrl: "https://example.com/" },
+        policy: {},
+        secrets: { apiKey: "env:APP_A_BING_API_KEY" },
+      },
+      gsc: {
+        config: { siteUrl: "sc-domain:example.com" },
+        policy: {},
+        secrets: { serviceAccountFile: "env:APP_A_GSC_SERVICE_ACCOUNT_FILE" },
+      },
+    } as typeof input.providers;
+    const profile = await loadDocument(input);
+    expect(profile.providers.bing?.config).toEqual({ siteUrl: "https://example.com/" });
+    expect(profile.providers.gsc?.config).toEqual({ siteUrl: "sc-domain:example.com" });
+    expect(resolveProviderSecrets(profile, "bing", { APP_A_BING_API_KEY: "secret" })).toEqual({
+      apiKey: "secret",
+    });
+    expect(
+      resolveProviderSecrets(profile, "gsc", {
+        APP_A_GSC_SERVICE_ACCOUNT_FILE: "credentials/gsc.json",
+      }),
+    ).toEqual({ serviceAccountFile: "credentials/gsc.json" });
+
+    for (const [provider, config, secrets] of [
+      ["bing", { siteUrl: "file:///tmp/site" }, { apiKey: "env:APP_A_BING_API_KEY" }],
+      [
+        "gsc",
+        { siteUrl: "sc-domain:example.com", origin: "https://attacker.invalid" },
+        { serviceAccountFile: "env:APP_A_GSC_SERVICE_ACCOUNT_FILE" },
+      ],
+    ] as const) {
+      const invalid = profileDocument();
+      invalid.providers = {
+        ...invalid.providers,
+        [provider]: { config, policy: {}, secrets },
+      } as typeof invalid.providers;
+      await expect(loadDocument(invalid)).rejects.toMatchObject({ reason: "invalid_profile" });
+    }
+  });
+
   test("reports a missing referenced env var without reading arbitrary secrets", async () => {
     const profile = await loadDocument(profileDocument());
 

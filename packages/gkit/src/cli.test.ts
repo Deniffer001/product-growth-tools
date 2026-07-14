@@ -28,14 +28,25 @@ describe("gkit process contract", () => {
     expect(Buffer.byteLength(result.stdout)).toBeLessThan(2_000);
     expect(result.stdout).toContain("gkit --profile <app> dataforseo api call");
     expect(result.stdout).toContain("gkit --profile <app> posthog api call");
+    expect(result.stdout).toContain("gkit --profile <app> google-ads api call");
+    expect(result.stdout).toContain("gkit --profile <app> bing api call");
+    expect(result.stdout).toContain("gkit --profile <app> gsc api call");
     expect(result.stdout).toContain("gkit describe --id <capability-id>");
     expect(result.stdout).toContain("argc dotted commands and @run are intentionally not exposed");
     expect(result.stdout).not.toContain("gkit dataforseo.api.call");
+    expect(result.stdout).not.toContain("gkit google-ads.api.call");
+    expect(result.stdout).not.toContain("gkit bing.api.call");
+    expect(result.stdout).not.toContain("gkit gsc.api.call");
 
     const selected = await runCli(["--schema", "posthog"], fixture.env);
     expect(selected.exitCode).toBe(0);
     expect(selected.stdout).toContain("posthog:");
     expect(selected.stdout).not.toContain("dataforseo:");
+
+    const googleAds = await runCli(["--schema", "google-ads"], fixture.env);
+    expect(googleAds.exitCode).toBe(0);
+    expect(googleAds.stdout).toContain('"google-ads":');
+    expect(googleAds.stdout).not.toContain("posthog:");
   });
 
   it("keeps describe offline and profile-free", async () => {
@@ -58,6 +69,89 @@ describe("gkit process contract", () => {
       provider: "posthog",
       effects: ["read"],
     });
+
+    const googleAds = await runCli(["describe", "--id", "google-ads.query.gaql"], fixture.env);
+    expect(googleAds.exitCode).toBe(0);
+    expect(JSON.parse(googleAds.stdout)).toMatchObject({
+      id: "google-ads.query.gaql",
+      provider: "google-ads",
+      effects: ["read"],
+    });
+
+    const bing = await runCli(["describe", "--id", "bing.sites.list"], fixture.env);
+    expect(bing.exitCode).toBe(0);
+    expect(JSON.parse(bing.stdout)).toMatchObject({
+      id: "bing.sites.list",
+      provider: "bing",
+      effects: ["read"],
+    });
+
+    const gsc = await runCli(["describe", "--id", "gsc.properties.list"], fixture.env);
+    expect(gsc.exitCode).toBe(0);
+    expect(JSON.parse(gsc.stdout)).toMatchObject({
+      id: "gsc.properties.list",
+      provider: "gsc",
+      effects: ["read"],
+    });
+  });
+
+  it("dry-runs Bing and GSC without resolving credentials or creating artifacts", async () => {
+    const fixture = await createCliFixture();
+    const bing = await runCli(
+      [
+        "--profile",
+        "app-a",
+        "bing",
+        "api",
+        "call",
+        "--operation-id",
+        "bing.traffic.rank",
+        "--input",
+        "{}",
+        "--out",
+        fixture.outPath,
+        "--dry-run",
+      ],
+      fixture.env,
+    );
+    expect(bing.exitCode).toBe(0);
+    expect(JSON.parse(bing.stdout)).toMatchObject({
+      ok: true,
+      data: {
+        dryRun: true,
+        requestPlan: {
+          provider: "bing",
+          diagnosticUrl: expect.not.stringContaining("apikey"),
+        },
+      },
+      meta: { provider: "bing", cost: null, attemptId: null },
+    });
+
+    const gsc = await runCli(
+      [
+        "--profile",
+        "app-a",
+        "gsc",
+        "api",
+        "call",
+        "--operation-id",
+        "gsc.properties.list",
+        "--input",
+        "{}",
+        "--out",
+        fixture.outPath,
+        "--dry-run",
+      ],
+      fixture.env,
+    );
+    expect(gsc.exitCode).toBe(0);
+    expect(JSON.parse(gsc.stdout)).toMatchObject({
+      ok: true,
+      data: { dryRun: true, requestPlan: { provider: "gsc", method: "GET" } },
+      meta: { provider: "gsc", cost: null, attemptId: null },
+    });
+    expect(await pathExists(fixture.outPath)).toBe(false);
+    expect(await pathExists(fixture.ledgerPath)).toBe(false);
   });
 
   it("dry-runs and executes PostHog without touching the spend ledger", async () => {
@@ -471,6 +565,16 @@ async function createCliFixture() {
           config: { host: "https://us.posthog.com", projectId: "12345" },
           policy: {},
           secrets: { apiToken: "env:TEST_POSTHOG_TOKEN" },
+        },
+        bing: {
+          config: { siteUrl: "https://example.com/" },
+          policy: {},
+          secrets: { apiKey: "env:TEST_BING_API_KEY" },
+        },
+        gsc: {
+          config: { siteUrl: "sc-domain:example.com" },
+          policy: {},
+          secrets: { serviceAccountFile: "env:TEST_GSC_SERVICE_ACCOUNT_FILE" },
         },
       },
     }),

@@ -1,0 +1,600 @@
+{
+  "version": 1,
+  "provider": "bing",
+  "revision": "2026-07-14.slice4.bing.1",
+  "source": {
+    "url": "https://learn.microsoft.com/en-us/bingwebmaster/api-protocols",
+    "revision": "2022-10-13+legacy-contract-2026-07-14",
+    "checksum": "sha256:eb54e000e233c31bf17879588eeb82d74b1e3df86f3fcbbfa67de58e0cc559c7"
+  },
+  "reviewedAt": "2026-07-14T06:00:00.000Z",
+  "capabilities": [
+    {
+      "id": "bing.crawl.issues",
+      "provider": "bing",
+      "revision": "1",
+      "adapterKey": "crawl.issues",
+      "title": "Read Bing crawl issues",
+      "description": "Read current crawl issue URLs for one site.",
+      "effects": [
+        "read"
+      ],
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "siteUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        }
+      },
+      "examples": [
+        {
+          "input": {},
+          "command": "gkit --profile <app> bing api call --operation-id bing.crawl.issues --input '{}' --out bing-crawl-issues.json --dry-run"
+        }
+      ]
+    },
+    {
+      "id": "bing.crawl.settings",
+      "provider": "bing",
+      "revision": "1",
+      "adapterKey": "crawl.settings",
+      "title": "Read Bing crawl settings",
+      "description": "Read crawl settings for one site without exposing mutation methods.",
+      "effects": [
+        "read"
+      ],
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "siteUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        }
+      },
+      "examples": [
+        {
+          "input": {},
+          "command": "gkit --profile <app> bing api call --operation-id bing.crawl.settings --input '{}' --out bing-crawl-settings.json --dry-run"
+        }
+      ]
+    },
+    {
+      "id": "bing.crawl.stats",
+      "provider": "bing",
+      "revision": "1",
+      "adapterKey": "crawl.stats",
+      "title": "Read Bing crawl statistics",
+      "description": "Read crawl statistics for one site.",
+      "effects": [
+        "read"
+      ],
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "siteUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        }
+      },
+      "examples": [
+        {
+          "input": {},
+          "command": "gkit --profile <app> bing api call --operation-id bing.crawl.stats --input '{}' --out bing-crawl-stats.json --dry-run"
+        }
+      ]
+    },
+    {
+      "id": "bing.links.pages",
+      "provider": "bing",
+      "revision": "1",
+      "adapterKey": "links.pages",
+      "title": "Read Bing inbound link counts",
+      "description": "Read one provider page of URLs and inbound link counts.",
+      "effects": [
+        "read"
+      ],
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "siteUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100000
+          }
+        }
+      },
+      "examples": [
+        {
+          "input": {
+            "page": 0
+          },
+          "command": "gkit --profile <app> bing api call --operation-id bing.links.pages --input '{\"page\":0}' --out bing-links.json --dry-run"
+        }
+      ]
+    },
+    {
+      "id": "bing.links.url",
+      "provider": "bing",
+      "revision": "1",
+      "adapterKey": "links.url",
+      "title": "Read Bing inbound links for one URL",
+      "description": "Read one provider page of inbound link details for an exact URL.",
+      "effects": [
+        "read"
+      ],
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "link"
+        ],
+        "properties": {
+          "siteUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "link": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100000
+          }
+        }
+      },
+      "examples": [
+        {
+          "input": {
+            "link": "https://example.com/docs",
+            "page": 0
+          },
+          "command": "gkit --profile <app> bing api call --operation-id bing.links.url --input @request.json --out bing-url-links.json --dry-run"
+        }
+      ]
+    },
+    {
+      "id": "bing.sitemaps.get",
+      "provider": "bing",
+      "revision": "1",
+      "adapterKey": "sitemaps.get",
+      "title": "Read one Bing feed",
+      "description": "Read details for one exact sitemap or feed URL.",
+      "effects": [
+        "read"
+      ],
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "feedUrl"
+        ],
+        "properties": {
+          "siteUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "feedUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        }
+      },
+      "examples": [
+        {
+          "input": {
+            "feedUrl": "https://example.com/sitemap.xml"
+          },
+          "command": "gkit --profile <app> bing api call --operation-id bing.sitemaps.get --input @request.json --out bing-sitemap.json --dry-run"
+        }
+      ]
+    },
+    {
+      "id": "bing.sitemaps.list",
+      "provider": "bing",
+      "revision": "1",
+      "adapterKey": "sitemaps.list",
+      "title": "List Bing feeds and sitemaps",
+      "description": "List top-level feeds or sitemaps for one site.",
+      "effects": [
+        "read"
+      ],
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "siteUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        }
+      },
+      "examples": [
+        {
+          "input": {},
+          "command": "gkit --profile <app> bing api call --operation-id bing.sitemaps.list --input '{}' --out bing-sitemaps.json --dry-run"
+        }
+      ]
+    },
+    {
+      "id": "bing.sites.list",
+      "provider": "bing",
+      "revision": "1",
+      "adapterKey": "sites.list",
+      "title": "List accessible Bing Webmaster sites",
+      "description": "List every site accessible to the profile-bound Bing Webmaster API key.",
+      "effects": [
+        "read"
+      ],
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      },
+      "examples": [
+        {
+          "input": {},
+          "command": "gkit --profile <app> bing api call --operation-id bing.sites.list --input '{}' --out bing-sites.json --dry-run"
+        }
+      ]
+    },
+    {
+      "id": "bing.traffic.page-queries",
+      "provider": "bing",
+      "revision": "1",
+      "adapterKey": "traffic.page-queries",
+      "title": "Read Bing queries for one page",
+      "description": "Read query statistics for one exact page URL.",
+      "effects": [
+        "read"
+      ],
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "pageUrl"
+        ],
+        "properties": {
+          "siteUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "pageUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        }
+      },
+      "examples": [
+        {
+          "input": {
+            "pageUrl": "https://example.com/docs"
+          },
+          "command": "gkit --profile <app> bing api call --operation-id bing.traffic.page-queries --input @request.json --out bing-page-queries.json --dry-run"
+        }
+      ]
+    },
+    {
+      "id": "bing.traffic.pages",
+      "provider": "bing",
+      "revision": "1",
+      "adapterKey": "traffic.pages",
+      "title": "Read top Bing page statistics",
+      "description": "Read top page traffic statistics for one site.",
+      "effects": [
+        "read"
+      ],
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "siteUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        }
+      },
+      "examples": [
+        {
+          "input": {},
+          "command": "gkit --profile <app> bing api call --operation-id bing.traffic.pages --input '{}' --out bing-pages.json --dry-run"
+        }
+      ]
+    },
+    {
+      "id": "bing.traffic.queries",
+      "provider": "bing",
+      "revision": "1",
+      "adapterKey": "traffic.queries",
+      "title": "Read top Bing query statistics",
+      "description": "Read top query traffic statistics for one site.",
+      "effects": [
+        "read"
+      ],
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "siteUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        }
+      },
+      "examples": [
+        {
+          "input": {},
+          "command": "gkit --profile <app> bing api call --operation-id bing.traffic.queries --input '{}' --out bing-queries.json --dry-run"
+        }
+      ]
+    },
+    {
+      "id": "bing.traffic.query",
+      "provider": "bing",
+      "revision": "1",
+      "adapterKey": "traffic.query",
+      "title": "Read one Bing query's traffic",
+      "description": "Read daily traffic statistics for one exact query.",
+      "effects": [
+        "read"
+      ],
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "query"
+        ],
+        "properties": {
+          "siteUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "query": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          }
+        }
+      },
+      "examples": [
+        {
+          "input": {
+            "query": "website cloner"
+          },
+          "command": "gkit --profile <app> bing api call --operation-id bing.traffic.query --input @request.json --out bing-query.json --dry-run"
+        }
+      ]
+    },
+    {
+      "id": "bing.traffic.query-page",
+      "provider": "bing",
+      "revision": "1",
+      "adapterKey": "traffic.query-page",
+      "title": "Read detailed Bing query-page statistics",
+      "description": "Read detailed statistics for one exact query and page URL pair.",
+      "effects": [
+        "read"
+      ],
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "query",
+          "pageUrl"
+        ],
+        "properties": {
+          "siteUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "query": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "pageUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        }
+      },
+      "examples": [
+        {
+          "input": {
+            "query": "website cloner",
+            "pageUrl": "https://example.com/docs"
+          },
+          "command": "gkit --profile <app> bing api call --operation-id bing.traffic.query-page --input @request.json --out bing-query-page.json --dry-run"
+        }
+      ]
+    },
+    {
+      "id": "bing.traffic.query-pages",
+      "provider": "bing",
+      "revision": "1",
+      "adapterKey": "traffic.query-pages",
+      "title": "Read Bing pages for one query",
+      "description": "Read page statistics for one exact query.",
+      "effects": [
+        "read"
+      ],
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "query"
+        ],
+        "properties": {
+          "siteUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "query": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          }
+        }
+      },
+      "examples": [
+        {
+          "input": {
+            "query": "website cloner"
+          },
+          "command": "gkit --profile <app> bing api call --operation-id bing.traffic.query-pages --input @request.json --out bing-query-pages.json --dry-run"
+        }
+      ]
+    },
+    {
+      "id": "bing.traffic.rank",
+      "provider": "bing",
+      "revision": "1",
+      "adapterKey": "traffic.rank",
+      "title": "Read Bing rank and traffic statistics",
+      "description": "Read rank and traffic statistics for the profile-bound or explicitly selected site.",
+      "effects": [
+        "read"
+      ],
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "siteUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        }
+      },
+      "examples": [
+        {
+          "input": {},
+          "command": "gkit --profile <app> bing api call --operation-id bing.traffic.rank --input '{}' --out bing-rank.json --dry-run"
+        }
+      ]
+    },
+    {
+      "id": "bing.urls.info",
+      "provider": "bing",
+      "revision": "1",
+      "adapterKey": "urls.info",
+      "title": "Read Bing index information for a URL",
+      "description": "Read Bing index information for one URL or domain target.",
+      "effects": [
+        "read"
+      ],
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "url"
+        ],
+        "properties": {
+          "siteUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "url": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        }
+      },
+      "examples": [
+        {
+          "input": {
+            "url": "https://example.com/docs"
+          },
+          "command": "gkit --profile <app> bing api call --operation-id bing.urls.info --input @request.json --out bing-url-info.json --dry-run"
+        }
+      ]
+    },
+    {
+      "id": "bing.urls.traffic",
+      "provider": "bing",
+      "revision": "1",
+      "adapterKey": "urls.traffic",
+      "title": "Read Bing traffic for a URL",
+      "description": "Read Bing traffic information for one URL or domain target.",
+      "effects": [
+        "read"
+      ],
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "url"
+        ],
+        "properties": {
+          "siteUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "url": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        }
+      },
+      "examples": [
+        {
+          "input": {
+            "url": "https://example.com/docs"
+          },
+          "command": "gkit --profile <app> bing api call --operation-id bing.urls.traffic --input @request.json --out bing-url-traffic.json --dry-run"
+        }
+      ]
+    }
+  ]
+}
