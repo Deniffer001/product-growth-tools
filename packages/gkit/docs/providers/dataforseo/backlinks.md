@@ -5,13 +5,140 @@ description: >
   Generated, searchable documentation for the reviewed DataForSEO operations
   that gkit is allowed to route and execute.
 provider: dataforseo
-manifestRevision: 2026-07-14.slice2.1
+manifestRevision: 2026-07-15.llm-mentions.2
 ---
 
 # DataForSEO reviewed executable capabilities
 
 This file is byte-stably rendered from `generated/dataforseo/manifest.json`.
 The committed manifest remains the only runtime, validation, effect, cost, and discovery source.
+
+## dataforseo.ai_optimization.llm_mentions.search.live
+
+Search reviewed ChatGPT or Google AI mention records for one domain in United States English results.
+
+- Provider: `dataforseo`
+- Adapter key: `ai_optimization.llm_mentions.search.live`
+- Capability revision: `1`
+- Effects: `read`, `spend`
+- Cost-policy revision: `dataforseo-ai-optimization-llm-mentions-pricing-2026-07-15-v2`
+- Conservative cost model: `150000` micros per request
+
+### Input schema
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "target",
+    "location_code",
+    "language_code",
+    "platform",
+    "limit"
+  ],
+  "properties": {
+    "target": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "domain"
+        ],
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 63,
+            "pattern": "^(?!https?://)(?!www\\.)(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\\.)+[A-Za-z]{2,63}$"
+          },
+          "search_filter": {
+            "type": "string",
+            "enum": [
+              "include"
+            ]
+          },
+          "search_scope": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 5,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "any",
+                "question",
+                "answer",
+                "brand_entities",
+                "fan_out_queries"
+              ]
+            }
+          },
+          "include_subdomains": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "location_code": {
+      "type": "integer",
+      "const": 2840
+    },
+    "language_code": {
+      "type": "string",
+      "const": "en"
+    },
+    "platform": {
+      "type": "string",
+      "enum": [
+        "chat_gpt",
+        "google"
+      ]
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+    },
+    "order_by": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "ai_search_volume,asc",
+          "ai_search_volume,desc",
+          "last_response_at,asc",
+          "last_response_at,desc"
+        ]
+      }
+    },
+    "tag": {
+      "type": "string",
+      "maxLength": 255
+    }
+  }
+}
+```
+
+### Invocation
+
+#### Safe preflight
+
+```bash
+gkit --profile clonesite.ai dataforseo api call --operation-id dataforseo.ai_optimization.llm_mentions.search.live --input @req.json --allow-spend --max-spend-usd 0.150000 --out llm-mentions.json --dry-run
+```
+
+#### Live call after reviewing the dry-run
+
+```bash
+gkit --profile clonesite.ai dataforseo api call --operation-id dataforseo.ai_optimization.llm_mentions.search.live --input @req.json --allow-spend --max-spend-usd 0.150000 --out llm-mentions.json
+```
 
 ## dataforseo.backlinks.bulk_ranks.live
 

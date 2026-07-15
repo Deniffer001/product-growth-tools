@@ -1,7 +1,7 @@
 {
   "version": 1,
   "provider": "dataforseo",
-  "revision": "2026-07-14.slice2.1",
+  "revision": "2026-07-15.llm-mentions.2",
   "source": {
     "url": "https://github.com/dataforseo/OpenApiDocumentation/blob/2d905ad34863444e2f1eb4272f8c9569032e4628/openapi_specification.yaml",
     "revision": "2d905ad34863444e2f1eb4272f8c9569032e4628",
@@ -405,8 +405,9 @@
       "tags": [
         "AiOptimization"
       ],
-      "exposure": "inventory",
-      "reason": "The reviewed minimum request price is USD 0.10, above the current profile hard cap of USD 0.03 per call."
+      "exposure": "executable",
+      "reason": "Reviewed adapter, input, effect, and cost contracts are committed.",
+      "capabilityId": "dataforseo.ai_optimization.llm_mentions.search.live"
     },
     {
       "path": "/v3/ai_optimization/llm_mentions/top_domains/live",

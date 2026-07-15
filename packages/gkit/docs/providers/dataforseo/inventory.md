@@ -4,12 +4,12 @@ title: DataForSEO operation inventory
 description: >
   Generated inventory of pinned DataForSEO operations and their gkit exposure decisions.
 provider: dataforseo
-inventoryRevision: 2026-07-14.slice2.1
+inventoryRevision: 2026-07-15.llm-mentions.2
 ---
 
 # DataForSEO operation inventory
 
-This pinned inventory contains 554 operations: 4 executable and 550 inventory-only.
+This pinned inventory contains 554 operations: 5 executable and 549 inventory-only.
 Inventory-only operations cannot be routed by `gkit dataforseo api call`.
 
 | Method | Path | Operation ID | Exposure | Decision |
@@ -53,7 +53,7 @@ Inventory-only operations cannot be routed by `gkit dataforseo api call`.
 | `GET` | `/v3/ai_optimization/llm_mentions/available_filters` | `LlmMentionsAvailableFilters` | `inventory` | Not reviewed for executable gkit exposure. |
 | `POST` | `/v3/ai_optimization/llm_mentions/cross_aggregated_metrics/live` | `LlmMentionsCrossAggregatedMetricsLive` | `inventory` | Not reviewed for executable gkit exposure. |
 | `GET` | `/v3/ai_optimization/llm_mentions/locations_and_languages` | `LlmMentionsLocationsAndLanguages` | `inventory` | Not reviewed for executable gkit exposure. |
-| `POST` | `/v3/ai_optimization/llm_mentions/search/live` | `LlmMentionsSearchLive` | `inventory` | The reviewed minimum request price is USD 0.10, above the current profile hard cap of USD 0.03 per call. |
+| `POST` | `/v3/ai_optimization/llm_mentions/search/live` | `LlmMentionsSearchLive` | `executable` | Reviewed adapter, input, effect, and cost contracts are committed.; capability: `dataforseo.ai_optimization.llm_mentions.search.live` |
 | `POST` | `/v3/ai_optimization/llm_mentions/top_domains/live` | `LlmMentionsTopDomainsLive` | `inventory` | Not reviewed for executable gkit exposure. |
 | `POST` | `/v3/ai_optimization/llm_mentions/top_pages/live` | `LlmMentionsTopPagesLive` | `inventory` | Not reviewed for executable gkit exposure. |
 | `POST` | `/v3/ai_optimization/perplexity/llm_responses/live` | `PerplexityLlmResponsesLive` | `inventory` | Not reviewed for executable gkit exposure. |

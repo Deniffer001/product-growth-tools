@@ -23,6 +23,7 @@ describe("DataForSEO artifact generator", () => {
     };
 
     expect(manifest.capabilities.map((record) => record.id)).toEqual([
+      "dataforseo.ai_optimization.llm_mentions.search.live",
       "dataforseo.backlinks.bulk_ranks.live",
       "dataforseo.backlinks.referring_domains.live",
       "dataforseo.backlinks.summary.live",
@@ -31,12 +32,9 @@ describe("DataForSEO artifact generator", () => {
     expect(inventory.operations).toContainEqual(
       expect.objectContaining({
         operationId: "LlmMentionsSearchLive",
-        exposure: "inventory",
-        reason: expect.stringContaining("0.03"),
+        exposure: "executable",
+        capabilityId: "dataforseo.ai_optimization.llm_mentions.search.live",
       }),
-    );
-    expect(first.inventoryDocs).toContain(
-      "`LlmMentionsSearchLive` | `inventory` | The reviewed minimum request price is USD 0.10",
     );
   });
 });

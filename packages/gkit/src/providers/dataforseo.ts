@@ -47,10 +47,26 @@ export type DataForSeoSerpInput = {
   tag?: string;
 };
 
+export type DataForSeoLlmMentionsSearchInput = {
+  target: Array<{
+    domain: string;
+    search_filter?: "include";
+    search_scope?: Array<"any" | "question" | "answer" | "brand_entities" | "fan_out_queries">;
+    include_subdomains?: boolean;
+  }>;
+  location_code: 2840;
+  language_code: "en";
+  platform: "chat_gpt" | "google";
+  limit: number;
+  order_by?: string[];
+  tag?: string;
+};
+
 export type DataForSeoAdapterKey =
   | "backlinks.bulk_ranks.live"
   | "backlinks.referring_domains.live"
   | "backlinks.summary.live"
+  | "ai_optimization.llm_mentions.search.live"
   | "serp.google.organic.live.advanced";
 
 export type DataForSeoDispatchSuccess = {
@@ -261,6 +277,44 @@ function validSerpItemsCount(result: JsonRecord | null, input: DataForSeoSerpInp
     : null;
 }
 
+function validLlmMentionsItemsCount(
+  result: JsonRecord | null,
+  input: DataForSeoLlmMentionsSearchInput,
+): number | null {
+  if (!result) return null;
+  const itemsCount = asNumber(result.items_count);
+  const totalCount = asNumber(result.total_count);
+  const items = result.items;
+  if (
+    itemsCount === null ||
+    !Number.isSafeInteger(itemsCount) ||
+    itemsCount < 0 ||
+    itemsCount > input.limit ||
+    totalCount === null ||
+    !Number.isSafeInteger(totalCount) ||
+    totalCount < itemsCount
+  ) {
+    return null;
+  }
+  if (itemsCount === 0) {
+    return items === null || (Array.isArray(items) && items.length === 0) ? 0 : null;
+  }
+  return Array.isArray(items) &&
+    items.length === itemsCount &&
+    items.every((item) => {
+      const record = asRecord(item);
+      return (
+        record !== null &&
+        asString(record.platform) === input.platform &&
+        asNumber(record.location_code) === input.location_code &&
+        asString(record.language_code) === input.language_code &&
+        Boolean(asString(record.question))
+      );
+    })
+    ? itemsCount
+    : null;
+}
+
 type AdapterDefinition = {
   endpoint: string;
   terminalStatusContract: string;
@@ -269,6 +323,13 @@ type AdapterDefinition = {
 };
 
 const adapterDefinitions: Record<DataForSeoAdapterKey, AdapterDefinition> = {
+  "ai_optimization.llm_mentions.search.live": {
+    endpoint: "/v3/ai_optimization/llm_mentions/search/live",
+    terminalStatusContract: "llm_mentions_search_terminal_status_unconfirmed",
+    resultContract: "llm_mentions_search_result_invalid",
+    validateResult: (result, input) =>
+      validLlmMentionsItemsCount(result, input as DataForSeoLlmMentionsSearchInput),
+  },
   "backlinks.bulk_ranks.live": {
     endpoint: "/v3/backlinks/bulk_ranks/live",
     terminalStatusContract: "bulk_ranks_terminal_status_unconfirmed",

@@ -189,9 +189,13 @@ describe("DataForSEO execution pipeline", () => {
   it("routes from the selected manifest adapter key and rejects an unavailable key before secrets", async () => {
     const fixture = await createFixture();
     const document = JSON.parse(JSON.stringify(fixture.manifest.document)) as {
-      capabilities: Array<{ adapterKey: string }>;
+      capabilities: Array<{ id: string; adapterKey: string }>;
     };
-    document.capabilities[0]!.adapterKey = "backlinks.unreviewed.live";
+    const selectedCapability = document.capabilities.find(
+      (capability) => capability.id === "dataforseo.backlinks.bulk_ranks.live",
+    );
+    expect(selectedCapability).toBeDefined();
+    selectedCapability!.adapterKey = "backlinks.unreviewed.live";
     const manifest = compileExecutableManifest(document);
     const resolveSecrets = vi.fn(resolveProviderSecrets);
     const loadAdapter = vi.fn(async () => adapter(successResult(24_072)));

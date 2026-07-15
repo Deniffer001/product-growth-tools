@@ -9,6 +9,32 @@ import {
 describe("DataForSEO reviewed adapter routing", () => {
   it.each([
     {
+      adapterKey: "ai_optimization.llm_mentions.search.live" as const,
+      endpoint: "/v3/ai_optimization/llm_mentions/search/live",
+      input: {
+        target: [{ domain: "clonesite.ai", search_filter: "include" as const }],
+        location_code: 2840 as const,
+        language_code: "en" as const,
+        platform: "chat_gpt" as const,
+        limit: 10,
+      },
+      cost: 0.1,
+      result: {
+        total_count: 1,
+        items_count: 1,
+        items: [
+          {
+            platform: "chat_gpt",
+            model_name: "gpt-4o-search-preview",
+            location_code: 2840,
+            language_code: "en",
+            question: "What is the best website cloning service?",
+          },
+        ],
+      },
+      itemsCount: 1,
+    },
+    {
       adapterKey: "backlinks.summary.live" as const,
       endpoint: "/v3/backlinks/summary/live",
       input: { target: "clonesite.ai" },

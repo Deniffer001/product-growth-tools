@@ -92,6 +92,7 @@ const defaultDependencies: ExecuteDependencies = {
 };
 
 const dataForSeoAdapterKeys = new Set<DataForSeoAdapterKey>([
+  "ai_optimization.llm_mentions.search.live",
   "backlinks.bulk_ranks.live",
   "backlinks.referring_domains.live",
   "backlinks.summary.live",
