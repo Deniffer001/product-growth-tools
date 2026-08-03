@@ -1,21 +1,38 @@
 # gkit
 
-Private, profile-bound CLI for agent-first access to growth providers. This
-repository has one CLI and one workspace package: `gkit`.
+Profile-bound CLI for agent-first access to growth providers. This repository
+has one CLI and one workspace package: `gkit`.
 
 The reviewed provider surface includes DataForSEO, PostHog, Google Ads, Google
 Search Console, and Bing Webmaster.
 
 ## Install
 
-gkit is private and is not published to npm. Install it once per machine from
-the repository checkout:
+gkit requires [Bun](https://bun.sh/) and is distributed only as a public npm
+tarball attached to GitHub Releases. It is not published to an npm registry.
+
+Install the latest stable release globally:
 
 ```bash
-bun install
-bun link --cwd packages/gkit
-
+bun add --global "gkit@https://github.com/celados/gkit/releases/latest/download/gkit.tgz"
 gkit --schema
+```
+
+Install an exact version instead:
+
+```bash
+bun add --global "gkit@https://github.com/celados/gkit/releases/download/v0.1.1/gkit-0.1.1.tgz"
+gkit --schema
+```
+
+Prereleases are available only through their exact version URLs and never
+replace the stable `latest` download.
+
+Upgrade to the newest stable release by running the latest install command
+again. To uninstall:
+
+```bash
+bun remove --global gkit
 ```
 
 ## Discover capabilities
