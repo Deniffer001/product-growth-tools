@@ -7,6 +7,11 @@ on:
     paths:
       - packages/gkit/package.json
   workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Source commit to resume (must already be on main)
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -26,6 +31,7 @@ jobs:
       - name: Checkout triggering commit and tags
         uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.source_sha || github.sha }}
           fetch-depth: 0
           fetch-tags: true
           persist-credentials: false
@@ -37,10 +43,13 @@ jobs:
 
       - name: Validate release trigger and version
         id: preflight
+        env:
+          SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
         run: |
+          git merge-base --is-ancestor "$SOURCE_SHA" origin/main
           args=(
             --event-name "${{ github.event_name }}"
-            --target-sha "${{ github.sha }}"
+            --target-sha "$SOURCE_SHA"
             --ref "${{ github.ref }}"
             --output "$GITHUB_OUTPUT"
           )
@@ -76,7 +85,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ steps.preflight.outputs.tag }}
-          TARGET_SHA: ${{ github.sha }}
+          TARGET_SHA: ${{ inputs.source_sha || github.sha }}
           TAG_EXISTS: ${{ steps.preflight.outputs.tag_exists }}
         run: |
           if [[ "$TAG_EXISTS" == "true" ]]; then
@@ -94,6 +103,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ steps.preflight.outputs.tag }}
           PRERELEASE: ${{ steps.preflight.outputs.prerelease }}
+          TARGET_SHA: ${{ inputs.source_sha || github.sha }}
         run: |
           releases=$(gh api --paginate --slurp \
             "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
@@ -107,7 +117,7 @@ jobs:
           if [[ "$release_count" == "0" ]]; then
             release_json=$(gh api --method POST "repos/$GITHUB_REPOSITORY/releases" \
               -f tag_name="$TAG" \
-              -f target_commitish="$GITHUB_SHA" \
+              -f target_commitish="$TARGET_SHA" \
               -F draft=true \
               -F prerelease="$PRERELEASE" \
               -F generate_release_notes=true \
@@ -125,6 +135,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.preflight.outputs.version }}
+          TAG: ${{ steps.preflight.outputs.tag }}
           RELEASE_DIR: ${{ runner.temp }}/gkit-release
           RELEASE_ID: ${{ steps.release.outputs.release_id }}
         run: |
@@ -135,11 +146,7 @@ jobs:
               --jq ".assets | map(select(.name == \"$name\"))")
             asset_count=$(jq length <<<"$asset_json")
             if [[ "$asset_count" == "0" ]]; then
-              encoded_name=$(jq -rn --arg name "$name" '$name | @uri')
-              gh api --method POST \
-                -H "Content-Type: application/octet-stream" \
-                "repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID/assets?name=$encoded_name" \
-                --input "$path" >/dev/null
+              gh release upload "$TAG" "$path"
               continue
             fi
             [[ "$asset_count" == "1" ]]
