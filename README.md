@@ -6,46 +6,74 @@ has one CLI and one workspace package: `gkit`.
 The reviewed provider surface includes DataForSEO, PostHog, Google Ads, Google
 Search Console, and Bing Webmaster.
 
-## Install
+## Requirements
 
-gkit requires [Bun](https://bun.sh/) and is distributed only as a public npm
-tarball attached to GitHub Releases. It is not published to an npm registry.
+gkit runs on [Bun](https://bun.sh/). Confirm that Bun is available before
+installing:
+
+```bash
+bun --version
+```
+
+gkit is distributed only as a public npm tarball attached to GitHub Releases.
+It is not published to an npm registry, so the GitHub URL is required in every
+install command.
+
+## Install
 
 Install the latest stable release globally:
 
 ```bash
 bun add --global "gkit@https://github.com/celados/gkit/releases/latest/download/gkit.tgz"
-gkit --schema
+gkit --schema gsc
 ```
+
+If the install succeeds but `gkit` is not found, run `bun pm bin --global` and
+make sure the printed directory is included in your `PATH`.
 
 Install an exact version instead:
 
 ```bash
-bun add --global "gkit@https://github.com/celados/gkit/releases/download/v0.1.1/gkit-0.1.1.tgz"
-gkit --schema
+VERSION=0.1.1
+bun add --global "gkit@https://github.com/celados/gkit/releases/download/v${VERSION}/gkit-${VERSION}.tgz"
 ```
 
 Prereleases are available only through their exact version URLs and never
 replace the stable `latest` download.
 
-Upgrade to the newest stable release by running the latest install command
-again. To uninstall:
+Because the stable URL does not change between releases, remove the installed
+copy before upgrading so Bun cannot reuse an older cached resolution:
+
+```bash
+bun remove --global gkit
+bun add --global "gkit@https://github.com/celados/gkit/releases/latest/download/gkit.tgz"
+gkit --schema gsc
+```
+
+To uninstall:
 
 ```bash
 bun remove --global gkit
 ```
 
-## Discover capabilities
+## Quick start
+
+### 1. Discover capabilities
 
 Discovery commands are offline and do not load a profile or resolve secrets:
 
 ```bash
 gkit --schema
+gkit --schema gsc
 gkit docs --provider gsc
-gkit describe --id gsc.search-analytics.query
+gkit describe --id gsc.properties.list
 ```
 
-## Configure an App profile
+Use `gkit --help` for the complete command shape. Use `describe` before calling
+an operation: it returns the reviewed input schema, effects, examples, and
+artifact behavior for that capability.
+
+### 2. Configure an App profile
 
 Provider execution must bind exactly one App profile. Create one JSON file at
 `$XDG_CONFIG_HOME/gkit/profiles/<app>.json`, or at
@@ -103,6 +131,42 @@ GKIT_PROFILE=my-app gkit posthog doctor
 `--profile` takes precedence over `GKIT_PROFILE`. One invocation never merges
 or falls back to another App profile. Compare multiple Apps by running separate
 invocations and joining their outputs outside gkit.
+
+### 3. Check the profile
+
+Run `doctor` before making a provider request. It checks the selected profile
+and its provider configuration without printing secret values:
+
+```bash
+gkit --profile my-app gsc doctor
+```
+
+### 4. Preview, then execute
+
+Start with the exact example returned by `describe` and keep `--dry-run` while
+reviewing the request:
+
+```bash
+gkit --profile my-app gsc api call \
+  --operation-id gsc.properties.list \
+  --input '{}' \
+  --out ./gsc-properties-plan.json \
+  --dry-run
+```
+
+Remove `--dry-run` only when the profile and request are correct:
+
+```bash
+gkit --profile my-app gsc api call \
+  --operation-id gsc.properties.list \
+  --input '{}' \
+  --out ./gsc-properties.json
+```
+
+Artifacts use no-replace behavior by default. Choose a new output path for a
+later run, or add `--force` only after reviewing the existing destination.
+DataForSEO operations that can spend money additionally require both
+`--allow-spend` and an explicit `--max-spend-usd` limit.
 
 ## Configure an Agent
 
