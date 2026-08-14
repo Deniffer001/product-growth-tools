@@ -1,0 +1,7 @@
+interface:
+  display_name: "Growth Workspace"
+  short_description: "Create and continue portable, evidence-backed gkit growth workspaces"
+  default_prompt: "Use $growth-workspace to enter this gkit Growth Workspace and continue its current work."
+
+policy:
+  allow_implicit_invocation: true
