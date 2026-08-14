@@ -1,0 +1,4 @@
+interface:
+  display_name: "Draft Clonesite Founder Email"
+  short_description: "Draft grounded founder outreach and replies"
+  default_prompt: "Use $gws-draft-clonesite-founder-email to prepare a personal Clonesite or ExportFramer founder email or customer reply."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prepare Customer Feedback Outreach"
+  short_description: "Research, send, and evaluate grounded outreach"
+  default_prompt: "Use $prepare-customer-feedback-outreach to investigate customers, prepare grounded outreach, and safely execute only explicitly authorized messages."
