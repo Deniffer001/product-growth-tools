@@ -36,12 +36,17 @@ describe("gkit argv parser", () => {
 
   it("keeps discovery commands profile-free", () => {
     expect(parseArgs(["--schema"])).toEqual({ kind: "schema", selector: null });
+    expect(parseArgs(["@skill"])).toEqual({ kind: "skill", path: null });
+    expect(parseArgs(["@skill", "SKILL.md"])).toEqual({ kind: "skill", path: "SKILL.md" });
     expect(parseArgs(["describe", "--id", "capability"])).toEqual({
       kind: "describe",
       id: "capability",
     });
     expect(() => parseArgs(["--profile", "app-a", "--schema"])).toThrow(
       "--schema does not load a profile",
+    );
+    expect(() => parseArgs(["--profile", "app-a", "@skill"])).toThrow(
+      "@skill does not load a profile",
     );
     expect(parseArgs(["ledger"])).toEqual({ kind: "ledger-status" });
     expect(parseArgs(["ledger", "status"])).toEqual({ kind: "ledger-status" });

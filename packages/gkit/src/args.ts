@@ -3,6 +3,7 @@ import { GkitFailure } from "./envelope";
 export type ParsedCommand =
   | { kind: "help" }
   | { kind: "schema"; selector: string | null }
+  | { kind: "skill"; path: string | null }
   | { kind: "describe"; id: string }
   | { kind: "docs"; provider: string | null }
   | { kind: "ledger-status" }
@@ -166,6 +167,14 @@ export function parseArgs(argv: string[]): ParsedCommand {
     return { kind: "schema", selector };
   }
 
+  // First-token builtin matching argc's @skill contract; gkit keeps its own
+  // dispatcher, so the skill must be served here rather than via cli().
+  if (rest[0] === "@skill") {
+    if (profileFlag) invalid("@skill does not load a profile.");
+    if (rest.length > 2) invalid("@skill takes at most one path.");
+    return { kind: "skill", path: rest[1] ?? null };
+  }
+
   if (rest[0] === "describe") {
     if (profileFlag) invalid("describe does not load a profile.");
     const flags = parseFlags(rest.slice(1), new Set());
@@ -287,6 +296,7 @@ export function renderHelp(): string {
     "",
     "Discovery:",
     "  gkit --schema [selector]",
+    "  gkit @skill [path]",
     "  gkit describe --id <capability-id>",
     "  gkit docs [--provider <provider>]",
     "",
