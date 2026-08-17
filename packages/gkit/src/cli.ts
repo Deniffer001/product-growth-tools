@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import { ensureTrailingNewline, formatBareSkill } from "argc/skill";
 
 import { parseArgs, renderHelp } from "./args";
-import { embedSkill } from "./skill.embed" with { type: "macro" };
+import { embedSkill } from "./skill.embed";
 import { describeCapability } from "./describe";
 import {
   runBingDoctor,
@@ -329,7 +329,7 @@ async function renderEmbeddedSkill(
   path: string | null,
   emitter: TerminalEmitter,
 ): Promise<0 | 1> {
-  const vfs = embedSkill();
+  const vfs = await embedSkill();
   if (path === null) {
     const body = vfs["SKILL.md"];
     if (body === undefined) {
