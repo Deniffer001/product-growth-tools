@@ -1,6 +1,9 @@
 import { fileURLToPath } from "node:url";
 
+import { ensureTrailingNewline, formatBareSkill } from "argc/skill";
+
 import { parseArgs, renderHelp } from "./args";
+import { embedSkill } from "./skill.embed" with { type: "macro" };
 import { describeCapability } from "./describe";
 import {
   runBingDoctor,
@@ -118,6 +121,12 @@ export async function main(
     if (command.kind === "help") {
       await emitter.writeText(renderHelp());
       process.exitCode = abortController.signal.aborted ? 130 : 0;
+      return;
+    }
+
+    if (command.kind === "skill") {
+      const exitCode = await renderEmbeddedSkill(command.path, emitter);
+      process.exitCode = abortController.signal.aborted ? 130 : exitCode;
       return;
     }
 
@@ -314,6 +323,38 @@ export async function main(
   } finally {
     process.off("SIGINT", onSigint);
   }
+}
+
+async function renderEmbeddedSkill(
+  path: string | null,
+  emitter: TerminalEmitter,
+): Promise<0 | 1> {
+  const vfs = embedSkill();
+  if (path === null) {
+    const body = vfs["SKILL.md"];
+    if (body === undefined) {
+      throw new GkitFailure({
+        code: "INTERNAL_ERROR",
+        message: "The embedded skill is missing SKILL.md.",
+      });
+    }
+    await emitter.writeText(formatBareSkill(body, Object.keys(vfs), "gkit"));
+    return 0;
+  }
+  const content = vfs[path];
+  if (content === undefined) {
+    // Match argc's UNKNOWN_SKILL_FILE envelope so agents can correct the path
+    // in one shot. This builtin is not a gkit JSON envelope.
+    const files = Object.keys(vfs).sort();
+    process.stderr.write(
+      `error: UNKNOWN_SKILL_FILE\ngot: ${path}\nfiles:\n${files
+        .map((file) => `  - ${file}`)
+        .join("\n")}\n`,
+    );
+    return 1;
+  }
+  await emitter.writeText(ensureTrailingNewline(content));
+  return 0;
 }
 
 async function loadDiscoveryManifests(options: {
