@@ -9,3 +9,5 @@ credentials
 dist
 coverage
 *.tgz
+
+.npmrc
