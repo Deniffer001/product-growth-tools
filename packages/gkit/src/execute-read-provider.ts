@@ -366,6 +366,13 @@ function normalizeArtifactError(error: unknown): ArtifactError {
 
 function normalizeExecutionError(error: unknown, context: ExecutionContext): unknown {
   if (error instanceof GkitFailure) return error;
+  if (error instanceof ArtifactError) {
+    return new GkitFailure({
+      code: "LOCAL_IO_ERROR",
+      message: error.message,
+      meta: contextMeta(context),
+    });
+  }
   if (error instanceof ProfileError) {
     return new GkitFailure({
       code: "PROFILE_ERROR",

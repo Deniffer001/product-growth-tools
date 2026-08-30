@@ -20,6 +20,7 @@ export type ParsedCommand =
   | { kind: "google-ads-doctor"; profileFlag: string | null }
   | { kind: "gsc-doctor"; profileFlag: string | null }
   | { kind: "posthog-doctor"; profileFlag: string | null }
+  | { kind: "hubspot-doctor"; profileFlag: string | null }
   | {
       kind: "dataforseo-call";
       profileFlag: string | null;
@@ -60,6 +61,15 @@ export type ParsedCommand =
     }
   | {
       kind: "posthog-call";
+      profileFlag: string | null;
+      operationId: string;
+      input: string;
+      out: string | null;
+      force: boolean;
+      dryRun: boolean;
+    }
+  | {
+      kind: "hubspot-call";
       profileFlag: string | null;
       operationId: string;
       input: string;
@@ -223,6 +233,7 @@ export function parseArgs(argv: string[]): ParsedCommand {
     rest[0] !== "dataforseo" &&
     rest[0] !== "google-ads" &&
     rest[0] !== "gsc" &&
+    rest[0] !== "hubspot" &&
     rest[0] !== "posthog"
   ) {
     invalid(`Unknown command: ${rest[0]}`);
@@ -239,7 +250,9 @@ export function parseArgs(argv: string[]): ParsedCommand {
               ? "google-ads-doctor"
               : provider === "gsc"
                 ? "gsc-doctor"
-                : "posthog-doctor",
+                : provider === "hubspot"
+                  ? "hubspot-doctor"
+                  : "posthog-doctor",
       profileFlag,
     };
   }
@@ -255,6 +268,8 @@ export function parseArgs(argv: string[]): ParsedCommand {
       kind:
         provider === "posthog"
           ? "posthog-call"
+          : provider === "hubspot"
+            ? "hubspot-call"
           : provider === "google-ads"
             ? "google-ads-call"
             : provider === "gsc"
@@ -325,6 +340,11 @@ export function renderHelp(): string {
     "  gkit --profile <app> gsc doctor",
     "  gkit --profile <app> gsc api call --operation-id <id> --input @request.json --out <path> --dry-run",
     "  gkit --profile <app> gsc api call --operation-id <id> --input @request.json --out <path>",
+    "",
+    "HubSpot:",
+    "  gkit --profile <app> hubspot doctor",
+    "  gkit --profile <app> hubspot api call --operation-id <id> --input @request.json --out <path> --dry-run",
+    "  gkit --profile <app> hubspot api call --operation-id <id> --input @request.json --out <path>",
     "",
     "Spend ledger:",
     "  gkit ledger",

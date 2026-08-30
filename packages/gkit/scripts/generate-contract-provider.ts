@@ -219,7 +219,12 @@ function renderInventoryDocs(
   operations: InventoryOperation[],
 ): string {
   const executable = operations.filter((operation) => operation.exposure === "executable").length;
-  const title = provider === "gsc" ? "Google Search Console" : "Bing Webmaster";
+  const title =
+    provider === "gsc"
+      ? "Google Search Console"
+      : provider === "hubspot"
+        ? "HubSpot"
+        : "Bing Webmaster";
   const lines = [
     "---",
     "type: Reference",
@@ -238,6 +243,14 @@ function renderInventoryDocs(
     "| Method | Path | Operation ID | Exposure | Decision |",
     "| --- | --- | --- | --- | --- |",
   ];
+  if (provider === "hubspot") {
+    lines.splice(
+      lines.length - 2,
+      0,
+      "HubSpot record, owner, event, association, pipeline, and property artifacts may contain PII or confidential business data. The inventory records endpoint exposure only; it does not authorize copying provider data into logs or prompts.",
+      "",
+    );
+  }
   for (const operation of operations) {
     const capability = operation.capabilityId ? `; capability: \`${operation.capabilityId}\`` : "";
     lines.push(

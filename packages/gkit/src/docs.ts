@@ -2,9 +2,12 @@ import type { LoadedExecutableManifest, ManifestRecord } from "./manifest";
 
 export function renderProviderDocs(manifest: LoadedExecutableManifest): string {
   const providerLabel =
-    { dataforseo: "DataForSEO", "google-ads": "Google Ads", posthog: "PostHog" }[
-      manifest.document.provider
-    ] ?? manifest.document.provider;
+    {
+      dataforseo: "DataForSEO",
+      "google-ads": "Google Ads",
+      hubspot: "HubSpot",
+      posthog: "PostHog",
+    }[manifest.document.provider] ?? manifest.document.provider;
   const lines = [
     "---",
     "type: Reference",
@@ -22,6 +25,17 @@ export function renderProviderDocs(manifest: LoadedExecutableManifest): string {
     "The committed manifest remains the only runtime, validation, effect, cost, and discovery source.",
     "",
   ];
+
+  if (manifest.document.provider === "hubspot") {
+    lines.push(
+      "## Data sensitivity",
+      "",
+      "HubSpot artifacts can contain personal data: contact names and email addresses; owner names, email addresses, and teams; ticket subjects or content; event URLs, page titles, object IDs, and event properties. Company records, deal names and amounts, association IDs, pipeline labels, and property metadata can also disclose confidential business context.",
+      "",
+      "Treat every HubSpot artifact as sensitive. Store it only at an access-controlled path, do not paste raw CRM rows into prompts or logs, and request only the reviewed properties required for the bounded analysis. The properties capability requests HubSpot's default non-sensitive metadata view and does not opt into sensitive-property definitions.",
+      "",
+    );
+  }
 
   for (const record of manifest.document.capabilities) {
     lines.push(...renderCapability(record));

@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import { Buffer } from "node:buffer";
 
 import type { Envelope, EnvelopeMeta } from "./envelope";
 import { GkitFailure, SecretRegistry, toFailureEnvelope } from "./envelope";
@@ -19,17 +20,18 @@ import {
 
 export type DoctorResult = {
   profilePath: string;
-  provider: "bing" | "dataforseo" | "google-ads" | "gsc" | "posthog";
+  provider: "bing" | "dataforseo" | "google-ads" | "gsc" | "hubspot" | "posthog";
   environment: "production" | "sandbox" | null;
   host?: string;
   projectId?: string;
   customerId?: string;
   siteUrl?: string;
-  authMode?: "service_account";
+  portalId?: string;
+  authMode?: "private_app_token" | "service_account";
   profileConfigured: true;
   secretsConfigured: true;
   spendPolicyConfigured: boolean;
-  networkProbe: "unknown";
+  networkProbe: "connected" | "unknown";
   note: string;
 };
 
@@ -241,6 +243,228 @@ export async function runPostHogDoctor(options: {
     }
     throw error;
   }
+}
+
+export async function runHubSpotDoctor(options: {
+  profileFlag: string | null;
+  signal: AbortSignal;
+  env?: Readonly<Record<string, string | undefined>>;
+  xdgConfigHome?: string;
+  home?: string;
+  fetch?: (input: string | URL | Request, init?: RequestInit) => Promise<Response>;
+  timeoutMs?: number;
+}): Promise<DoctorExecutionResult> {
+  const env = options.env ?? process.env;
+  const secrets = new SecretRegistry();
+  let selectedProfile = options.profileFlag ?? env.GKIT_PROFILE ?? null;
+  let providerRequestId: string | null = null;
+
+  try {
+    selectedProfile = selectProfileName(options.profileFlag ?? undefined, env);
+    const profile = await loadProfile(selectedProfile, {
+      xdgConfigHome: options.xdgConfigHome,
+      home: options.home,
+    });
+    getProviderProfile(profile, "hubspot");
+    const profileEnvironment = await loadProfileEnvironment(profile, env);
+    const resolved = resolveProviderSecrets(profile, "hubspot", profileEnvironment);
+    const accessToken = resolved.accessToken;
+    if (!accessToken) {
+      throw new ProfileError(
+        "invalid_profile",
+        "HubSpot requires an accessToken env reference under secrets.",
+      );
+    }
+    secrets.register(accessToken);
+    if (options.signal.aborted) {
+      throw new GkitFailure({
+        code: "CANCELLED",
+        message: "The invocation was cancelled before the HubSpot connectivity probe.",
+        outcome: "not_dispatched",
+        meta: doctorMeta(profile.name, "hubspot"),
+      });
+    }
+
+    const timeoutMs = options.timeoutMs ?? 10_000;
+    if (!Number.isSafeInteger(timeoutMs) || timeoutMs <= 0) {
+      throw new GkitFailure({ code: "INVALID_INPUT", message: "HubSpot doctor timeout is invalid." });
+    }
+    const dispatchSignal = createDoctorSignal(options.signal, timeoutMs);
+    let response: Response;
+    let rawBytes: Uint8Array;
+    try {
+      response = await (options.fetch ?? globalThis.fetch)(
+        "https://api.hubapi.com/account-info/2026-03/details",
+        {
+          method: "GET",
+          headers: { authorization: `Bearer ${accessToken}`, accept: "application/json" },
+          signal: dispatchSignal.signal,
+        },
+      );
+      rawBytes = new Uint8Array(await response.arrayBuffer());
+    } catch {
+      throw new GkitFailure({
+        code: dispatchSignal.timedOut()
+          ? "TIMEOUT"
+          : options.signal.aborted
+            ? "UNKNOWN_OUTCOME"
+            : "NETWORK_ERROR",
+        message: dispatchSignal.timedOut()
+          ? "The HubSpot connectivity probe exceeded its deadline."
+          : "The HubSpot connectivity probe ended without a confirmed response.",
+        retryable: true,
+        outcome: "unknown",
+        meta: doctorMeta(profile.name, "hubspot"),
+      });
+    } finally {
+      dispatchSignal.dispose();
+    }
+
+    const payload = parseDoctorJson(rawBytes);
+    providerRequestId = hubSpotDoctorRequestId(response, payload, accessToken);
+    const meta = { ...doctorMeta(profile.name, "hubspot"), providerRequestId };
+    if (!response.ok) {
+      const code =
+        response.status === 401 || response.status === 403
+          ? "AUTH_FAILED"
+          : response.status === 429
+            ? "RATE_LIMITED"
+            : response.status === 408 || response.status >= 500
+              ? "UNKNOWN_OUTCOME"
+              : "PROVIDER_ERROR";
+      throw new GkitFailure({
+        code,
+        message:
+          code === "AUTH_FAILED"
+            ? "HubSpot rejected the configured token or account-info scope."
+            : code === "RATE_LIMITED"
+              ? "HubSpot rate-limited the connectivity probe."
+              : "HubSpot did not accept the connectivity probe.",
+        retryable: code === "RATE_LIMITED" || code === "UNKNOWN_OUTCOME",
+        outcome: code === "UNKNOWN_OUTCOME" ? "unknown" : "confirmed",
+        details: {
+          httpStatus: response.status,
+          ...hubSpotDoctorErrorDetails(payload),
+        },
+        meta,
+      });
+    }
+    if (!isDoctorRecord(payload)) {
+      throw new GkitFailure({
+        code: "PROVIDER_ERROR",
+        message: "HubSpot returned an invalid account-details response.",
+        outcome: "confirmed",
+        meta,
+      });
+    }
+    const portalId = payload.portalId;
+    const portalIdText = typeof portalId === "number" ? String(portalId) : portalId;
+    if (typeof portalIdText !== "string" || !/^[1-9]\d*$/.test(portalIdText)) {
+      throw new GkitFailure({
+        code: "PROVIDER_ERROR",
+        message: "HubSpot returned account details without a valid portal identifier.",
+        outcome: "confirmed",
+        meta,
+      });
+    }
+    return {
+      envelope: {
+        ok: true,
+        data: {
+          profilePath: profile.path,
+          provider: "hubspot",
+          environment: null,
+          portalId: portalIdText,
+          authMode: "private_app_token",
+          profileConfigured: true,
+          secretsConfigured: true,
+          spendPolicyConfigured: false,
+          networkProbe: "connected",
+          note: "HubSpot readiness verified the profile-bound account through the fixed account-details endpoint.",
+        },
+        meta,
+      },
+      secrets,
+    };
+  } catch (error) {
+    if (error instanceof GkitFailure) {
+      return { envelope: toFailureEnvelope(error), secrets };
+    }
+    if (error instanceof ProfileError) {
+      return {
+        envelope: toFailureEnvelope(
+          new GkitFailure({
+            code: "PROFILE_ERROR",
+            message: error.message,
+            hint: "Fix the selected HubSpot profile or its referenced access-token environment variable.",
+            meta: selectedProfile ? doctorMeta(selectedProfile, "hubspot") : undefined,
+          }),
+        ),
+        secrets,
+      };
+    }
+    throw error;
+  }
+}
+
+function createDoctorSignal(
+  externalSignal: AbortSignal,
+  timeoutMs: number,
+): { signal: AbortSignal; timedOut(): boolean; dispose(): void } {
+  const controller = new AbortController();
+  let didTimeOut = false;
+  const onExternalAbort = (): void => controller.abort(externalSignal.reason);
+  externalSignal.addEventListener("abort", onExternalAbort, { once: true });
+  const timer = setTimeout(() => {
+    didTimeOut = true;
+    controller.abort(new Error("HubSpot doctor deadline exceeded."));
+  }, timeoutMs);
+  timer.unref();
+  return {
+    signal: controller.signal,
+    timedOut: () => didTimeOut,
+    dispose: () => {
+      clearTimeout(timer);
+      externalSignal.removeEventListener("abort", onExternalAbort);
+    },
+  };
+}
+
+function parseDoctorJson(rawBytes: Uint8Array): unknown {
+  try {
+    return JSON.parse(Buffer.from(rawBytes).toString("utf8")) as unknown;
+  } catch {
+    return null;
+  }
+}
+
+function hubSpotDoctorRequestId(
+  response: Response,
+  payload: unknown,
+  accessToken: string,
+): string | null {
+  const header =
+    response.headers.get("x-hubspot-correlation-id") ?? response.headers.get("x-request-id");
+  if (header && header !== accessToken && /^[A-Za-z0-9._:-]{1,128}$/.test(header)) return header;
+  if (!isDoctorRecord(payload)) return null;
+  const value = payload.correlationId;
+  return typeof value === "string" &&
+    value !== accessToken &&
+    /^[A-Za-z0-9._:-]{1,128}$/.test(value)
+    ? value
+    : null;
+}
+
+function hubSpotDoctorErrorDetails(payload: unknown): Record<string, unknown> {
+  if (!isDoctorRecord(payload)) return {};
+  const category = payload.category;
+  return typeof category === "string" && /^[A-Z0-9_]{1,80}$/.test(category)
+    ? { providerCategory: category }
+    : {};
+}
+
+function isDoctorRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
 export type DoctorExecutionResult = {

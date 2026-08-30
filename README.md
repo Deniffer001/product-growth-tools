@@ -4,7 +4,7 @@ Profile-bound CLI for agent-first access to growth providers. This repository
 has one CLI and one workspace package: `gkit`.
 
 The reviewed provider surface includes DataForSEO, PostHog, Google Ads, Google
-Search Console, and Bing Webmaster.
+Search Console, Bing Webmaster, and HubSpot.
 
 ## Install
 
@@ -72,6 +72,12 @@ Provider execution must bind exactly one App profile. Create one JSON file at
       "secrets": {
         "serviceAccountFile": "env:MY_APP_GSC_SERVICE_ACCOUNT_FILE"
       }
+    },
+    "hubspot": {
+      "config": {},
+      "secrets": {
+        "accessToken": "env:MY_APP_HUBSPOT_ACCESS_TOKEN"
+      }
     }
   }
 }
@@ -92,6 +98,7 @@ Select a profile explicitly:
 ```bash
 gkit --profile my-app posthog doctor
 gkit --profile my-app gsc doctor
+gkit --profile my-app hubspot doctor
 ```
 
 Or bind it for one process through the environment:
@@ -103,6 +110,72 @@ GKIT_PROFILE=my-app gkit posthog doctor
 `--profile` takes precedence over `GKIT_PROFILE`. One invocation never merges
 or falls back to another App profile. Compare multiple Apps by running separate
 invocations and joining their outputs outside gkit.
+
+### Check the profile
+
+Run `doctor` before making a provider request. It checks the selected profile
+and its provider configuration without printing secret values:
+
+```bash
+gkit --profile my-app gsc doctor
+gkit --profile my-app hubspot doctor
+```
+
+### Preview, then execute
+
+Start with the exact example returned by `describe` and keep `--dry-run` while
+reviewing the request:
+
+```bash
+gkit --profile my-app gsc api call \
+  --operation-id gsc.properties.list \
+  --input '{}' \
+  --out ./gsc-properties-plan.json \
+  --dry-run
+```
+
+Remove `--dry-run` only when the profile and request are correct:
+
+```bash
+gkit --profile my-app gsc api call \
+  --operation-id gsc.properties.list \
+  --input '{}' \
+  --out ./gsc-properties.json
+```
+
+Artifacts use no-replace behavior by default. Choose a new output path for a
+later run, or add `--force` only after reviewing the existing destination.
+DataForSEO operations that can spend money additionally require both
+`--allow-spend` and an explicit `--max-spend-usd` limit.
+
+### HubSpot read-only example
+
+HubSpot uses one profile-bound private-app access token and calls the REST API
+directly; `@hubspot/cli` and `hs` are not runtime dependencies. The V1 surface
+uses HubSpot's current `2026-03` date-versioned endpoints and exposes only
+reviewed reads. CRM Search remains a POST because that is HubSpot's read API,
+but create, update, delete, send, and import operations are inventory-only and
+cannot be dispatched.
+
+```bash
+gkit --profile my-app hubspot doctor
+gkit describe --id hubspot.crm.objects.search
+gkit --profile my-app hubspot api call \
+  --operation-id hubspot.crm.objects.search \
+  --input @hubspot-search.json \
+  --out ./hubspot-contact-search.json \
+  --dry-run
+```
+
+HubSpot artifacts can contain PII and confidential business data, including
+contact and owner names or email addresses, ticket text, event URLs and
+properties, object and association identifiers, company or deal details, and
+pipeline or property metadata. Results are therefore artifact-only: the CLI
+prints a compact envelope and receipt, never the unbounded CRM payload. Keep
+artifacts access-controlled and request only the reviewed properties required
+for the analysis. Search pages are capped at 200 and one search query cannot
+page beyond 10,000 results; other list surfaces use lower reviewed page and
+total-result bounds documented by `describe`.
 
 ## Configure an Agent
 
