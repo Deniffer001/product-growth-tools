@@ -10,6 +10,7 @@ import {
   runDataForSeoDoctor,
   runGoogleAdsDoctor,
   runGscDoctor,
+  runHubSpotDoctor,
   runPostHogDoctor,
 } from "./doctor";
 import {
@@ -25,6 +26,7 @@ import { executeDataForSeoCall } from "./execute";
 import { executeBingCall } from "./execute-bing";
 import { executeGoogleAdsCall } from "./execute-google-ads";
 import { executeGscCall } from "./execute-gsc";
+import { executeHubSpotCall } from "./execute-hubspot";
 import { executePostHogCall } from "./execute-posthog";
 import {
   appendSettled,
@@ -62,6 +64,12 @@ export const gscManifestPath = fileURLToPath(
   new URL("../generated/gsc/manifest.json", import.meta.url),
 );
 export const gscDocsDirectory = fileURLToPath(new URL("../docs/providers/gsc", import.meta.url));
+export const hubSpotManifestPath = fileURLToPath(
+  new URL("../generated/hubspot/manifest.json", import.meta.url),
+);
+export const hubSpotDocsDirectory = fileURLToPath(
+  new URL("../docs/providers/hubspot", import.meta.url),
+);
 export const providerDocsDirectory = fileURLToPath(new URL("../docs/providers", import.meta.url));
 
 type TerminalEmitter = {
@@ -100,6 +108,7 @@ export async function main(
     manifestPath?: string;
     googleAdsManifestPath?: string;
     gscManifestPath?: string;
+    hubSpotManifestPath?: string;
     postHogManifestPath?: string;
   } = {},
 ): Promise<void> {
@@ -137,6 +146,7 @@ export async function main(
         command.provider !== "bing" &&
         command.provider !== "google-ads" &&
         command.provider !== "gsc" &&
+        command.provider !== "hubspot" &&
         command.provider !== "posthog"
       ) {
         throw new GkitFailure({
@@ -153,9 +163,11 @@ export async function main(
               ? googleAdsDocsDirectory
               : command.provider === "gsc"
                 ? gscDocsDirectory
-                : command.provider === "posthog"
-                  ? postHogDocsDirectory
-                  : providerDocsDirectory;
+                : command.provider === "hubspot"
+                  ? hubSpotDocsDirectory
+                  : command.provider === "posthog"
+                    ? postHogDocsDirectory
+                    : providerDocsDirectory;
       await emitter.writeText(`${directory}\n`);
       process.exitCode = abortController.signal.aborted ? 130 : 0;
       return;
@@ -264,6 +276,15 @@ export async function main(
       process.exitCode = abortController.signal.aborted ? 130 : result.envelope.ok ? 0 : 1;
       return;
     }
+    if (command.kind === "hubspot-doctor") {
+      const result = await runHubSpotDoctor({
+        profileFlag: command.profileFlag,
+        signal: abortController.signal,
+      });
+      await emitter.writeEnvelope(result.envelope, result.secrets);
+      process.exitCode = abortController.signal.aborted ? 130 : result.envelope.ok ? 0 : 1;
+      return;
+    }
 
     if (command.kind === "schema") {
       const manifests = await loadDiscoveryManifests(options);
@@ -306,6 +327,14 @@ export async function main(
                   ),
                   signal: abortController.signal,
                 })
+              : command.kind === "hubspot-call"
+                ? await executeHubSpotCall({
+                    command,
+                    manifest: await loadExecutableManifest(
+                      options.hubSpotManifestPath ?? hubSpotManifestPath,
+                    ),
+                    signal: abortController.signal,
+                  })
               : await executePostHogCall({
                   command,
                   manifest: await loadExecutableManifest(
@@ -362,6 +391,7 @@ async function loadDiscoveryManifests(options: {
   manifestPath?: string;
   googleAdsManifestPath?: string;
   gscManifestPath?: string;
+  hubSpotManifestPath?: string;
   postHogManifestPath?: string;
 }) {
   return await Promise.all([
@@ -369,6 +399,7 @@ async function loadDiscoveryManifests(options: {
     loadExecutableManifest(options.manifestPath ?? dataForSeoManifestPath),
     loadExecutableManifest(options.googleAdsManifestPath ?? googleAdsManifestPath),
     loadExecutableManifest(options.gscManifestPath ?? gscManifestPath),
+    loadExecutableManifest(options.hubSpotManifestPath ?? hubSpotManifestPath),
     loadExecutableManifest(options.postHogManifestPath ?? postHogManifestPath),
   ]);
 }

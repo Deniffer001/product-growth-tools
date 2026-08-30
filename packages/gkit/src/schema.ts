@@ -24,6 +24,9 @@ export function buildGkitSchema(
   const gscCapabilityCount = capabilities.filter(
     (capability) => capability.provider === "gsc",
   ).length;
+  const hubSpotCapabilityCount = capabilities.filter(
+    (capability) => capability.provider === "hubspot",
+  ).length;
   if (capabilities.length === 0) {
     throw new GkitFailure({
       code: "INTERNAL_ERROR",
@@ -194,6 +197,30 @@ export function buildGkitSchema(
         ),
       },
     ),
+    hubspot: group(
+      { description: `${hubSpotCapabilityCount} reviewed reads.` },
+      {
+        doctor: c
+          .meta({
+            description: "Profile check.",
+            examples: ["gkit --profile app-a hubspot doctor"],
+          })
+          .input(s(v.strictObject({}))),
+        api: group(
+          { description: "Native API." },
+          {
+            call: c
+              .meta({
+                description: `Call ${hubSpotCapabilityCount} reads: gkit --profile <app> hubspot api call --operation-id <id> --input @request.json --out <path> --dry-run.`,
+                examples: [
+                  "gkit --profile <app> hubspot api call --operation-id <id> --input @request.json --out <path> --dry-run",
+                ],
+              })
+              .input(s(v.strictObject({}))),
+          },
+        ),
+      },
+    ),
   };
 }
 
@@ -262,7 +289,10 @@ function compactRootSchema(generated: string): string {
           return `${indent}/** ${description} */`;
         },
       )
-      .replace(/^\s*\/\*\* (?:\d+ reviewed reads?|Profile check\.|Native API\.) \*\/\n/gm, "")
+      .replace(
+        /^\s*\/\*\* (?:\d+ reviewed reads?\.|Profile check\.|Native API\.) \*\/\n/gm,
+        "",
+      )
       .replace(/\n{2,}/g, "\n")
   );
 }
@@ -303,5 +333,9 @@ function rewriteArgcExamples(
     .replace(
       /gkit gsc\.api\.call "[^"]*"/g,
       "gkit --profile <app> gsc api call --operation-id <id> --input @request.json --out <path> --dry-run",
+    )
+    .replace(
+      /gkit hubspot\.api\.call "[^"]*"/g,
+      "gkit --profile <app> hubspot api call --operation-id <id> --input @request.json --out <path> --dry-run",
     );
 }

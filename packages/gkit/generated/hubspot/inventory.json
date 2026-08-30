@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "provider": "hubspot",
+  "revision": "2026-08-30.hubspot.read-v1.1",
+  "source": {
+    "url": "https://developers.hubspot.com/docs/api/how-to-use-hubspot-api",
+    "revision": "hubspot-2026-03-reviewed-2026-08-30",
+    "checksum": "sha256:7bb3fe9ae46ca78a2fcc4fd0fec51f4bbf8f32c5fba92600c1b09ad190048da3"
+  },
+  "operations": [
+    {
+      "path": "/crm/imports/2026-03/imports",
+      "method": "post",
+      "operationId": "crm.imports.create",
+      "exposure": "inventory",
+      "reason": "Imports are mutations and are outside the read-only HubSpot V1 provider."
+    },
+    {
+      "path": "/crm/objects/2026-03/{fromObjectType}/{objectId}/associations/{toObjectType}",
+      "method": "get",
+      "operationId": "crm.associations.list",
+      "exposure": "executable",
+      "capabilityId": "hubspot.crm.associations.list",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/crm/objects/2026-03/{fromObjectType}/{objectId}/associations/{toObjectType}/{toObjectId}",
+      "method": "delete",
+      "operationId": "crm.associations.delete",
+      "exposure": "inventory",
+      "reason": "Destructive mutation is outside the read-only HubSpot V1 provider."
+    },
+    {
+      "path": "/crm/objects/2026-03/{fromObjectType}/{objectId}/associations/default/{toObjectType}/{toObjectId}",
+      "method": "put",
+      "operationId": "crm.associations.create",
+      "exposure": "inventory",
+      "reason": "Mutation is outside the read-only HubSpot V1 provider."
+    },
+    {
+      "path": "/crm/objects/2026-03/{objectType}",
+      "method": "get",
+      "operationId": "crm.objects.list",
+      "exposure": "executable",
+      "capabilityId": "hubspot.crm.objects.list",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/crm/objects/2026-03/{objectType}",
+      "method": "post",
+      "operationId": "crm.objects.create",
+      "exposure": "inventory",
+      "reason": "Mutation is outside the read-only HubSpot V1 provider."
+    },
+    {
+      "path": "/crm/objects/2026-03/{objectType}/{recordId}",
+      "method": "delete",
+      "operationId": "crm.objects.archive",
+      "exposure": "inventory",
+      "reason": "Destructive mutation is outside the read-only HubSpot V1 provider."
+    },
+    {
+      "path": "/crm/objects/2026-03/{objectType}/{recordId}",
+      "method": "patch",
+      "operationId": "crm.objects.update",
+      "exposure": "inventory",
+      "reason": "Mutation is outside the read-only HubSpot V1 provider."
+    },
+    {
+      "path": "/crm/objects/2026-03/{objectType}/search",
+      "method": "post",
+      "operationId": "crm.objects.search",
+      "exposure": "executable",
+      "capabilityId": "hubspot.crm.objects.search",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/crm/owners/2026-03",
+      "method": "get",
+      "operationId": "crm.owners.list",
+      "exposure": "executable",
+      "capabilityId": "hubspot.crm.owners.list",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/crm/pipelines/2026-03/{objectType}",
+      "method": "get",
+      "operationId": "crm.pipelines.list",
+      "exposure": "executable",
+      "capabilityId": "hubspot.crm.pipelines.list",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/crm/pipelines/2026-03/{objectType}",
+      "method": "post",
+      "operationId": "crm.pipelines.create",
+      "exposure": "inventory",
+      "reason": "Mutation is outside the read-only HubSpot V1 provider."
+    },
+    {
+      "path": "/crm/pipelines/2026-03/{objectType}/{pipelineId}",
+      "method": "delete",
+      "operationId": "crm.pipelines.delete",
+      "exposure": "inventory",
+      "reason": "Destructive mutation is outside the read-only HubSpot V1 provider."
+    },
+    {
+      "path": "/crm/properties/2026-03/{objectType}",
+      "method": "get",
+      "operationId": "crm.properties.list",
+      "exposure": "executable",
+      "capabilityId": "hubspot.crm.properties.list",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    },
+    {
+      "path": "/crm/properties/2026-03/{objectType}",
+      "method": "post",
+      "operationId": "crm.properties.create",
+      "exposure": "inventory",
+      "reason": "Mutation is outside the read-only HubSpot V1 provider."
+    },
+    {
+      "path": "/events/2026-03/send",
+      "method": "post",
+      "operationId": "events.occurrences.send",
+      "exposure": "inventory",
+      "reason": "Event sending is outside the read-only HubSpot V1 provider."
+    },
+    {
+      "path": "/events/event-occurrences/2026-03",
+      "method": "get",
+      "operationId": "events.occurrences.list",
+      "exposure": "executable",
+      "capabilityId": "hubspot.events.occurrences.list",
+      "reason": "Reviewed adapter, input, effect, and response contracts are committed."
+    }
+  ]
+}
