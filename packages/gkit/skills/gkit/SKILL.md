@@ -1,11 +1,9 @@
 ---
 name: gkit
 description: >-
-  Call growth providers through the profile-bound gkit CLI (DataForSEO,
-  PostHog, Google Ads, GSC, Bing). Activate when discovering capabilities,
-  running doctor, or making a live/dry-run provider request for an App
-  profile.
+  When a task requires discovering or calling DataForSEO, PostHog, Google Ads,
+  GSC, or Bing through an App profile, including doctor and dry-run checks, run
+  `gkit @skill` immediately to load the full usage guide.
 ---
 
 Run `gkit @skill` now for the full usage guide.
-Read a referenced file with `gkit @skill <path>`.
