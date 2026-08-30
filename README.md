@@ -21,7 +21,7 @@ gkit --schema
 Install an exact version instead:
 
 ```bash
-bun add --global "gkit@https://github.com/celados/gkit/releases/download/v0.1.1/gkit-0.1.1.tgz"
+bun add --global "gkit@https://github.com/celados/gkit/releases/download/v0.1.3/gkit-0.1.3.tgz"
 gkit --schema
 ```
 
