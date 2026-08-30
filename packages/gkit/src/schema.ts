@@ -1,5 +1,5 @@
 import { toStandardJsonSchema } from "@valibot/to-json-schema";
-import { c, generateSchema, group, selectSchema, type Router } from "@celados/argc";
+import { c, generateSchema, group, selectSchema, type Router } from "argc";
 import * as v from "valibot";
 
 import { GkitFailure } from "./envelope";
