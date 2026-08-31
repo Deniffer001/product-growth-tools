@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "provider": "hubspot",
+  "operations": [
+    { "path": "/crm/properties/2026-03/{objectType}", "method": "get", "operationId": "crm.properties.list" },
+    { "path": "/crm/properties/2026-03/{objectType}", "method": "post", "operationId": "crm.properties.create" },
+    { "path": "/crm/objects/2026-03/{objectType}", "method": "get", "operationId": "crm.objects.list" },
+    { "path": "/crm/objects/2026-03/{objectType}", "method": "post", "operationId": "crm.objects.create" },
+    { "path": "/crm/objects/2026-03/{objectType}/search", "method": "post", "operationId": "crm.objects.search" },
+    { "path": "/crm/objects/2026-03/{objectType}/{recordId}", "method": "patch", "operationId": "crm.objects.update" },
+    { "path": "/crm/objects/2026-03/{objectType}/{recordId}", "method": "delete", "operationId": "crm.objects.archive" },
+    { "path": "/crm/objects/2026-03/{fromObjectType}/{objectId}/associations/{toObjectType}", "method": "get", "operationId": "crm.associations.list" },
+    { "path": "/crm/objects/2026-03/{fromObjectType}/{objectId}/associations/default/{toObjectType}/{toObjectId}", "method": "put", "operationId": "crm.associations.create" },
+    { "path": "/crm/objects/2026-03/{fromObjectType}/{objectId}/associations/{toObjectType}/{toObjectId}", "method": "delete", "operationId": "crm.associations.delete" },
+    { "path": "/events/event-occurrences/2026-03", "method": "get", "operationId": "events.occurrences.list" },
+    { "path": "/events/2026-03/send", "method": "post", "operationId": "events.occurrences.send" },
+    { "path": "/crm/pipelines/2026-03/{objectType}", "method": "get", "operationId": "crm.pipelines.list" },
+    { "path": "/crm/pipelines/2026-03/{objectType}", "method": "post", "operationId": "crm.pipelines.create" },
+    { "path": "/crm/pipelines/2026-03/{objectType}/{pipelineId}", "method": "delete", "operationId": "crm.pipelines.delete" },
+    { "path": "/crm/owners/2026-03", "method": "get", "operationId": "crm.owners.list" },
+    { "path": "/crm/imports/2026-03/imports", "method": "post", "operationId": "crm.imports.create" }
+  ]
+}

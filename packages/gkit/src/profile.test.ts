@@ -349,6 +349,46 @@ describe("profile loading and secret resolution", () => {
     }
   });
 
+  test("accepts only a static HubSpot access-token env reference with no config", async () => {
+    const input = profileDocument();
+    input.providers = {
+      ...input.providers,
+      hubspot: {
+        config: {},
+        policy: {},
+        secrets: { accessToken: "env:APP_A_HUBSPOT_ACCESS_TOKEN" },
+      },
+    } as typeof input.providers;
+    const profile = await loadDocument(input);
+
+    expect(profile.providers.hubspot?.config).toEqual({});
+    expect(
+      resolveProviderSecrets(profile, "hubspot", {
+        APP_A_HUBSPOT_ACCESS_TOKEN: "resolved-hubspot-secret",
+      }),
+    ).toEqual({ accessToken: "resolved-hubspot-secret" });
+
+    for (const hubspot of [
+      {
+        config: { portalId: "123" },
+        policy: {},
+        secrets: { accessToken: "env:APP_A_HUBSPOT_ACCESS_TOKEN" },
+      },
+      {
+        config: {},
+        policy: {},
+        secrets: {
+          accessToken: "env:APP_A_HUBSPOT_ACCESS_TOKEN",
+          apiKey: "env:APP_A_HUBSPOT_API_KEY",
+        },
+      },
+    ]) {
+      const invalid = profileDocument();
+      invalid.providers = { ...invalid.providers, hubspot } as typeof invalid.providers;
+      await expect(loadDocument(invalid)).rejects.toMatchObject({ reason: "invalid_profile" });
+    }
+  });
+
   test("reports a missing referenced env var without reading arbitrary secrets", async () => {
     const profile = await loadDocument(profileDocument());
 

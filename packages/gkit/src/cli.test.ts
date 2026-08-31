@@ -31,12 +31,14 @@ describe("gkit process contract", () => {
     expect(result.stdout).toContain("gkit --profile <app> google-ads api call");
     expect(result.stdout).toContain("gkit --profile <app> bing api call");
     expect(result.stdout).toContain("gkit --profile <app> gsc api call");
+    expect(result.stdout).toContain("gkit --profile <app> hubspot api call");
     expect(result.stdout).toContain("gkit describe --id <capability-id>");
     expect(result.stdout).toContain("argc dotted commands and @run are intentionally not exposed");
     expect(result.stdout).not.toContain("gkit dataforseo.api.call");
     expect(result.stdout).not.toContain("gkit google-ads.api.call");
     expect(result.stdout).not.toContain("gkit bing.api.call");
     expect(result.stdout).not.toContain("gkit gsc.api.call");
+    expect(result.stdout).not.toContain("gkit hubspot.api.call");
 
     const selected = await runCli(["--schema", "posthog"], fixture.env);
     expect(selected.exitCode).toBe(0);
@@ -47,6 +49,47 @@ describe("gkit process contract", () => {
     expect(googleAds.exitCode).toBe(0);
     expect(googleAds.stdout).toContain('"google-ads":');
     expect(googleAds.stdout).not.toContain("posthog:");
+
+    const hubspot = await runCli(["--schema", "hubspot"], fixture.env);
+    expect(hubspot.exitCode).toBe(0);
+    expect(hubspot.stdout).toContain("hubspot:");
+    expect(hubspot.stdout).not.toContain("posthog:");
+  });
+
+  it("dispatches HubSpot through the common api call envelope and artifact contract", async () => {
+    const fixture = await createCliFixture();
+    const outPath = join(fixture.root, "hubspot-contacts.json");
+    const result = await runMainHarness(
+      [
+        "--profile",
+        "app-a",
+        "hubspot",
+        "api",
+        "call",
+        "--operation-id",
+        "hubspot.crm.objects.list",
+        "--input",
+        JSON.stringify({ objectType: "contacts", properties: ["email"], limit: 1 }),
+        "--out",
+        outPath,
+      ],
+      { ...fixture.env, TEST_HUBSPOT_ACCESS_TOKEN: "hubspot-secret" },
+      `async (_input, init) => {
+        if (new Headers(init?.headers).get("authorization") !== "Bearer hubspot-secret") throw new Error("missing auth");
+        return new Response(JSON.stringify({ results: [{ id: "1", properties: { email: "person@example.test" } }] }), { status: 200, headers: { "x-hubspot-correlation-id": "hubspot_request" } });
+      }`,
+    ).result;
+
+    expect(result.exitCode).toBe(0);
+    expect(result.stderr).toBe("");
+    expect(result.stdout).not.toContain("hubspot-secret");
+    expect(result.stdout).not.toContain("person@example.test");
+    expect(JSON.parse(result.stdout)).toMatchObject({
+      ok: true,
+      data: { pages: 1, rowCount: 1, artifactFormat: "json-array-of-exact-hubspot-pages" },
+      meta: { provider: "hubspot", providerRequestId: "hubspot_request" },
+    });
+    expect(await readFile(outPath, "utf8")).toContain("person@example.test");
   });
 
   it("keeps describe offline and profile-free", async () => {
@@ -604,6 +647,11 @@ async function createCliFixture() {
           config: { siteUrl: "sc-domain:example.com" },
           policy: {},
           secrets: { serviceAccountFile: "env:TEST_GSC_SERVICE_ACCOUNT_FILE" },
+        },
+        hubspot: {
+          config: {},
+          policy: {},
+          secrets: { accessToken: "env:TEST_HUBSPOT_ACCESS_TOKEN" },
         },
       },
     }),

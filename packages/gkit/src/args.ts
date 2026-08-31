@@ -3,6 +3,7 @@ import { GkitFailure } from "./envelope";
 export type ParsedCommand =
   | { kind: "help" }
   | { kind: "schema"; selector: string | null }
+  | { kind: "skill"; path: string | null }
   | { kind: "describe"; id: string }
   | { kind: "docs"; provider: string | null }
   | { kind: "ledger-status" }
@@ -19,6 +20,7 @@ export type ParsedCommand =
   | { kind: "google-ads-doctor"; profileFlag: string | null }
   | { kind: "gsc-doctor"; profileFlag: string | null }
   | { kind: "posthog-doctor"; profileFlag: string | null }
+  | { kind: "hubspot-doctor"; profileFlag: string | null }
   | {
       kind: "dataforseo-call";
       profileFlag: string | null;
@@ -59,6 +61,15 @@ export type ParsedCommand =
     }
   | {
       kind: "posthog-call";
+      profileFlag: string | null;
+      operationId: string;
+      input: string;
+      out: string | null;
+      force: boolean;
+      dryRun: boolean;
+    }
+  | {
+      kind: "hubspot-call";
       profileFlag: string | null;
       operationId: string;
       input: string;
@@ -166,6 +177,14 @@ export function parseArgs(argv: string[]): ParsedCommand {
     return { kind: "schema", selector };
   }
 
+  // First-token builtin matching argc's @skill contract; gkit keeps its own
+  // dispatcher, so the skill must be served here rather than via cli().
+  if (rest[0] === "@skill") {
+    if (profileFlag) invalid("@skill does not load a profile.");
+    if (rest.length > 2) invalid("@skill takes at most one path.");
+    return { kind: "skill", path: rest[1] ?? null };
+  }
+
   if (rest[0] === "describe") {
     if (profileFlag) invalid("describe does not load a profile.");
     const flags = parseFlags(rest.slice(1), new Set());
@@ -214,6 +233,7 @@ export function parseArgs(argv: string[]): ParsedCommand {
     rest[0] !== "dataforseo" &&
     rest[0] !== "google-ads" &&
     rest[0] !== "gsc" &&
+    rest[0] !== "hubspot" &&
     rest[0] !== "posthog"
   ) {
     invalid(`Unknown command: ${rest[0]}`);
@@ -230,7 +250,9 @@ export function parseArgs(argv: string[]): ParsedCommand {
               ? "google-ads-doctor"
               : provider === "gsc"
                 ? "gsc-doctor"
-                : "posthog-doctor",
+                : provider === "hubspot"
+                  ? "hubspot-doctor"
+                  : "posthog-doctor",
       profileFlag,
     };
   }
@@ -246,6 +268,8 @@ export function parseArgs(argv: string[]): ParsedCommand {
       kind:
         provider === "posthog"
           ? "posthog-call"
+          : provider === "hubspot"
+            ? "hubspot-call"
           : provider === "google-ads"
             ? "google-ads-call"
             : provider === "gsc"
@@ -287,6 +311,7 @@ export function renderHelp(): string {
     "",
     "Discovery:",
     "  gkit --schema [selector]",
+    "  gkit @skill [path]",
     "  gkit describe --id <capability-id>",
     "  gkit docs [--provider <provider>]",
     "",
@@ -315,6 +340,11 @@ export function renderHelp(): string {
     "  gkit --profile <app> gsc doctor",
     "  gkit --profile <app> gsc api call --operation-id <id> --input @request.json --out <path> --dry-run",
     "  gkit --profile <app> gsc api call --operation-id <id> --input @request.json --out <path>",
+    "",
+    "HubSpot:",
+    "  gkit --profile <app> hubspot doctor",
+    "  gkit --profile <app> hubspot api call --operation-id <id> --input @request.json --out <path> --dry-run",
+    "  gkit --profile <app> hubspot api call --operation-id <id> --input @request.json --out <path>",
     "",
     "Spend ledger:",
     "  gkit ledger",

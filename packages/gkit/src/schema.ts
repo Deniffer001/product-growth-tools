@@ -24,6 +24,9 @@ export function buildGkitSchema(
   const gscCapabilityCount = capabilities.filter(
     (capability) => capability.provider === "gsc",
   ).length;
+  const hubSpotCapabilityCount = capabilities.filter(
+    (capability) => capability.provider === "hubspot",
+  ).length;
   if (capabilities.length === 0) {
     throw new GkitFailure({
       code: "INTERNAL_ERROR",
@@ -194,6 +197,30 @@ export function buildGkitSchema(
         ),
       },
     ),
+    hubspot: group(
+      { description: `${hubSpotCapabilityCount} reviewed reads.` },
+      {
+        doctor: c
+          .meta({
+            description: "Profile check.",
+            examples: ["gkit --profile app-a hubspot doctor"],
+          })
+          .input(s(v.strictObject({}))),
+        api: group(
+          { description: "Native API." },
+          {
+            call: c
+              .meta({
+                description: `Call ${hubSpotCapabilityCount} reads: gkit --profile <app> hubspot api call --operation-id <id> --input @request.json --out <path> --dry-run.`,
+                examples: [
+                  "gkit --profile <app> hubspot api call --operation-id <id> --input @request.json --out <path> --dry-run",
+                ],
+              })
+              .input(s(v.strictObject({}))),
+          },
+        ),
+      },
+    ),
   };
 }
 
@@ -240,9 +267,34 @@ function schemaPreamble(): string {
 }
 
 function compactRootSchema(generated: string): string {
-  return generated
-    .replace(/^\s*\/\*\* (?:\d+ reviewed reads?|Profile check\.|Native API\.) \*\/\n/gm, "")
-    .replace(/\n{2,}/g, "\n");
+  return (
+    generated
+      // argc 7.6+ promotes authored examples into JSDoc blocks. Keep the 7.5
+      // public surface: drop doctor noise, collapse everything else that is
+      // not describe / docs / ledger.reconcile.
+      .replace(
+        /\n[ \t]*\/\*\*\n[ \t]*\* Profile check\.\n(?:[ \t]*\*\n[ \t]*\* @example\n(?:[ \t]*\* .+\n)+)?[ \t]*\*\/\n/g,
+        "\n",
+      )
+      .replace(
+        /^([ \t]*)\/\*\*\n[ \t]*\* ([^\n]+)\n[ \t]*\*\n[ \t]*\* @example\n(?:[ \t]*\* .+\n)+[ \t]*\*\//gm,
+        (block, indent: string, description: string) => {
+          if (
+            description.startsWith("Capability details.") ||
+            description.startsWith("Provider docs directory.") ||
+            description.startsWith("Manual settlement.")
+          ) {
+            return block;
+          }
+          return `${indent}/** ${description} */`;
+        },
+      )
+      .replace(
+        /^\s*\/\*\* (?:\d+ reviewed reads?\.|Profile check\.|Native API\.) \*\/\n/gm,
+        "",
+      )
+      .replace(/\n{2,}/g, "\n")
+  );
 }
 
 function rewriteArgcExamples(
@@ -251,7 +303,13 @@ function rewriteArgcExamples(
 ): string {
   return generated
     .replace(/gkit describe "\{ id: 'value' \}"/g, "gkit describe --id <capability-id>")
+    .replace(/gkit describe --id \S+/g, "gkit describe --id <capability-id>")
     .replace(/gkit docs "\{ provider: 'value' \}"/g, "gkit docs --provider <provider>")
+    .replace(/gkit docs --provider \S+/g, "gkit docs --provider <provider>")
+    .replace(
+      /gkit ledger reconcile --attempt <id> --outcome confirmed_not_charged --evidence-ref ticket:123/g,
+      "gkit ledger reconcile --attempt <id> --outcome <outcome> --evidence-ref <ref> [--cost-usd <decimal>]",
+    )
     .replace(
       /gkit bing\.api\.call "[^"]*"/g,
       "gkit --profile <app> bing api call --operation-id <id> --input @request.json --out <path> --dry-run",
@@ -275,5 +333,9 @@ function rewriteArgcExamples(
     .replace(
       /gkit gsc\.api\.call "[^"]*"/g,
       "gkit --profile <app> gsc api call --operation-id <id> --input @request.json --out <path> --dry-run",
+    )
+    .replace(
+      /gkit hubspot\.api\.call "[^"]*"/g,
+      "gkit --profile <app> hubspot api call --operation-id <id> --input @request.json --out <path> --dry-run",
     );
 }

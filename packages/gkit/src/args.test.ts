@@ -36,12 +36,17 @@ describe("gkit argv parser", () => {
 
   it("keeps discovery commands profile-free", () => {
     expect(parseArgs(["--schema"])).toEqual({ kind: "schema", selector: null });
+    expect(parseArgs(["@skill"])).toEqual({ kind: "skill", path: null });
+    expect(parseArgs(["@skill", "SKILL.md"])).toEqual({ kind: "skill", path: "SKILL.md" });
     expect(parseArgs(["describe", "--id", "capability"])).toEqual({
       kind: "describe",
       id: "capability",
     });
     expect(() => parseArgs(["--profile", "app-a", "--schema"])).toThrow(
       "--schema does not load a profile",
+    );
+    expect(() => parseArgs(["--profile", "app-a", "@skill"])).toThrow(
+      "@skill does not load a profile",
     );
     expect(parseArgs(["ledger"])).toEqual({ kind: "ledger-status" });
     expect(parseArgs(["ledger", "status"])).toEqual({ kind: "ledger-status" });
@@ -129,6 +134,7 @@ describe("gkit argv parser", () => {
   it.each([
     ["bing", "bing.sites.list", "bing-call"],
     ["gsc", "gsc.properties.list", "gsc-call"],
+    ["hubspot", "hubspot.crm.objects.list", "hubspot-call"],
   ] as const)(
     "accepts the read-only %s call without spend flags",
     (provider, operationId, kind) => {

@@ -96,6 +96,12 @@ const gscSecretsSchema = strictObject({
   serviceAccountFile: pipe(string(), regex(ENV_REFERENCE_PATTERN)),
 });
 
+const hubSpotConfigSchema = strictObject({});
+
+const hubSpotSecretsSchema = strictObject({
+  accessToken: pipe(string(), regex(ENV_REFERENCE_PATTERN)),
+});
+
 export type ProviderEnvironment = "production" | "sandbox";
 
 export type ProviderPolicy = {
@@ -218,6 +224,8 @@ export async function loadProfile(
             ? parseGscConfig(provider.config)
             : providerId === "posthog"
               ? parsePostHogConfig(provider.config)
+              : providerId === "hubspot"
+                ? parseHubSpotConfig(provider.config)
               : providerId === "google-ads"
                 ? parseGoogleAdsConfig(provider.config)
                 : freezeRecord(provider.config);
@@ -230,6 +238,8 @@ export async function loadProfile(
             ? parseGscSecrets(provider.secrets)
             : providerId === "posthog"
               ? parsePostHogSecrets(provider.secrets)
+              : providerId === "hubspot"
+                ? parseHubSpotSecrets(provider.secrets)
               : providerId === "google-ads"
                 ? parseGoogleAdsSecrets(provider.secrets)
                 : Object.freeze(provider.secrets as Record<string, `env:${string}`>);
@@ -454,6 +464,30 @@ function parseGscSecrets(
     throw new ProfileError(
       "invalid_profile",
       "GSC secrets must contain only a serviceAccountFile env: reference.",
+    );
+  }
+  return Object.freeze(parsed.output as Record<string, `env:${string}`>);
+}
+
+function parseHubSpotConfig(config: Record<string, unknown>): Readonly<Record<string, unknown>> {
+  const parsed = safeParse(hubSpotConfigSchema, config);
+  if (!parsed.success) {
+    throw new ProfileError(
+      "invalid_profile",
+      "HubSpot config must be empty; the account is derived only from the profile-bound token.",
+    );
+  }
+  return Object.freeze(parsed.output);
+}
+
+function parseHubSpotSecrets(
+  secrets: Record<string, string>,
+): Readonly<Record<string, `env:${string}`>> {
+  const parsed = safeParse(hubSpotSecretsSchema, secrets);
+  if (!parsed.success) {
+    throw new ProfileError(
+      "invalid_profile",
+      "HubSpot secrets must contain only an accessToken env: reference.",
     );
   }
   return Object.freeze(parsed.output as Record<string, `env:${string}`>);
