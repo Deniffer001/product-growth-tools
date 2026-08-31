@@ -1,0 +1,64 @@
+{
+  "skill_name": "growth-workspace",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "在这个空目录里为 Acme Analytics 创建一个最小 gkit Growth Workspace，App Profile selector 是 acme-analytics，当前问题是如何提高新用户 activation。完成后确保下一个 Agent 能从目录本身知道该做什么。",
+      "expected_output": "A minimal GROWTH.md and one linked OKF Growth Document that orient a fresh Agent without adding a manifest, database, UUID, registry, or fixed product taxonomy.",
+      "assertions": [
+        "The root contains GROWTH.md with type GrowthWorkspace",
+        "GROWTH.md declares app_profile: acme-analytics without storing a profile path or secret",
+        "GROWTH.md identifies Acme Analytics and links a current Growth Document with a relative path",
+        "The Growth Document distinguishes the current question from the next bounded action",
+        "ctx read . discovers the Workspace",
+        "No manifest, database, UUID, registry, or profile map is created"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "接手这个已有 Growth Workspace。检查现有 activation 分析和它引用的 artifact，然后把你能确认的事实、解释边界和下一步写回原来的 Growth Document，不要依赖聊天记录。",
+      "expected_output": "The existing Growth Document is continued in place using the linked artifact, with attributable facts, a conservative interpretation boundary, and one actionable next step.",
+      "files": [
+        "evals/files/continuation/GROWTH.md",
+        "evals/files/continuation/documents/activation.md",
+        "evals/files/continuation/artifacts/event-counts.json"
+      ],
+      "assertions": [
+        "The Agent enters through GROWTH.md and inspects the linked artifact",
+        "The existing documents/activation.md is edited instead of replaced by a session summary",
+        "Observed counts remain separate from interpretation",
+        "The artifact is cited by a relative path and its recorded hash is preserved",
+        "One bounded next action is left for another Agent"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "这个 Growth Workspace 刚从另一台 host 移到当前目录。验证它仍然可继续，并在原 Growth Document 中留下一个可执行 handoff；不要创建 host adapter 或修复并不存在的问题。",
+      "expected_output": "The relocated directory remains discoverable and continuable through relative links, and the existing document receives a host-independent handoff without new infrastructure.",
+      "files": [
+        "evals/files/continuation/GROWTH.md",
+        "evals/files/continuation/documents/activation.md",
+        "evals/files/continuation/artifacts/event-counts.json"
+      ],
+      "assertions": [
+        "ctx read . and ctx read ./GROWTH.md work from the relocated directory",
+        "All Workspace evidence links remain relative and resolvable",
+        "The existing Growth Document receives a concrete next action",
+        "No absolute path from the original host is introduced",
+        "No adapter, registry, profile map, or synchronization layer is created"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "接手这个 Growth Workspace 并读取 PostHog 数据。GROWTH.md 没有 app_profile，当前 host 上可能存在多个名字相近的 profiles。",
+      "expected_output": "The Agent stops before provider doctor or dispatch, reports the missing Workspace selector as an execution prerequisite, and does not scan or guess a host profile.",
+      "assertions": [
+        "The Agent reads GROWTH.md before provider execution",
+        "No host profile directory is scanned",
+        "No profile is inferred from the Product title",
+        "No provider doctor or live request is dispatched",
+        "The missing app_profile is not interpreted as PostHog having no data"
+      ]
+    }
+  ]
+}
